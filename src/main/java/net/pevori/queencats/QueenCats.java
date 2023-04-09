@@ -1,8 +1,11 @@
 package net.pevori.queencats;
 
 import net.fabricmc.api.ModInitializer;
+import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.pevori.queencats.item.ModItemGroup;
 import net.pevori.queencats.item.ModItems;
+import net.pevori.queencats.screen.HumanoidAnimalScreen;
+import net.pevori.queencats.screen.HumanoidAnimalScreenRegistries;
 import net.pevori.queencats.util.ModRegistries;
 
 import org.slf4j.Logger;

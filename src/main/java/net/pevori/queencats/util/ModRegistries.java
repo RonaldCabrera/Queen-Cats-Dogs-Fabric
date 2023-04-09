@@ -6,12 +6,14 @@ import net.pevori.queencats.entity.custom.PrincessCatEntity;
 import net.pevori.queencats.entity.custom.PrincessDogEntity;
 import net.pevori.queencats.entity.custom.QueenCatEntity;
 import net.pevori.queencats.entity.custom.QueenDogEntity;
+import net.pevori.queencats.screen.HumanoidAnimalScreenRegistries;
 import net.pevori.queencats.sound.ModSounds;
 
 public class ModRegistries {
     public static void registerQueenCats() {
         registerAttributes();
         registerSounds();
+        registerScreens();
     }
 
     private static void registerAttributes() {
@@ -27,5 +29,9 @@ public class ModRegistries {
 
     private static void registerSounds(){
         ModSounds.bootSounds();
+    }
+
+    private static void registerScreens(){
+        HumanoidAnimalScreenRegistries.registerScreenHandlers();
     }
 }

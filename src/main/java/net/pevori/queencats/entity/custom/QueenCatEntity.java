@@ -5,6 +5,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.goal.*;
+import net.minecraft.entity.ai.pathing.MobNavigation;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.passive.PassiveEntity;
@@ -29,7 +30,7 @@ import net.pevori.queencats.item.ModItems;
 import org.jetbrains.annotations.Nullable;
 
 public class QueenCatEntity extends HumanoidCatEntity{
-    public QueenCatEntity(EntityType<? extends TameableEntity> entityType, World world) {
+    public QueenCatEntity(EntityType<? extends HumanoidCatEntity> entityType, World world) {
         super(entityType, world);
     }
 
@@ -56,10 +57,12 @@ public class QueenCatEntity extends HumanoidCatEntity{
     }
 
     protected void initGoals() {
+        super.initGoals();
+
         this.goalSelector.add(0, new SwimGoal(this));
         this.goalSelector.add(1, new SitGoal(this));
         this.goalSelector.add(2, new MeleeAttackGoal(this, 1.25D, false));
-        this.goalSelector.add(3, new FollowOwnerGoal(this, 1.0, 10.0f, 2.0f, false));
+        this.goalSelector.add(3, new FollowOwnerGoal(this, 1.0, 4.0f, 10.0f, false));
         this.goalSelector.add(4, new AnimalMateGoal(this, 1.0));
         this.goalSelector.add(5, new TemptGoal(this, 1.0f, Ingredient.ofItems(ModItems.GOLDEN_FISH), false));
         this.goalSelector.add(5, new WanderAroundPointOfInterestGoal(this, 1.0f, false));
@@ -77,11 +80,11 @@ public class QueenCatEntity extends HumanoidCatEntity{
         ItemStack itemStack = player.getStackInHand(hand);
         Item item = itemStack.getItem();
 
-        if (isBreedingItem(itemStack)) {
+        if (isBreedingItem(itemStack) && !player.isSneaking()) {
             return super.interactMob(player, hand);
         }
 
-        if (item instanceof DyeItem && this.isOwner(player)) {
+        if (item instanceof DyeItem && this.isOwner(player) && !player.isSneaking()) {
             DyeColor dyeColor = ((DyeItem) item).getColor();
             if (dyeColor == DyeColor.BLACK) {
                 this.setVariant(HumanoidCatVariant.BLACK);
@@ -101,22 +104,22 @@ public class QueenCatEntity extends HumanoidCatEntity{
             return ActionResult.CONSUME;
         }
 
-        if (this.hasStackEquipped(EquipmentSlot.CHEST) && isTamed() && this.isOwner(player) && !this.world.isClient() && hand == Hand.MAIN_HAND
-                && player.isSneaking()) {
-            if (!player.getAbilities().creativeMode) {
-                player.giveItemStack(this.getEquippedStack(EquipmentSlot.CHEST));
-            }
-            this.equipStack(EquipmentSlot.CHEST, ItemStack.EMPTY);
-
-            return ActionResult.CONSUME;
-        } else if (equippableArmor.test(itemStack) && isTamed() && this.isOwner(player) && !this.hasStackEquipped(EquipmentSlot.CHEST)) {
-            this.equipStack(EquipmentSlot.CHEST, itemStack.copy());
-            if (!player.getAbilities().creativeMode) {
-                itemStack.decrement(1);
-            }
-
-            return ActionResult.SUCCESS;
-        }
+//        if (this.hasStackEquipped(EquipmentSlot.CHEST) && isTamed() && this.isOwner(player) && !this.world.isClient() && hand == Hand.MAIN_HAND
+//                && player.isSneaking()) {
+//            if (!player.getAbilities().creativeMode) {
+//                player.giveItemStack(this.getEquippedStack(EquipmentSlot.CHEST));
+//            }
+//            this.equipStack(EquipmentSlot.CHEST, ItemStack.EMPTY);
+//
+//            return ActionResult.CONSUME;
+//        } else if (equippableArmor.test(itemStack) && isTamed() && this.isOwner(player) && !this.hasStackEquipped(EquipmentSlot.CHEST)) {
+//            this.equipStack(EquipmentSlot.CHEST, itemStack.copy());
+//            if (!player.getAbilities().creativeMode) {
+//                itemStack.decrement(1);
+//            }
+//
+//            return ActionResult.SUCCESS;
+//        }
 
         if ((itemForHealing.test(itemStack)) && isTamed() && this.getHealth() < getMaxHealth()) {
             if (this.world.isClient()) {
@@ -163,7 +166,7 @@ public class QueenCatEntity extends HumanoidCatEntity{
             }
         }
 
-        if (isTamed() && this.isOwner(player) && !this.world.isClient() && hand == Hand.MAIN_HAND) {
+        if (isTamed() && this.isOwner(player) && !player.isSneaking() && !this.world.isClient() && hand == Hand.MAIN_HAND) {
             setSit(!isSitting());
             return ActionResult.SUCCESS;
         }

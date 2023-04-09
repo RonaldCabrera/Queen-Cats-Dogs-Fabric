@@ -36,14 +36,12 @@ import software.bernie.geckolib.core.animatable.instance.SingletonAnimatableInst
 import software.bernie.geckolib.core.animation.*;
 import software.bernie.geckolib.core.object.PlayState;
 
-public class HumanoidBunnyEntity extends TameableEntity implements GeoEntity {
+public class HumanoidBunnyEntity extends HumanoidAnimalEntity implements GeoEntity {
     private AnimatableInstanceCache factory = new SingletonAnimatableInstanceCache(this);
 
     protected Item itemForTaming = ModItems.GOLDEN_WHEAT;
     protected Ingredient itemForHealing = Ingredient.ofItems(Items.CARROT, Items.WHEAT, ModItems.GOLDEN_WHEAT, Items.GOLDEN_CARROT);
     protected Item itemForGrowth = ModItems.KEMOMIMI_POTION;
-    protected Ingredient equippableArmor = Ingredient.ofItems(Items.LEATHER_CHESTPLATE, Items.CHAINMAIL_CHESTPLATE, Items.GOLDEN_CHESTPLATE,
-            Items.IRON_CHESTPLATE, Items.DIAMOND_CHESTPLATE, Items.NETHERITE_CHESTPLATE);
     public static final String pekoSan = "pekora";
 
     protected HumanoidBunnyEntity(EntityType<? extends TameableEntity> entityType, World world) {

@@ -36,13 +36,11 @@ import software.bernie.geckolib.core.animatable.instance.SingletonAnimatableInst
 import software.bernie.geckolib.core.animation.*;
 import software.bernie.geckolib.core.object.PlayState;
 
-public class HumanoidDogEntity extends TameableEntity implements GeoEntity {
+public class HumanoidDogEntity extends HumanoidAnimalEntity implements GeoEntity {
     private AnimatableInstanceCache factory = new SingletonAnimatableInstanceCache(this);
 
     protected Item itemForTaming = ModItems.GOLDEN_BONE;
     protected Item itemForGrowth = ModItems.KEMOMIMI_POTION;
-    protected Ingredient equippableArmor = Ingredient.ofItems(Items.LEATHER_CHESTPLATE, Items.CHAINMAIL_CHESTPLATE,
-            Items.IRON_CHESTPLATE, Items.DIAMOND_CHESTPLATE, Items.NETHERITE_CHESTPLATE);
     public static final String koroSan = "korone";
 
 

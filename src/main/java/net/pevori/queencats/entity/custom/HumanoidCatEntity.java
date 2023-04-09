@@ -35,17 +35,15 @@ import software.bernie.geckolib.core.animatable.instance.SingletonAnimatableInst
 import software.bernie.geckolib.core.animation.*;
 import software.bernie.geckolib.core.object.PlayState;
 
-public class HumanoidCatEntity extends TameableEntity implements GeoEntity {
+public class HumanoidCatEntity extends HumanoidAnimalEntity implements GeoEntity {
     private AnimatableInstanceCache factory = new SingletonAnimatableInstanceCache(this);
 
     protected Item itemForTaming = ModItems.GOLDEN_FISH;
     protected Item itemForGrowth = ModItems.KEMOMIMI_POTION;
     protected Ingredient itemForHealing = Ingredient.ofItems(Items.COD, Items.SALMON, ModItems.GOLDEN_FISH);
-    protected Ingredient equippableArmor = Ingredient.ofItems(Items.LEATHER_CHESTPLATE, Items.CHAINMAIL_CHESTPLATE, Items.GOLDEN_CHESTPLATE,
-            Items.IRON_CHESTPLATE, Items.DIAMOND_CHESTPLATE, Items.NETHERITE_CHESTPLATE);
     public static final String okayuSan = "okayu";
 
-    protected HumanoidCatEntity(EntityType<? extends TameableEntity> entityType, World world) {
+    protected HumanoidCatEntity(EntityType<? extends HumanoidAnimalEntity> entityType, World world) {
         super(entityType, world);
     }
 
@@ -53,7 +51,12 @@ public class HumanoidCatEntity extends TameableEntity implements GeoEntity {
     public PassiveEntity createChild(ServerWorld var1, PassiveEntity var2) {
         return null;
     }
-    
+
+    @Override
+    public boolean isBaby() {
+        return false;
+    }
+
     public boolean isMogu(){
         String s = Formatting.strip(this.getName().getString());
         return (s != null && s.toLowerCase().contains(okayuSan));

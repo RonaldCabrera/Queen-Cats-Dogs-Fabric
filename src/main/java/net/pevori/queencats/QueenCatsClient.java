@@ -1,10 +1,14 @@
 package net.pevori.queencats;
 
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.pevori.queencats.entity.ModEntities;
 import net.pevori.queencats.entity.client.*;
+import net.pevori.queencats.screen.HumanoidAnimalScreenRegistries;
 
+@Environment(EnvType.CLIENT)
 public class QueenCatsClient implements ClientModInitializer {
 
     @Override
@@ -17,6 +21,7 @@ public class QueenCatsClient implements ClientModInitializer {
 
         EntityRendererRegistry.register(ModEntities.QUEEN_BUNNY, QueenBunnyRenderer::new);
         EntityRendererRegistry.register(ModEntities.PRINCESS_BUNNY, PrincessBunnyRenderer::new);
+
+        HumanoidAnimalScreenRegistries.registerScreenRenderers();
     }
-    
 }

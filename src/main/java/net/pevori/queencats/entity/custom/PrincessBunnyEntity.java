@@ -47,6 +47,8 @@ public class PrincessBunnyEntity extends HumanoidBunnyEntity{
     }
 
     protected void initGoals() {
+        super.initGoals();
+
         this.goalSelector.add(0, new SwimGoal(this));
         this.goalSelector.add(1, new SitGoal(this));
         this.goalSelector.add(2, new MeleeAttackGoal(this, 1.25D, false));
@@ -66,7 +68,7 @@ public class PrincessBunnyEntity extends HumanoidBunnyEntity{
         ItemStack itemstack = player.getStackInHand(hand);
         Item item = itemstack.getItem();
 
-        if (item instanceof DyeItem && this.isOwner(player)) {
+        if (item instanceof DyeItem && this.isOwner(player) && !player.isSneaking()) {
             DyeColor dyeColor = ((DyeItem) item).getColor();
             if (dyeColor == DyeColor.LIGHT_GRAY) {
                 this.setVariant(HumanoidBunnyVariant.COCOA);
@@ -86,7 +88,7 @@ public class PrincessBunnyEntity extends HumanoidBunnyEntity{
             return ActionResult.CONSUME;
         }
 
-        if (item == itemForGrowth && isTamed() && this.isOwner(player)) {
+        if (item == itemForGrowth && isTamed() && this.isOwner(player) && !player.isSneaking()) {
             if (!player.getAbilities().creativeMode) {
                 itemstack.decrement(1);
             }
@@ -94,7 +96,7 @@ public class PrincessBunnyEntity extends HumanoidBunnyEntity{
             return ActionResult.CONSUME;
         }
 
-        if ((itemForHealing.test(itemstack)) && isTamed() && this.getHealth() < getMaxHealth()) {
+        if ((itemForHealing.test(itemstack)) && isTamed() && !player.isSneaking() && this.getHealth() < getMaxHealth()) {
             if (this.world.isClient()) {
                 return ActionResult.CONSUME;
             } else {
@@ -138,7 +140,7 @@ public class PrincessBunnyEntity extends HumanoidBunnyEntity{
             }
         }
 
-        if (isTamed() && this.isOwner(player) && !this.world.isClient() && hand == Hand.MAIN_HAND) {
+        if (isTamed() && this.isOwner(player) && !player.isSneaking() && !this.world.isClient() && hand == Hand.MAIN_HAND) {
             setSit(!isSitting());
             return ActionResult.SUCCESS;
         }
