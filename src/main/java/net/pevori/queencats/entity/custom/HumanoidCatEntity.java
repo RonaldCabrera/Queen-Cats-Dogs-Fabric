@@ -38,13 +38,11 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
-public class HumanoidCatEntity extends TameableEntity implements IAnimatable {
+public class HumanoidCatEntity extends HumanoidAnimalEntity implements IAnimatable {
     public static final String okayuSan = "okayu";
     Item itemForTaming = ModItems.GOLDEN_FISH;
     Item itemForGrowth = ModItems.KEMOMIMI_POTION;
     Ingredient itemForHealing = Ingredient.ofItems(Items.COD, Items.SALMON, ModItems.GOLDEN_FISH);
-    Ingredient equippableArmor = Ingredient.ofItems(Items.LEATHER_CHESTPLATE, Items.CHAINMAIL_CHESTPLATE, Items.GOLDEN_CHESTPLATE,
-            Items.IRON_CHESTPLATE, Items.DIAMOND_CHESTPLATE, Items.NETHERITE_CHESTPLATE);
 
     private AnimationFactory factory = new AnimationFactory(this);
 

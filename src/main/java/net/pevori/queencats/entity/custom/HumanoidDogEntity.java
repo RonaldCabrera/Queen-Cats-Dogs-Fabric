@@ -38,13 +38,10 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
-public class HumanoidDogEntity extends TameableEntity implements IAnimatable {
+public class HumanoidDogEntity extends HumanoidAnimalEntity implements IAnimatable {
     public static final String koroSan = "korone";
     private AnimationFactory factory = new AnimationFactory(this);
     protected Item itemForTaming = ModItems.GOLDEN_BONE;
-    protected Ingredient equippableArmor = Ingredient.ofItems(Items.LEATHER_CHESTPLATE, Items.CHAINMAIL_CHESTPLATE,
-            Items.IRON_CHESTPLATE, Items.DIAMOND_CHESTPLATE, Items.NETHERITE_CHESTPLATE);
-
 
     protected HumanoidDogEntity(EntityType<? extends TameableEntity> entityType, World world) {
     super(entityType, world);

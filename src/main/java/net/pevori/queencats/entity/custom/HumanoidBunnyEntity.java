@@ -39,13 +39,11 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
-public class HumanoidBunnyEntity extends TameableEntity implements IAnimatable {
+public class HumanoidBunnyEntity extends HumanoidAnimalEntity implements IAnimatable {
     private AnimationFactory factory = new AnimationFactory(this);
     protected Item itemForTaming = ModItems.GOLDEN_WHEAT;
     protected Ingredient itemForHealing = Ingredient.ofItems(Items.CARROT, Items.WHEAT, ModItems.GOLDEN_WHEAT, Items.GOLDEN_CARROT);
     protected Item itemForGrowth = ModItems.KEMOMIMI_POTION;
-    protected Ingredient equippableArmor = Ingredient.ofItems(Items.LEATHER_CHESTPLATE, Items.CHAINMAIL_CHESTPLATE, Items.GOLDEN_CHESTPLATE,
-            Items.IRON_CHESTPLATE, Items.DIAMOND_CHESTPLATE, Items.NETHERITE_CHESTPLATE);
     public static final String pekoSan = "pekora";
 
     protected HumanoidBunnyEntity(EntityType<? extends TameableEntity> entityType, World world) {
