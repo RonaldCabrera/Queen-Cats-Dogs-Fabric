@@ -1,7 +1,9 @@
 package net.pevori.queencats.entity.custom;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
@@ -12,13 +14,18 @@ import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.scoreboard.AbstractTeam;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundEvent;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.pevori.queencats.entity.variant.HumanoidDogVariant;
 import net.pevori.queencats.item.ModItems;
+import net.pevori.queencats.sound.ModSounds;
 import software.bernie.geckolib3.core.AnimationState;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
@@ -28,7 +35,7 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
-public class HumanoidDogEntity extends TameableEntity implements IAnimatable{
+public class HumanoidDogEntity extends HumanoidAnimalEntity implements IAnimatable{
     protected AnimationFactory factory = new AnimationFactory(this);
     protected static final TrackedData<Boolean> SITTING = DataTracker.registerData(HumanoidDogEntity.class,
             TrackedDataHandlerRegistry.BOOLEAN);
@@ -84,6 +91,31 @@ public class HumanoidDogEntity extends TameableEntity implements IAnimatable{
     @Override
     public AnimationFactory getFactory() {
         return factory;
+    }
+
+    @Override
+    protected SoundEvent getAmbientSound() {
+        return ModSounds.HUMANOID_DOG_AMBIENT;
+    }
+
+    @Override
+    public SoundEvent getEatSound(ItemStack stack) {
+        return ModSounds.HUMANOID_DOG_EAT;
+    }
+
+    @Override
+    protected SoundEvent getHurtSound(DamageSource source) {
+        return ModSounds.HUMANOID_DOG_HURT;
+    }
+
+    @Override
+    protected SoundEvent getDeathSound() {
+        return ModSounds.HUMANOID_DOG_DEATH;
+    }
+
+    @Override
+    protected void playStepSound(BlockPos pos, BlockState state) {
+        this.playSound(SoundEvents.ENTITY_WOLF_STEP, 0.15f, 1.0f);
     }
 
     public void setSit(boolean sitting) {

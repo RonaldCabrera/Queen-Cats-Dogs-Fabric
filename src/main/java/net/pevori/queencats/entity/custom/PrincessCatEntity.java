@@ -55,10 +55,12 @@ public class PrincessCatEntity extends HumanoidCatEntity{
     }
 
     protected void initGoals() {
+        super.initGoals();
+
         this.goalSelector.add(0, new SwimGoal(this));
         this.goalSelector.add(1, new SitGoal(this));
         this.goalSelector.add(2, new MeleeAttackGoal(this, 1.25D, false));
-        this.goalSelector.add(3, new FollowOwnerGoal(this, 1.0, 10.0f, 2.0f, false));
+        this.goalSelector.add(3, new FollowOwnerGoal(this, 1.0, 4.0f, 10.0f, false));
         this.goalSelector.add(5, new TemptGoal(this, 1.0f, Ingredient.ofItems(ModItems.GOLDEN_FISH), false));
         this.goalSelector.add(5, new WanderAroundPointOfInterestGoal(this, 1.0f, false));
         this.goalSelector.add(5, new WanderAroundFarGoal(this, 1.0, 1));
@@ -99,7 +101,7 @@ public class PrincessCatEntity extends HumanoidCatEntity{
         ItemStack itemstack = player.getStackInHand(hand);
         Item item = itemstack.getItem();
 
-        if (item instanceof DyeItem && this.isOwner(player)) {
+        if (item instanceof DyeItem && this.isOwner(player) && !player.isSneaking()) {
             DyeColor dyeColor = ((DyeItem) item).getColor();
             if (dyeColor == DyeColor.BLACK) {
                 this.setVariant(HumanoidCatVariant.BLACK);
@@ -119,7 +121,7 @@ public class PrincessCatEntity extends HumanoidCatEntity{
             return ActionResult.CONSUME;
         }
 
-        if (item == itemForGrowth && isTamed() && this.isOwner(player)) {
+        if (item == itemForGrowth && isTamed() && this.isOwner(player) && !player.isSneaking()) {
             if (!player.getAbilities().creativeMode) {
                 itemstack.decrement(1);
             }
@@ -127,7 +129,7 @@ public class PrincessCatEntity extends HumanoidCatEntity{
             return ActionResult.CONSUME;
         }
 
-        if ((itemForHealing.test(itemstack)) && isTamed() && this.getHealth() < getMaxHealth()) {
+        if ((itemForHealing.test(itemstack)) && isTamed() && this.getHealth() < getMaxHealth() && !player.isSneaking()) {
             if (this.world.isClient()) {
                 return ActionResult.CONSUME;
             } else {
@@ -171,7 +173,7 @@ public class PrincessCatEntity extends HumanoidCatEntity{
             }
         }
 
-        if (isTamed() && this.isOwner(player) && !this.world.isClient() && hand == Hand.MAIN_HAND) {
+        if (isTamed() && this.isOwner(player) && !player.isSneaking() && !this.world.isClient() && hand == Hand.MAIN_HAND) {
             setSit(!isSitting());
             return ActionResult.SUCCESS;
         }

@@ -14,8 +14,11 @@ import net.minecraft.entity.passive.HorseEntity;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.recipe.Ingredient;
 import net.minecraft.scoreboard.AbstractTeam;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
@@ -36,9 +39,11 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
-public class HumanoidBunnyEntity extends TameableEntity implements IAnimatable {
+public class HumanoidBunnyEntity extends HumanoidAnimalEntity implements IAnimatable {
     private AnimationFactory factory = new AnimationFactory(this);
-
+    protected Item itemForTaming = ModItems.GOLDEN_WHEAT;
+    protected Ingredient itemForHealing = Ingredient.ofItems(Items.CARROT, ModItems.GOLDEN_WHEAT, Items.WHEAT, Items.GOLDEN_CARROT);
+    protected Item itemForGrowth = ModItems.KEMOMIMI_POTION;
     public static final String pekoSan = "pekora";
 
     protected HumanoidBunnyEntity(EntityType<? extends TameableEntity> entityType, World world) {

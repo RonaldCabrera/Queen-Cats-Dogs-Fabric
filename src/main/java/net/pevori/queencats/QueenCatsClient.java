@@ -4,6 +4,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.pevori.queencats.entity.ModEntities;
 import net.pevori.queencats.entity.client.*;
+import net.pevori.queencats.screen.HumanoidAnimalScreenRegistries;
 
 public class QueenCatsClient implements ClientModInitializer {
 
@@ -17,6 +18,8 @@ public class QueenCatsClient implements ClientModInitializer {
 
         EntityRendererRegistry.register(ModEntities.QUEEN_BUNNY, QueenBunnyRenderer::new);
         EntityRendererRegistry.register(ModEntities.PRINCESS_BUNNY, PrincessBunnyRenderer::new);
+
+        HumanoidAnimalScreenRegistries.registerScreenRenderers();
     }
     
 }

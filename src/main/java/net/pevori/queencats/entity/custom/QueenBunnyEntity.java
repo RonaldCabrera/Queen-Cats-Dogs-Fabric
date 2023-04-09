@@ -49,6 +49,8 @@ public class QueenBunnyEntity extends HumanoidBunnyEntity{
     }
 
     protected void initGoals() {
+        super.initGoals();
+
         this.goalSelector.add(0, new SwimGoal(this));
         this.goalSelector.add(1, new SitGoal(this));
         this.goalSelector.add(2, new MeleeAttackGoal(this, 1.25D, false));
@@ -69,16 +71,11 @@ public class QueenBunnyEntity extends HumanoidBunnyEntity{
         ItemStack itemstack = player.getStackInHand(hand);
         Item item = itemstack.getItem();
 
-        Item itemForTaming = ModItems.GOLDEN_WHEAT;
-        Ingredient itemForHealing = Ingredient.ofItems(Items.CARROT, ModItems.GOLDEN_WHEAT, Items.WHEAT, Items.GOLDEN_CARROT);
-        Ingredient equippableArmor = Ingredient.ofItems(Items.LEATHER_CHESTPLATE, Items.CHAINMAIL_CHESTPLATE, Items.GOLDEN_CHESTPLATE,
-                Items.IRON_CHESTPLATE, Items.DIAMOND_CHESTPLATE, Items.NETHERITE_CHESTPLATE);
-
         if (isBreedingItem(itemstack)) {
             return super.interactMob(player, hand);
         }
 
-        if (item instanceof DyeItem && this.isOwner(player)) {
+        if (item instanceof DyeItem && this.isOwner(player) && !player.isSneaking()) {
             DyeColor dyeColor = ((DyeItem) item).getColor();
             if (dyeColor == DyeColor.LIGHT_GRAY) {
                 this.setVariant(HumanoidBunnyVariant.COCOA);
@@ -98,22 +95,7 @@ public class QueenBunnyEntity extends HumanoidBunnyEntity{
             return ActionResult.CONSUME;
         }
 
-        if (this.hasStackEquipped(EquipmentSlot.CHEST) && isTamed() && this.isOwner(player) && !this.world.isClient() && hand == Hand.MAIN_HAND
-                && player.isSneaking()) {
-            if (!player.getAbilities().creativeMode) {
-                player.giveItemStack(this.getEquippedStack(EquipmentSlot.CHEST));
-            }
-            this.equipStack(EquipmentSlot.CHEST, ItemStack.EMPTY);
-            return ActionResult.CONSUME;
-        } else if (equippableArmor.test(itemstack) && isTamed() && this.isOwner(player) && !this.hasStackEquipped(EquipmentSlot.CHEST)) {
-            this.equipStack(EquipmentSlot.CHEST, itemstack.copy());
-            if (!player.getAbilities().creativeMode) {
-                itemstack.decrement(1);
-            }
-            return ActionResult.SUCCESS;
-        }
-
-        if ((itemForHealing.test(itemstack)) && isTamed() && this.getHealth() < getMaxHealth()) {
+        if ((itemForHealing.test(itemstack)) && isTamed() && this.getHealth() < getMaxHealth() && !player.isSneaking()) {
             if (this.world.isClient()) {
                 return ActionResult.CONSUME;
             } else {
@@ -158,7 +140,7 @@ public class QueenBunnyEntity extends HumanoidBunnyEntity{
             }
         }
 
-        if (isTamed() && this.isOwner(player) && !this.world.isClient() && hand == Hand.MAIN_HAND) {
+        if (isTamed() && this.isOwner(player) && !player.isSneaking() && !this.world.isClient() && hand == Hand.MAIN_HAND) {
             setSit(!isSitting());
             return ActionResult.SUCCESS;
         }
