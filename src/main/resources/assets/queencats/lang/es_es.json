@@ -7,12 +7,12 @@
     "item.queencats.kemomimi_potion": "Poción Kemomimi",
     "item.queencats.glinted_item_tooltip": "Desbordado con la Energia §l§bKemomimi§r",
 
-    "item.queencats.queen_cat_spawn_egg": "Generar de Reina Gato",
-    "item.queencats.princess_cat_spawn_egg": "Generar de Princesa Gato",
-    "item.queencats.queen_dog_spawn_egg": "Generar de Reina Perro",
-    "item.queencats.princess_dog_spawn_egg": "Generar de Princesa Perro",
-    "item.queencats.queen_bunny_spawn_egg": "Generar de Reina Conejo",
-    "item.queencats.princess_bunny_spawn_egg": "Generar de Princesa Conejo",
+    "item.queencats.queen_cat_spawn_egg": "Generar Reina Gato",
+    "item.queencats.princess_cat_spawn_egg": "Generar Princesa Gato",
+    "item.queencats.queen_dog_spawn_egg": "Generar Reina Perro",
+    "item.queencats.princess_dog_spawn_egg": "Generar Princesa Perro",
+    "item.queencats.queen_bunny_spawn_egg": "Generar Reina Conejo",
+    "item.queencats.princess_bunny_spawn_egg": "Generar Princesa Conejo",
 
     "entity.queencats.queen_cat": "Reina Gato",
     "entity.queencats.princess_cat": "Princesa Gato",
