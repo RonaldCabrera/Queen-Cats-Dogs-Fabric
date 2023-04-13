@@ -26,6 +26,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.pevori.queencats.entity.ModEntities;
 import net.pevori.queencats.entity.variant.HumanoidBunnyVariant;
 import net.pevori.queencats.item.ModItems;
 import net.pevori.queencats.sound.ModSounds;
@@ -67,6 +68,28 @@ public class HumanoidBunnyEntity extends HumanoidAnimalEntity implements IAnimat
     public boolean isAlmond(){
         String s = Formatting.strip(this.getName().getString());
         return (s != null && s.toLowerCase().contains(pekoSan));
+    }
+
+    public void startGrowth() {
+        HumanoidBunnyVariant variant = this.getVariant();
+        QueenBunnyEntity queenBunnyEntity = ModEntities.QUEEN_BUNNY.create(world);
+        queenBunnyEntity.refreshPositionAndAngles(this.getX(), this.getY(), this.getZ(), this.getYaw(), this.getPitch());
+        queenBunnyEntity.setAiDisabled(this.isAiDisabled());
+        queenBunnyEntity.setInventory(this.inventory);
+
+        queenBunnyEntity.setVariant(variant);
+
+        if (this.hasCustomName()) {
+            queenBunnyEntity.setCustomName(this.getCustomName());
+            queenBunnyEntity.setCustomNameVisible(this.isCustomNameVisible());
+        }
+
+        queenBunnyEntity.setPersistent();
+        queenBunnyEntity.setOwnerUuid(this.getOwnerUuid());
+        queenBunnyEntity.setTamed(true);
+        queenBunnyEntity.setSitting(this.isSitting());
+        world.spawnEntity(queenBunnyEntity);
+        this.discard();
     }
 
     @Override
@@ -149,33 +172,6 @@ public class HumanoidBunnyEntity extends HumanoidAnimalEntity implements IAnimat
 
     public boolean isSitting() {
         return this.dataTracker.get(SITTING);
-    }
-
-    @Override
-    public boolean canAttackWithOwner(LivingEntity target, LivingEntity owner) {
-        if (target instanceof CreeperEntity || target instanceof GhastEntity) {
-            return false;
-        }
-        if (target instanceof HumanoidBunnyEntity) {
-            HumanoidBunnyEntity humanoidBunnyEntity = (HumanoidBunnyEntity) target;
-            return !humanoidBunnyEntity.isTamed() || humanoidBunnyEntity.getOwner() != owner;
-        }
-        if (target instanceof HumanoidCatEntity) {
-            HumanoidCatEntity humanoidCatEntity = (HumanoidCatEntity) target;
-            return !humanoidCatEntity.isTamed() || humanoidCatEntity.getOwner() != owner;
-        }
-        if (target instanceof HumanoidDogEntity) {
-            HumanoidDogEntity humanoidDogEntity = (HumanoidDogEntity) target;
-            return !humanoidDogEntity.isTamed() || humanoidDogEntity.getOwner() != owner;
-        }
-        if (target instanceof PlayerEntity && owner instanceof PlayerEntity
-                && !((PlayerEntity) owner).shouldDamagePlayer((PlayerEntity) target)) {
-            return false;
-        }
-        if (target instanceof HorseEntity && ((HorseEntity) target).isTame()) {
-            return false;
-        }
-        return !(target instanceof TameableEntity) || !((TameableEntity) target).isTamed();
     }
 
     @Override

@@ -26,6 +26,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.pevori.queencats.entity.ModEntities;
 import net.pevori.queencats.entity.variant.HumanoidDogVariant;
 import net.pevori.queencats.item.ModItems;
 import net.pevori.queencats.sound.ModSounds;
@@ -68,6 +69,27 @@ public class HumanoidDogEntity extends HumanoidAnimalEntity implements IAnimatab
     public boolean isDoog(){
         String s = Formatting.strip(this.getName().getString());
         return (s != null && s.toLowerCase().contains(koroSan));
+    }
+
+    public void startGrowth() {
+        HumanoidDogVariant variant = this.getVariant();
+        QueenDogEntity queenDogEntity = ModEntities.QUEEN_DOG.create(world);
+        queenDogEntity.refreshPositionAndAngles(this.getX(), this.getY(), this.getZ(), this.getYaw(), this.getPitch());
+        queenDogEntity.setAiDisabled(this.isAiDisabled());
+        queenDogEntity.setInventory(this.inventory);
+
+        queenDogEntity.setVariant(variant);
+
+        if (this.hasCustomName()) {
+            queenDogEntity.setCustomName(this.getCustomName());
+            queenDogEntity.setCustomNameVisible(this.isCustomNameVisible());
+        }
+        queenDogEntity.setPersistent();
+        queenDogEntity.setOwnerUuid(this.getOwnerUuid());
+        queenDogEntity.setTamed(true);
+        queenDogEntity.setSitting(this.isSitting());
+        world.spawnEntity(queenDogEntity);
+        this.discard();
     }
 
     private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
@@ -153,33 +175,6 @@ public class HumanoidDogEntity extends HumanoidAnimalEntity implements IAnimatab
 
     public boolean isMeatItem(Item item) {
         return item.isFood() && item.getFoodComponent().isMeat();
-    }
-
-    @Override
-    public boolean canAttackWithOwner(LivingEntity target, LivingEntity owner) {
-        if (target instanceof CreeperEntity || target instanceof GhastEntity) {
-            return false;
-        }
-        if (target instanceof HumanoidBunnyEntity) {
-            HumanoidBunnyEntity humanoidBunnyEntity = (HumanoidBunnyEntity) target;
-            return !humanoidBunnyEntity.isTamed() || humanoidBunnyEntity.getOwner() != owner;
-        }
-        if (target instanceof HumanoidCatEntity) {
-            HumanoidCatEntity humanoidCatEntity = (HumanoidCatEntity) target;
-            return !humanoidCatEntity.isTamed() || humanoidCatEntity.getOwner() != owner;
-        }
-        if (target instanceof HumanoidDogEntity) {
-            HumanoidDogEntity humanoidDogEntity = (HumanoidDogEntity) target;
-            return !humanoidDogEntity.isTamed() || humanoidDogEntity.getOwner() != owner;
-        }
-        if (target instanceof PlayerEntity && owner instanceof PlayerEntity
-                && !((PlayerEntity) owner).shouldDamagePlayer((PlayerEntity) target)) {
-            return false;
-        }
-        if (target instanceof HorseEntity && ((HorseEntity) target).isTame()) {
-            return false;
-        }
-        return !(target instanceof TameableEntity) || !((TameableEntity) target).isTamed();
     }
 
     @Override
