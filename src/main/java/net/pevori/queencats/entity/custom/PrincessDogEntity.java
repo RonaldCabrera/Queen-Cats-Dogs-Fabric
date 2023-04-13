@@ -186,26 +186,6 @@ public class PrincessDogEntity extends HumanoidDogEntity{
         return super.interactMob(player, hand);
     }
 
-    public void startGrowth() {
-        HumanoidDogVariant variant = this.getVariant();
-        QueenDogEntity queenDogEntity = ModEntities.QUEEN_DOG.create(world);
-        queenDogEntity.refreshPositionAndAngles(this.getX(), this.getY(), this.getZ(), this.getYaw(), this.getPitch());
-        queenDogEntity.setAiDisabled(this.isAiDisabled());
-
-        queenDogEntity.setVariant(variant);
-
-        if (this.hasCustomName()) {
-            queenDogEntity.setCustomName(this.getCustomName());
-            queenDogEntity.setCustomNameVisible(this.isCustomNameVisible());
-        }
-        queenDogEntity.setPersistent();
-        queenDogEntity.setOwnerUuid(this.getOwnerUuid());
-        queenDogEntity.setTamed(true);
-        queenDogEntity.setSitting(this.isSitting());
-        world.spawnEntity(queenDogEntity);
-        this.discard();
-    }
-
     @Override
     public void setTamed(boolean tamed) {
         super.setTamed(tamed);
