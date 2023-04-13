@@ -157,27 +157,6 @@ public class PrincessCatEntity extends HumanoidCatEntity{
         return super.interactMob(player, hand);
     }
 
-    public void startGrowth() {
-        HumanoidCatVariant variant = this.getVariant();
-        QueenCatEntity queenCatEntity = ModEntities.QUEEN_CAT.create(world);
-        queenCatEntity.refreshPositionAndAngles(this.getX(), this.getY(), this.getZ(), this.getYaw(), this.getPitch());
-        queenCatEntity.setAiDisabled(this.isAiDisabled());
-
-        queenCatEntity.setVariant(variant);
-
-        if (this.hasCustomName()) {
-            queenCatEntity.setCustomName(this.getCustomName());
-            queenCatEntity.setCustomNameVisible(this.isCustomNameVisible());
-        }
-
-        queenCatEntity.setPersistent();
-        queenCatEntity.setOwnerUuid(this.getOwnerUuid());
-        queenCatEntity.setTamed(true);
-        queenCatEntity.setSitting(this.isSitting());
-        world.spawnEntity(queenCatEntity);
-        this.discard();
-    }
-
     @Override
     public void setTamed(boolean tamed) {
         super.setTamed(tamed);

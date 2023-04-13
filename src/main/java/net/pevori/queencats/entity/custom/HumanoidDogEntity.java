@@ -161,6 +161,7 @@ public class HumanoidDogEntity extends HumanoidAnimalEntity implements GeoEntity
         QueenDogEntity queenDogEntity = ModEntities.QUEEN_DOG.create(world);
         queenDogEntity.refreshPositionAndAngles(this.getX(), this.getY(), this.getZ(), this.getYaw(), this.getPitch());
         queenDogEntity.setAiDisabled(this.isAiDisabled());
+        queenDogEntity.setInventory(this.inventory);
 
         queenDogEntity.setVariant(variant);
 
@@ -168,6 +169,7 @@ public class HumanoidDogEntity extends HumanoidAnimalEntity implements GeoEntity
             queenDogEntity.setCustomName(this.getCustomName());
             queenDogEntity.setCustomNameVisible(this.isCustomNameVisible());
         }
+
         queenDogEntity.setPersistent();
         queenDogEntity.setOwnerUuid(this.getOwnerUuid());
         queenDogEntity.setTamed(true);

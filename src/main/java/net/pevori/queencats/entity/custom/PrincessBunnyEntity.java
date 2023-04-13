@@ -152,27 +152,6 @@ public class PrincessBunnyEntity extends HumanoidBunnyEntity{
         return super.interactMob(player, hand);
     }
 
-    public void startGrowth() {
-        HumanoidBunnyVariant variant = this.getVariant();
-        QueenBunnyEntity queenBunnyEntity = ModEntities.QUEEN_BUNNY.create(world);
-        queenBunnyEntity.refreshPositionAndAngles(this.getX(), this.getY(), this.getZ(), this.getYaw(), this.getPitch());
-        queenBunnyEntity.setAiDisabled(this.isAiDisabled());
-
-        queenBunnyEntity.setVariant(variant);
-
-        if (this.hasCustomName()) {
-            queenBunnyEntity.setCustomName(this.getCustomName());
-            queenBunnyEntity.setCustomNameVisible(this.isCustomNameVisible());
-        }
-
-        queenBunnyEntity.setPersistent();
-        queenBunnyEntity.setOwnerUuid(this.getOwnerUuid());
-        queenBunnyEntity.setTamed(true);
-        queenBunnyEntity.setSitting(this.isSitting());
-        world.spawnEntity(queenBunnyEntity);
-        this.discard();
-    }
-
     @Override
     public void setTamed(boolean tamed) {
         super.setTamed(tamed);

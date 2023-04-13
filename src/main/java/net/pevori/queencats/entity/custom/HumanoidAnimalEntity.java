@@ -192,6 +192,12 @@ public abstract class HumanoidAnimalEntity extends TameableEntity implements Ext
         }
     }
 
+    public void setInventory(Inventory inventory){
+        for(int i = 0; i < inventory.size(); i++){
+            this.inventory.setStack(i, inventory.getStack(i));
+        }
+    }
+
     @Override
     public void writeScreenOpeningData(ServerPlayerEntity player, PacketByteBuf buf) {
         //Sends the entity id to pick it up later in the screenHandler and get back the entity reference.

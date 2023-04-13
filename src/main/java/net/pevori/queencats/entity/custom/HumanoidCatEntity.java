@@ -26,6 +26,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.pevori.queencats.entity.ModEntities;
 import net.pevori.queencats.entity.variant.HumanoidCatVariant;
 import net.pevori.queencats.item.ModItems;
 import net.pevori.queencats.sound.ModSounds;
@@ -60,6 +61,28 @@ public class HumanoidCatEntity extends HumanoidAnimalEntity implements GeoEntity
     public boolean isMogu(){
         String s = Formatting.strip(this.getName().getString());
         return (s != null && s.toLowerCase().contains(okayuSan));
+    }
+
+    public void startGrowth() {
+        HumanoidCatVariant variant = this.getVariant();
+        QueenCatEntity queenCatEntity = ModEntities.QUEEN_CAT.create(world);
+        queenCatEntity.refreshPositionAndAngles(this.getX(), this.getY(), this.getZ(), this.getYaw(), this.getPitch());
+        queenCatEntity.setAiDisabled(this.isAiDisabled());
+        queenCatEntity.setInventory(this.inventory);
+
+        queenCatEntity.setVariant(variant);
+
+        if (this.hasCustomName()) {
+            queenCatEntity.setCustomName(this.getCustomName());
+            queenCatEntity.setCustomNameVisible(this.isCustomNameVisible());
+        }
+
+        queenCatEntity.setPersistent();
+        queenCatEntity.setOwnerUuid(this.getOwnerUuid());
+        queenCatEntity.setTamed(true);
+        queenCatEntity.setSitting(this.isSitting());
+        world.spawnEntity(queenCatEntity);
+        this.discard();
     }
 
     private PlayState predicate(AnimationState animationState) {
