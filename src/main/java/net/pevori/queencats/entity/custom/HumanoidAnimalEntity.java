@@ -4,8 +4,12 @@ import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.LongDoorInteractGoal;
 import net.minecraft.entity.ai.pathing.MobNavigation;
+import net.minecraft.entity.mob.CreeperEntity;
+import net.minecraft.entity.mob.GhastEntity;
+import net.minecraft.entity.passive.HorseEntity;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -60,6 +64,25 @@ public abstract class HumanoidAnimalEntity extends TameableEntity implements Ext
     @Override
     public PassiveEntity createChild(ServerWorld world, PassiveEntity entity) {
         return null;
+    }
+
+    @Override
+    public boolean canAttackWithOwner(LivingEntity target, LivingEntity owner) {
+        if (target instanceof CreeperEntity || target instanceof GhastEntity) {
+            return false;
+        }
+        if (target instanceof HumanoidAnimalEntity) {
+            HumanoidAnimalEntity humanoidAnimalEntity = (HumanoidAnimalEntity) target;
+            return !humanoidAnimalEntity.isTamed() || humanoidAnimalEntity.getOwner() != owner;
+        }
+        if (target instanceof PlayerEntity && owner instanceof PlayerEntity
+                && !((PlayerEntity) owner).shouldDamagePlayer((PlayerEntity) target)) {
+            return false;
+        }
+        if (target instanceof HorseEntity && ((HorseEntity) target).isTame()) {
+            return false;
+        }
+        return !(target instanceof TameableEntity) || !((TameableEntity) target).isTamed();
     }
 
     @Override

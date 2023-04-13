@@ -172,33 +172,6 @@ public class HumanoidBunnyEntity extends HumanoidAnimalEntity implements GeoEnti
     }
 
     @Override
-    public boolean canAttackWithOwner(LivingEntity target, LivingEntity owner) {
-        if (target instanceof CreeperEntity || target instanceof GhastEntity) {
-            return false;
-        }
-        if (target instanceof HumanoidBunnyEntity) {
-            HumanoidBunnyEntity humanoidBunnyEntity = (HumanoidBunnyEntity) target;
-            return !humanoidBunnyEntity.isTamed() || humanoidBunnyEntity.getOwner() != owner;
-        }
-        if (target instanceof HumanoidCatEntity) {
-            HumanoidCatEntity humanoidCatEntity = (HumanoidCatEntity) target;
-            return !humanoidCatEntity.isTamed() || humanoidCatEntity.getOwner() != owner;
-        }
-        if (target instanceof HumanoidDogEntity) {
-            HumanoidDogEntity humanoidDogEntity = (HumanoidDogEntity) target;
-            return !humanoidDogEntity.isTamed() || humanoidDogEntity.getOwner() != owner;
-        }
-        if (target instanceof PlayerEntity && owner instanceof PlayerEntity
-                && !((PlayerEntity) owner).shouldDamagePlayer((PlayerEntity) target)) {
-            return false;
-        }
-        if (target instanceof HorseEntity && ((HorseEntity) target).isTame()) {
-            return false;
-        }
-        return !(target instanceof TameableEntity) || !((TameableEntity) target).isTamed();
-    }
-
-    @Override
     public void writeCustomDataToNbt(NbtCompound nbt) {
         super.writeCustomDataToNbt(nbt);
         nbt.putBoolean("isSitting", this.dataTracker.get(SITTING));
