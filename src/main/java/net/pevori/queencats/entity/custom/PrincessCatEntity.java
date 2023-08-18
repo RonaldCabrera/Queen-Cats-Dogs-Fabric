@@ -72,31 +72,6 @@ public class PrincessCatEntity extends HumanoidCatEntity{
     }
 
     @Override
-    protected SoundEvent getAmbientSound() {
-        return ModSounds.HUMANOID_CAT_AMBIENT;
-    }
-
-    @Override
-    public SoundEvent getEatSound(ItemStack stack) {
-        return ModSounds.HUMANOID_CAT_EAT;
-    }
-
-    @Override
-    protected SoundEvent getHurtSound(DamageSource source) {
-        return ModSounds.HUMANOID_CAT_HURT;
-    }
-
-    @Override
-    protected SoundEvent getDeathSound() {
-        return ModSounds.HUMANOID_CAT_DEATH;
-    }
-
-    @Override
-    protected void playStepSound(BlockPos pos, BlockState state) {
-        this.playSound(SoundEvents.ENTITY_WOLF_STEP, 0.15f, 1.0f);
-    }
-
-    @Override
     public ActionResult interactMob(PlayerEntity player, Hand hand) {
         ItemStack itemstack = player.getStackInHand(hand);
         Item item = itemstack.getItem();
@@ -145,7 +120,7 @@ public class PrincessCatEntity extends HumanoidCatEntity{
                         this.setHealth(getMaxHealth());
                     }
 
-                    this.playSound(ModSounds.HUMANOID_CAT_EAT, 1.0f, 1.0f);
+                    this.playSound(this.getEatSound(itemstack), 1.0f, 1.0f);
                 }
 
                 return ActionResult.SUCCESS;
@@ -161,6 +136,8 @@ public class PrincessCatEntity extends HumanoidCatEntity{
                 }
 
                 if (!this.world.isClient()) {
+                    this.playSound(this.getEatSound(itemstack), 1.0f, 1.0f);
+
                     super.setOwner(player);
                     this.navigation.recalculatePath();
                     this.setTarget(null);

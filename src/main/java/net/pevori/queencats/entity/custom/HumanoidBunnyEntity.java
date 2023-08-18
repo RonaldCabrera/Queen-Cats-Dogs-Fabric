@@ -26,6 +26,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.pevori.queencats.config.QueenCatsConfig;
 import net.pevori.queencats.entity.ModEntities;
 import net.pevori.queencats.entity.variant.HumanoidBunnyVariant;
 import net.pevori.queencats.item.ModItems;
@@ -99,21 +100,37 @@ public class HumanoidBunnyEntity extends HumanoidAnimalEntity implements IAnimat
 
     @Override
     protected SoundEvent getAmbientSound() {
+        if(!QueenCatsConfig.enableHumanoidBunnySounds){
+            return ModSounds.HUMANOID_ENTITY_SILENT;
+        }
+
         return ModSounds.HUMANOID_BUNNY_AMBIENT;
     }
 
     @Override
     public SoundEvent getEatSound(ItemStack stack) {
+        if(!QueenCatsConfig.enableHumanoidBunnySounds){
+            return ModSounds.HUMANOID_ENTITY_SILENT;
+        }
+
         return ModSounds.HUMANOID_BUNNY_EAT;
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
+        if(!QueenCatsConfig.enableHumanoidBunnySounds){
+            return ModSounds.HUMANOID_ENTITY_SILENT;
+        }
+
         return ModSounds.HUMANOID_BUNNY_HURT;
     }
 
     @Override
     protected SoundEvent getDeathSound() {
+        if(!QueenCatsConfig.enableHumanoidBunnySounds){
+            return ModSounds.HUMANOID_ENTITY_SILENT;
+        }
+
         return ModSounds.HUMANOID_BUNNY_DEATH;
     }
 
@@ -175,33 +192,6 @@ public class HumanoidBunnyEntity extends HumanoidAnimalEntity implements IAnimat
     }
 
     @Override
-    public boolean canAttackWithOwner(LivingEntity target, LivingEntity owner) {
-        if (target instanceof CreeperEntity || target instanceof GhastEntity) {
-            return false;
-        }
-        if (target instanceof HumanoidBunnyEntity) {
-            HumanoidBunnyEntity humanoidBunnyEntity = (HumanoidBunnyEntity) target;
-            return !humanoidBunnyEntity.isTamed() || humanoidBunnyEntity.getOwner() != owner;
-        }
-        if (target instanceof HumanoidCatEntity) {
-            HumanoidCatEntity humanoidCatEntity = (HumanoidCatEntity) target;
-            return !humanoidCatEntity.isTamed() || humanoidCatEntity.getOwner() != owner;
-        }
-        if (target instanceof HumanoidDogEntity) {
-            HumanoidDogEntity humanoidDogEntity = (HumanoidDogEntity) target;
-            return !humanoidDogEntity.isTamed() || humanoidDogEntity.getOwner() != owner;
-        }
-        if (target instanceof PlayerEntity && owner instanceof PlayerEntity
-                && !((PlayerEntity) owner).shouldDamagePlayer((PlayerEntity) target)) {
-            return false;
-        }
-        if (target instanceof HorseEntity && ((HorseEntity) target).isTame()) {
-            return false;
-        }
-        return !(target instanceof TameableEntity) || !((TameableEntity) target).isTamed();
-    }
-
-    @Override
     public void writeCustomDataToNbt(NbtCompound nbt) {
         super.writeCustomDataToNbt(nbt);
         nbt.putBoolean("isSitting", this.dataTracker.get(SITTING));
@@ -236,7 +226,7 @@ public class HumanoidBunnyEntity extends HumanoidAnimalEntity implements IAnimat
         return this.dataTracker.get(DATA_ID_TYPE_VARIANT);
     }
 
-    protected void setVariant(HumanoidBunnyVariant variant) {
+    public void setVariant(HumanoidBunnyVariant variant) {
         this.dataTracker.set(DATA_ID_TYPE_VARIANT, variant.getId() & 255);
     }
 }

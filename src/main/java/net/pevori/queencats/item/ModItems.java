@@ -27,32 +27,42 @@ public class ModItems {
 
     public static final Item QUEEN_CAT_SPAWN_EGG = registerItem("queen_cat_spawn_egg",
         new SpawnEggItem(ModEntities.QUEEN_CAT, 0xF3F7FA, 0xB9EDFE,
-        new FabricItemSettings().group(ModItemGroup.QUEENCATS).maxCount(1))
+        new FabricItemSettings().group(ModItemGroup.QUEENCATS))
     );
 
     public static final Item PRINCESS_CAT_SPAWN_EGG = registerItem("princess_cat_spawn_egg",
         new SpawnEggItem(ModEntities.PRINCESS_CAT, 0xF3F7FA, 0xB9EDFE,
-        new FabricItemSettings().group(ModItemGroup.QUEENCATS).maxCount(1))
+        new FabricItemSettings().group(ModItemGroup.QUEENCATS))
     );
 
     public static final Item QUEEN_DOG_SPAWN_EGG = registerItem("queen_dog_spawn_egg",
         new SpawnEggItem(ModEntities.QUEEN_DOG, 0xF3F7FA, 0x844204,
-        new FabricItemSettings().group(ModItemGroup.QUEENCATS).maxCount(1))
+        new FabricItemSettings().group(ModItemGroup.QUEENCATS))
     );
 
     public static final Item PRINCESS_DOG_SPAWN_EGG = registerItem("princess_dog_spawn_egg",
         new SpawnEggItem(ModEntities.PRINCESS_DOG, 0xF3F7FA, 0x844204,
-        new FabricItemSettings().group(ModItemGroup.QUEENCATS).maxCount(1))
+        new FabricItemSettings().group(ModItemGroup.QUEENCATS))
     );
 
     public static final Item QUEEN_BUNNY_SPAWN_EGG = registerItem("queen_bunny_spawn_egg",
             new SpawnEggItem(ModEntities.QUEEN_BUNNY, 0xF3F7FA, 0xA020F0,
-                    new FabricItemSettings().group(ModItemGroup.QUEENCATS).maxCount(1))
+                    new FabricItemSettings().group(ModItemGroup.QUEENCATS))
     );
 
     public static final Item PRINCESS_BUNNY_SPAWN_EGG = registerItem("princess_bunny_spawn_egg",
             new SpawnEggItem(ModEntities.PRINCESS_BUNNY, 0xF3F7FA, 0xDB68ED,
-                    new FabricItemSettings().group(ModItemGroup.QUEENCATS).maxCount(1))
+                    new FabricItemSettings().group(ModItemGroup.QUEENCATS))
+    );
+
+    public static final Item QUEEN_COW_SPAWN_EGG = registerItem("queen_cow_spawn_egg",
+            new SpawnEggItem(ModEntities.QUEEN_COW, 0xF3F7FA, 0x403424,
+                    new FabricItemSettings().group(ModItemGroup.QUEENCATS))
+    );
+
+    public static final Item PRINCESS_COW_SPAWN_EGG = registerItem("princess_cow_spawn_egg",
+            new SpawnEggItem(ModEntities.PRINCESS_COW, 0xF3F7FA, 0x1D140E,
+                    new FabricItemSettings().group(ModItemGroup.QUEENCATS))
     );
 
     private static Item registerItem(String name, Item item){

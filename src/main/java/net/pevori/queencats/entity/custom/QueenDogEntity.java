@@ -131,7 +131,7 @@ public class QueenDogEntity extends HumanoidDogEntity{
                         this.setHealth(getMaxHealth());
                     }
 
-                    this.playSound(ModSounds.HUMANOID_CAT_EAT, 1.0f, 1.0f);
+                    this.playSound(this.getEatSound(itemstack), 1.0f, 1.0f);
                 }
 
                 return ActionResult.SUCCESS;
@@ -147,7 +147,8 @@ public class QueenDogEntity extends HumanoidDogEntity{
                 }
 
                 if (!this.world.isClient()) {
-                    this.playSound(ModSounds.HUMANOID_DOG_EAT, 1.0f, 1.0f);
+                    this.playSound(this.getEatSound(itemstack), 1.0f, 1.0f);
+
                     super.setOwner(player);
                     this.navigation.recalculatePath();
                     this.setTarget(null);

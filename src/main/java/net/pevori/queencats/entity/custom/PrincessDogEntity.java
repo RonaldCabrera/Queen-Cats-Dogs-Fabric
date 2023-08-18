@@ -70,34 +70,6 @@ public class PrincessDogEntity extends HumanoidDogEntity{
         this.targetSelector.add(2, new AttackWithOwnerGoal(this));
         this.targetSelector.add(4, new ActiveTargetGoal<>(this, AbstractSkeletonEntity.class, false));
     }
-    @Override
-    protected SoundEvent getAmbientSound() {
-        if (this.isAttacking()) {
-            return ModSounds.HUMANOID_DOG_ANGRY;
-        }
-
-        return ModSounds.HUMANOID_DOG_AMBIENT;
-    }
-
-    @Override
-    public SoundEvent getEatSound(ItemStack stack) {
-        return ModSounds.HUMANOID_DOG_EAT;
-    }
-
-    @Override
-    protected SoundEvent getHurtSound(DamageSource source) {
-        return ModSounds.HUMANOID_DOG_HURT;
-    }
-
-    @Override
-    protected SoundEvent getDeathSound() {
-        return ModSounds.HUMANOID_DOG_DEATH;
-    }
-
-    @Override
-    protected void playStepSound(BlockPos pos, BlockState state) {
-        this.playSound(SoundEvents.ENTITY_WOLF_STEP, 0.15f, 1.0f);
-    }
 
     @Override
     public ActionResult interactMob(PlayerEntity player, Hand hand) {
@@ -146,7 +118,7 @@ public class PrincessDogEntity extends HumanoidDogEntity{
                         this.setHealth(getMaxHealth());
                     }
 
-                    this.playSound(ModSounds.HUMANOID_DOG_EAT, 1.0f, 1.0f);
+                    this.playSound(this.getEatSound(itemstack), 1.0f, 1.0f);
                 }
 
                 return ActionResult.SUCCESS;
@@ -162,6 +134,8 @@ public class PrincessDogEntity extends HumanoidDogEntity{
                 }
 
                 if (!this.world.isClient()) {
+                    this.playSound(this.getEatSound(itemstack), 1.0f, 1.0f);
+
                     super.setOwner(player);
                     this.navigation.recalculatePath();
                     this.setTarget(null);

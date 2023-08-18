@@ -142,6 +142,7 @@ public class PrincessBunnyEntity extends HumanoidBunnyEntity{
                 }
 
                 if (!this.world.isClient()) {
+                    this.playSound(this.getEatSound(itemstack), 1.0f, 1.0f);
                     super.setOwner(player);
                     this.navigation.recalculatePath();
                     this.setTarget(null);
