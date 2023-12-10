@@ -26,6 +26,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.pevori.queencats.config.QueenCatsConfig;
 import net.pevori.queencats.entity.ModEntities;
 import net.pevori.queencats.entity.variant.HumanoidBunnyVariant;
 import net.pevori.queencats.item.ModItems;
@@ -99,21 +100,37 @@ public class HumanoidBunnyEntity extends HumanoidAnimalEntity implements IAnimat
 
     @Override
     protected SoundEvent getAmbientSound() {
+        if(!QueenCatsConfig.enableHumanoidBunnySounds){
+            return ModSounds.HUMANOID_ENTITY_SILENT;
+        }
+
         return ModSounds.HUMANOID_BUNNY_AMBIENT;
     }
 
     @Override
     public SoundEvent getEatSound(ItemStack stack) {
+        if(!QueenCatsConfig.enableHumanoidBunnySounds){
+            return ModSounds.HUMANOID_ENTITY_SILENT;
+        }
+
         return ModSounds.HUMANOID_BUNNY_EAT;
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
+        if(!QueenCatsConfig.enableHumanoidBunnySounds){
+            return ModSounds.HUMANOID_ENTITY_SILENT;
+        }
+
         return ModSounds.HUMANOID_BUNNY_HURT;
     }
 
     @Override
     protected SoundEvent getDeathSound() {
+        if(!QueenCatsConfig.enableHumanoidBunnySounds){
+            return ModSounds.HUMANOID_ENTITY_SILENT;
+        }
+
         return ModSounds.HUMANOID_BUNNY_DEATH;
     }
 
@@ -209,7 +226,7 @@ public class HumanoidBunnyEntity extends HumanoidAnimalEntity implements IAnimat
         return this.dataTracker.get(DATA_ID_TYPE_VARIANT);
     }
 
-    protected void setVariant(HumanoidBunnyVariant variant) {
+    public void setVariant(HumanoidBunnyVariant variant) {
         this.dataTracker.set(DATA_ID_TYPE_VARIANT, variant.getId() & 255);
     }
 }

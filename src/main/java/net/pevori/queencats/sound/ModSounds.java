@@ -22,6 +22,14 @@ public class ModSounds {
     public static SoundEvent HUMANOID_BUNNY_HURT = registerSoundEvent("humanoid_bunny_hurt");
     public static SoundEvent HUMANOID_BUNNY_DEATH = registerSoundEvent("humanoid_bunny_death");
 
+    public static SoundEvent HUMANOID_COW_AMBIENT = registerSoundEvent("humanoid_cow_ambient");
+    public static SoundEvent HUMANOID_COW_EAT = registerSoundEvent("humanoid_cow_eat");
+    public static SoundEvent HUMANOID_COW_HURT = registerSoundEvent("humanoid_cow_hurt");
+    public static SoundEvent HUMANOID_COW_DEATH = registerSoundEvent("humanoid_cow_death");
+    public static SoundEvent HUMANOID_COW_MILK = registerSoundEvent("humanoid_cow_milk");
+
+    public static SoundEvent HUMANOID_ENTITY_SILENT = registerSoundEvent("humanoid_entity_silent");
+
     private static SoundEvent registerSoundEvent(String name){
         Identifier id = new Identifier(QueenCats.MOD_ID, name);
         return Registry.register(Registry.SOUND_EVENT, id, new SoundEvent(id));

@@ -26,6 +26,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.pevori.queencats.config.QueenCatsConfig;
 import net.pevori.queencats.entity.ModEntities;
 import net.pevori.queencats.entity.variant.HumanoidCatVariant;
 import net.pevori.queencats.item.ModItems;
@@ -124,21 +125,37 @@ public class HumanoidCatEntity extends HumanoidAnimalEntity implements IAnimatab
 
     @Override
     protected SoundEvent getAmbientSound() {
+        if(!QueenCatsConfig.enableHumanoidCatSounds){
+            return ModSounds.HUMANOID_ENTITY_SILENT;
+        }
+
         return ModSounds.HUMANOID_CAT_AMBIENT;
     }
 
     @Override
     public SoundEvent getEatSound(ItemStack stack) {
+        if(!QueenCatsConfig.enableHumanoidCatSounds){
+            return ModSounds.HUMANOID_ENTITY_SILENT;
+        }
+
         return ModSounds.HUMANOID_CAT_EAT;
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
+        if(!QueenCatsConfig.enableHumanoidCatSounds){
+            return ModSounds.HUMANOID_ENTITY_SILENT;
+        }
+
         return ModSounds.HUMANOID_CAT_HURT;
     }
 
     @Override
     protected SoundEvent getDeathSound() {
+        if(!QueenCatsConfig.enableHumanoidCatSounds){
+            return ModSounds.HUMANOID_ENTITY_SILENT;
+        }
+
         return ModSounds.HUMANOID_CAT_DEATH;
     }
 
@@ -216,7 +233,7 @@ public class HumanoidCatEntity extends HumanoidAnimalEntity implements IAnimatab
         return this.dataTracker.get(DATA_ID_TYPE_VARIANT);
     }
 
-    protected void setVariant(HumanoidCatVariant variant) {
+    public void setVariant(HumanoidCatVariant variant) {
         this.dataTracker.set(DATA_ID_TYPE_VARIANT, variant.getId() & 255);
     }
 }

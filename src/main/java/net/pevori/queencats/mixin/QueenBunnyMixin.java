@@ -2,6 +2,7 @@ package net.pevori.queencats.mixin;
 
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.passive.AnimalEntity;
+import net.minecraft.entity.passive.CowEntity;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.passive.RabbitEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -9,9 +10,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Util;
 import net.minecraft.world.World;
 import net.pevori.queencats.entity.ModEntities;
-import net.pevori.queencats.entity.custom.QueenBunnyEntity;
+import net.pevori.queencats.entity.custom.*;
+import net.pevori.queencats.entity.variant.HumanoidBunnyVariant;
 import net.pevori.queencats.item.ModItems;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -41,25 +44,37 @@ public abstract class QueenBunnyMixin extends AnimalEntity{
                 player.getStackInHand(hand).decrement(1);
             }
 
-            QueenBunnyEntity queenBunnyEntity = ModEntities.QUEEN_BUNNY.create(thisRabbit.world);
-            queenBunnyEntity.refreshPositionAndAngles(thisRabbit.getX(), thisRabbit.getY(), thisRabbit.getZ(), thisRabbit.getYaw(), thisRabbit.getPitch());
-            queenBunnyEntity.setAiDisabled(thisRabbit.isAiDisabled());
-
-            if (thisRabbit.hasCustomName()) {
-                queenBunnyEntity.setCustomName(thisRabbit.getCustomName());
-                queenBunnyEntity.setCustomNameVisible(thisRabbit.isCustomNameVisible());
+            if(thisRabbit.isBaby()){
+                PrincessBunnyEntity princessBunnyEntity = ModEntities.PRINCESS_BUNNY.create(thisRabbit.world);
+                spawnHumanoidBunny(princessBunnyEntity, thisRabbit, player);
             }
-
-            queenBunnyEntity.setPersistent();
-            queenBunnyEntity.setOwnerUuid(player.getUuid());
-            queenBunnyEntity.setTamed(true);
-            queenBunnyEntity.setSit(true);
-            thisRabbit.world.spawnEntity(queenBunnyEntity);
-            thisRabbit.discard();
+            else {
+                QueenBunnyEntity queenBunnyEntity = ModEntities.QUEEN_BUNNY.create(thisRabbit.world);
+                spawnHumanoidBunny(queenBunnyEntity, thisRabbit, player);
+            }
         }
 
         return super.interactMob(player, hand);
     }
 
+    public void spawnHumanoidBunny(HumanoidBunnyEntity humanoidBunnyEntity, RabbitEntity rabbitEntity, PlayerEntity player){
+        humanoidBunnyEntity.refreshPositionAndAngles(rabbitEntity.getX(), rabbitEntity.getY(), rabbitEntity.getZ(), rabbitEntity.getYaw(), rabbitEntity.getPitch());
+        humanoidBunnyEntity.setAiDisabled(rabbitEntity.isAiDisabled());
 
+        if (rabbitEntity.hasCustomName()) {
+            humanoidBunnyEntity.setCustomName(rabbitEntity.getCustomName());
+            humanoidBunnyEntity.setCustomNameVisible(rabbitEntity.isCustomNameVisible());
+        }
+
+        humanoidBunnyEntity.setPersistent();
+        humanoidBunnyEntity.setOwnerUuid(player.getUuid());
+        humanoidBunnyEntity.setTamed(true);
+        humanoidBunnyEntity.setSit(true);
+
+        HumanoidBunnyVariant variant = Util.getRandom(HumanoidBunnyVariant.values(), this.random);
+        humanoidBunnyEntity.setVariant(variant);
+
+        rabbitEntity.world.spawnEntity(humanoidBunnyEntity);
+        rabbitEntity.discard();
+    }
 }

@@ -2,10 +2,7 @@ package net.pevori.queencats.util;
 
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.pevori.queencats.entity.ModEntities;
-import net.pevori.queencats.entity.custom.PrincessCatEntity;
-import net.pevori.queencats.entity.custom.PrincessDogEntity;
-import net.pevori.queencats.entity.custom.QueenCatEntity;
-import net.pevori.queencats.entity.custom.QueenDogEntity;
+import net.pevori.queencats.entity.custom.*;
 import net.pevori.queencats.screen.HumanoidAnimalScreenRegistries;
 import net.pevori.queencats.sound.ModSounds;
 
@@ -23,8 +20,11 @@ public class ModRegistries {
         FabricDefaultAttributeRegistry.register(ModEntities.QUEEN_DOG, QueenDogEntity.setAttributes());
         FabricDefaultAttributeRegistry.register(ModEntities.PRINCESS_DOG, PrincessDogEntity.setAttributes());
 
-        FabricDefaultAttributeRegistry.register(ModEntities.QUEEN_BUNNY, QueenDogEntity.setAttributes());
-        FabricDefaultAttributeRegistry.register(ModEntities.PRINCESS_BUNNY, PrincessDogEntity.setAttributes());
+        FabricDefaultAttributeRegistry.register(ModEntities.QUEEN_BUNNY, QueenBunnyEntity.setAttributes());
+        FabricDefaultAttributeRegistry.register(ModEntities.PRINCESS_BUNNY, PrincessBunnyEntity.setAttributes());
+
+        FabricDefaultAttributeRegistry.register(ModEntities.QUEEN_COW, QueenCowEntity.setAttributes());
+        FabricDefaultAttributeRegistry.register(ModEntities.PRINCESS_COW, PrincessCowEntity.setAttributes());
     }
 
     private static void registerSounds(){

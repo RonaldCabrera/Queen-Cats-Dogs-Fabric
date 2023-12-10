@@ -44,4 +44,14 @@ public class ModEntities {
             Registry.ENTITY_TYPE, new Identifier(QueenCats.MOD_ID, "princess_bunny"),
             FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, PrincessBunnyEntity::new)
                     .dimensions(EntityDimensions.fixed(princessSizeWidth, princessSizeHeight)).build());
+
+    public static final EntityType<QueenCowEntity> QUEEN_COW = Registry.register(
+            Registry.ENTITY_TYPE, new Identifier(QueenCats.MOD_ID, "queen_cow"),
+            FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, QueenCowEntity::new)
+                    .dimensions(EntityDimensions.fixed(queenSizeWidth, queenSizeHeight)).build());
+
+    public static final EntityType<PrincessCowEntity> PRINCESS_COW = Registry.register(
+            Registry.ENTITY_TYPE, new Identifier(QueenCats.MOD_ID, "princess_cow"),
+            FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, PrincessCowEntity::new)
+                    .dimensions(EntityDimensions.fixed(princessSizeWidth, princessSizeHeight)).build());
 }

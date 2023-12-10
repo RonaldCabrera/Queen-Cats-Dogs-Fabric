@@ -1,65 +1,49 @@
 package net.pevori.queencats.screen;
 
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
+import net.minecraft.item.*;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.screen.slot.SlotActionType;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.pevori.queencats.QueenCats;
 import net.pevori.queencats.entity.custom.HumanoidAnimalEntity;
 
 public class HumanoidAnimalScreenHandler extends ScreenHandler {
-    private final Inventory inventory;
+    private Inventory inventory;
     private int entityId;
     private HumanoidAnimalEntity entity;
 
+    // Client ScreenHandler Initializer
     public HumanoidAnimalScreenHandler(int syncId, PlayerInventory playerInventory, PacketByteBuf buf) {
-        this(syncId, playerInventory, new SimpleInventory(19));
+        this(syncId, playerInventory, (HumanoidAnimalEntity) MinecraftClient.getInstance().world.getEntityById(buf.readInt()));
+        //super(HumanoidAnimalScreenRegistries.HUMANOID_ANIMAL_SCREEN_HANDLER, syncId);
+        //this(syncId, playerInventory, new SimpleInventory(19));
 
-        entityId = buf.readInt();
-        this.entity = (HumanoidAnimalEntity) playerInventory.player.world.getEntityById(entityId);
+        this.entityId = buf.readInt();
+
+        this.inventory = new SimpleInventory(19);
+        this.entity = (HumanoidAnimalEntity) MinecraftClient.getInstance().world.getEntityById(entityId);
+        this.inventory.onOpen(playerInventory.player);
     }
 
-    public HumanoidAnimalScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory) {
+    // Server ScreenHandler Initializer
+    public HumanoidAnimalScreenHandler(int syncId, PlayerInventory playerInventory, HumanoidAnimalEntity entity) {
         super(HumanoidAnimalScreenRegistries.HUMANOID_ANIMAL_SCREEN_HANDLER, syncId);
+        Inventory entityInventory = entity.getInventory();
+        checkSize(entityInventory, 19);
+        this.inventory = entityInventory;
 
-        checkSize(inventory, 19);
-        this.inventory = inventory;
-
-        inventory.onOpen(playerInventory.player);
-
-        //This will add the slot to place the armor in the HumanoidAnimal inventory.
-        Slot customSlot = getCustomArmorSlot();
-        this.addSlot(customSlot);
-
-        //This will place the slot in the correct locations for a 4x5 Grid. The slots exist on both server and client!
-        //This will not render the background of the slots however, this is the Screens job
-        int m, l;
-        //The Humanoid Animal´s inventory
-        for (m = 0; m < 3; ++m) {
-            for (l = 0; l < getInventoryColumns(); ++l) {
-                this.addSlot(new Slot(inventory, 1 + l + m * getInventoryColumns(), 62 + l * 18, 18 + m * 18));
-            }
-        }
-
-        //The player inventory
-        for (m = 0; m < 3; ++m) {
-            for (l = 0; l < 9; ++l) {
-                this.addSlot(new Slot(playerInventory, l + m * 9 + 9, 8 + l * 18, 84 + m * 18));
-            }
-        }
-
-        //The player Hotbar
-        for (m = 0; m < 9; ++m) {
-            this.addSlot(new Slot(playerInventory, m, 8 + m * 18, 142));
-        }
-
+        this.addSlot(getCustomArmorSlot());
+        this.addHumanoidAnimalInventory();
+        this.addPlayerInventory(playerInventory);
     }
 
     @Override
@@ -95,8 +79,6 @@ public class HumanoidAnimalScreenHandler extends ScreenHandler {
     @Override
     public void close(PlayerEntity player) {
         super.close(player);
-        this.inventory.markDirty();
-
         this.inventory.onClose(player);
     }
 
@@ -108,7 +90,6 @@ public class HumanoidAnimalScreenHandler extends ScreenHandler {
         return 6;
     }
 
-    // Generates the new armor slot trying to avoid null exceptions.
     public Slot getCustomArmorSlot(){
         return new Slot(inventory, 0, 8, 36) {
             public boolean canInsert(ItemStack stack) {
@@ -122,31 +103,48 @@ public class HumanoidAnimalScreenHandler extends ScreenHandler {
             public int getMaxItemCount() {
                 return 1;
             }
+
+            /*@Override
+            public void setStack(ItemStack stack) {
+                super.setStack(stack);
+                entity.equipArmor(stack);
+            }*/
         };
     }
 
     public boolean isValidArmor(ItemStack itemStack){
-        return Ingredient.ofItems(Items.LEATHER_CHESTPLATE, Items.CHAINMAIL_CHESTPLATE, Items.GOLDEN_CHESTPLATE,
-                Items.IRON_CHESTPLATE, Items.DIAMOND_CHESTPLATE, Items.NETHERITE_CHESTPLATE).test(itemStack);
+        return itemStack.getItem() instanceof ArmorItem item && item.getSlotType() == EquipmentSlot.CHEST;
     }
 
-    @Override
-    public void onSlotClick(int slotIndex, int button, SlotActionType actionType, PlayerEntity player) {
-        super.onSlotClick(slotIndex, button, actionType, player);
-        ItemStack itemStack = inventory.getStack(slotIndex);
-
-        if(entity == null){
-            entity = (HumanoidAnimalEntity) player.world.getEntityById(entityId);
-        }
-
-        if (slotIndex == 0 && actionType == SlotActionType.PICKUP){
-            // If the slot was empty, equip the armor on the entity
-            if(itemStack.isEmpty()){
-                entity.unEquipArmor();
-            }
-            else {
-                entity.equipArmor(itemStack);
+    public void addHumanoidAnimalInventory(){
+        int m, l;
+        //The Humanoid Animal´s inventory
+        for (m = 0; m < 3; ++m) {
+            for (l = 0; l < getInventoryColumns(); ++l) {
+                this.addSlot(new Slot(inventory, 1 + l + m * getInventoryColumns(), 62 + l * 18, 18 + m * 18));
             }
         }
+    }
+
+    public void addPlayerInventory(PlayerInventory playerInventory){
+        int m, l;
+
+        //The player inventory
+        for (m = 0; m < 3; ++m) {
+            for (l = 0; l < 9; ++l) {
+                this.addSlot(new Slot(playerInventory, l + m * 9 + 9, 8 + l * 18, 84 + m * 18));
+            }
+        }
+
+        //The player Hotbar
+        for (m = 0; m < 9; ++m) {
+            this.addSlot(new Slot(playerInventory, m, 8 + m * 18, 142));
+        }
+    }
+
+    public HumanoidAnimalEntity getEntityServerSide(PacketByteBuf buf){
+        HumanoidAnimalEntity humanoidAnimal = (HumanoidAnimalEntity) MinecraftClient.getInstance().world.getEntityById(buf.readInt());
+        this.entity = humanoidAnimal;
+        return humanoidAnimal;
     }
 }
