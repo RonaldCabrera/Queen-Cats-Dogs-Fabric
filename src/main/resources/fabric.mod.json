@@ -25,6 +25,9 @@
     ],
     "client": [
       "net.pevori.queencats.QueenCatsClient"
+    ],
+    "modmenu": [
+      "net.pevori.queencats.config.QueenCatsModMenuIntegration"
     ]
   },
   "mixins": [
