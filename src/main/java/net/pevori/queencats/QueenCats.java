@@ -1,11 +1,10 @@
 package net.pevori.queencats;
 
+import eu.midnightdust.lib.config.MidnightConfig;
 import net.fabricmc.api.ModInitializer;
-import net.minecraft.client.gui.screen.ingame.HandledScreens;
+import net.pevori.queencats.config.QueenCatsConfig;
 import net.pevori.queencats.item.ModItemGroup;
 import net.pevori.queencats.item.ModItems;
-import net.pevori.queencats.screen.HumanoidAnimalScreen;
-import net.pevori.queencats.screen.HumanoidAnimalScreenRegistries;
 import net.pevori.queencats.util.ModRegistries;
 
 import org.slf4j.Logger;
@@ -19,7 +18,7 @@ public class QueenCats implements ModInitializer {
 	public void onInitialize() {
 		ModItemGroup.registerItemGroup();
 		ModItems.registerModItems();
-
 		ModRegistries.registerQueenCats();
+		MidnightConfig.init(MOD_ID, QueenCatsConfig.class);
 	}
 }

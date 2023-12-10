@@ -70,6 +70,7 @@ public class QueenDogEntity extends HumanoidDogEntity{
         this.goalSelector.add(5, new WanderAroundFarGoal(this, 1.0, 1));
         this.goalSelector.add(6, new LookAroundGoal(this));
         this.goalSelector.add(6, new LookAtEntityGoal(this, PlayerEntity.class, 8.0f));
+
         this.targetSelector.add(1, new TrackOwnerAttackerGoal(this));
         this.targetSelector.add(2, new AttackWithOwnerGoal(this));
         this.targetSelector.add(4, new ActiveTargetGoal<>(this, AbstractSkeletonEntity.class, false));

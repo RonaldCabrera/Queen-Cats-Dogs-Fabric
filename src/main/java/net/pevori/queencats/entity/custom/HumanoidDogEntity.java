@@ -26,6 +26,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.pevori.queencats.config.QueenCatsConfig;
 import net.pevori.queencats.entity.ModEntities;
 import net.pevori.queencats.entity.variant.HumanoidDogVariant;
 import net.pevori.queencats.item.ModItems;
@@ -35,6 +36,8 @@ import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache
 import software.bernie.geckolib.core.animatable.instance.SingletonAnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.*;
 import software.bernie.geckolib.core.object.PlayState;
+
+import static net.pevori.queencats.sound.ModSounds.soundEventByConfig;
 
 public class HumanoidDogEntity extends HumanoidAnimalEntity implements GeoEntity {
     private AnimatableInstanceCache factory = new SingletonAnimatableInstanceCache(this);
@@ -98,9 +101,9 @@ public class HumanoidDogEntity extends HumanoidAnimalEntity implements GeoEntity
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController(this, "controller",
+        controllers.add(new AnimationController<>(this, "controller",
                 0, this::predicate));
-        controllers.add(new AnimationController(this, "attackController",
+        controllers.add(new AnimationController<>(this, "attackController",
                 0, this::attackPredicate));
     }
 
@@ -111,28 +114,27 @@ public class HumanoidDogEntity extends HumanoidAnimalEntity implements GeoEntity
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return ModSounds.HUMANOID_DOG_AMBIENT;
+        if(this.isAttacking()){
+            return soundEventByConfig(QueenCatsConfig.enableHumanoidDogSounds, ModSounds.HUMANOID_DOG_ANGRY);
+        }
+
+        return soundEventByConfig(QueenCatsConfig.enableHumanoidDogSounds, ModSounds.HUMANOID_DOG_AMBIENT);
     }
 
     @Override
     public SoundEvent getEatSound(ItemStack stack) {
-        return ModSounds.HUMANOID_DOG_EAT;
+        return soundEventByConfig(QueenCatsConfig.enableHumanoidDogSounds, ModSounds.HUMANOID_DOG_EAT);
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return ModSounds.HUMANOID_DOG_HURT;
+        return soundEventByConfig(QueenCatsConfig.enableHumanoidDogSounds, ModSounds.HUMANOID_DOG_HURT);
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return ModSounds.HUMANOID_DOG_DEATH;
+        return soundEventByConfig(QueenCatsConfig.enableHumanoidDogSounds, ModSounds.HUMANOID_DOG_DEATH);
     }
-
-    /*@Override
-    protected SoundEvent getAttackSound(){
-        return ModSounds.HUMANOID_DOG_ANGRY;
-    }*/
 
     @Override
     protected void playStepSound(BlockPos pos, BlockState state) {
@@ -220,7 +222,7 @@ public class HumanoidDogEntity extends HumanoidAnimalEntity implements GeoEntity
         return this.dataTracker.get(DATA_ID_TYPE_VARIANT);
     }
 
-    protected void setVariant(HumanoidDogVariant variant) {
+    public void setVariant(HumanoidDogVariant variant) {
         this.dataTracker.set(DATA_ID_TYPE_VARIANT, variant.getId() & 255);
     }
 }

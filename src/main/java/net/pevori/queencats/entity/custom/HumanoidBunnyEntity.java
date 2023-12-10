@@ -26,6 +26,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.pevori.queencats.config.QueenCatsConfig;
 import net.pevori.queencats.entity.ModEntities;
 import net.pevori.queencats.entity.variant.HumanoidBunnyVariant;
 import net.pevori.queencats.item.ModItems;
@@ -36,6 +37,8 @@ import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache
 import software.bernie.geckolib.core.animatable.instance.SingletonAnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.*;
 import software.bernie.geckolib.core.object.PlayState;
+
+import static net.pevori.queencats.sound.ModSounds.soundEventByConfig;
 
 public class HumanoidBunnyEntity extends HumanoidAnimalEntity implements GeoEntity {
     private AnimatableInstanceCache factory = new SingletonAnimatableInstanceCache(this);
@@ -97,22 +100,22 @@ public class HumanoidBunnyEntity extends HumanoidAnimalEntity implements GeoEnti
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return ModSounds.HUMANOID_BUNNY_AMBIENT;
+        return soundEventByConfig(QueenCatsConfig.enableHumanoidBunnySounds, ModSounds.HUMANOID_BUNNY_AMBIENT);
     }
 
     @Override
     public SoundEvent getEatSound(ItemStack stack) {
-        return ModSounds.HUMANOID_BUNNY_EAT;
+        return soundEventByConfig(QueenCatsConfig.enableHumanoidBunnySounds, ModSounds.HUMANOID_BUNNY_EAT);
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return ModSounds.HUMANOID_BUNNY_HURT;
+        return soundEventByConfig(QueenCatsConfig.enableHumanoidBunnySounds, ModSounds.HUMANOID_BUNNY_HURT);
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return ModSounds.HUMANOID_BUNNY_DEATH;
+        return soundEventByConfig(QueenCatsConfig.enableHumanoidBunnySounds, ModSounds.HUMANOID_BUNNY_DEATH);
     }
 
     @Override
@@ -147,9 +150,9 @@ public class HumanoidBunnyEntity extends HumanoidAnimalEntity implements GeoEnti
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController(this, "controller",
+        controllers.add(new AnimationController<>(this, "controller",
                 0, this::predicate));
-        controllers.add(new AnimationController(this, "attackController",
+        controllers.add(new AnimationController<>(this, "attackController",
                 0, this::attackPredicate));
     }
 
@@ -206,7 +209,7 @@ public class HumanoidBunnyEntity extends HumanoidAnimalEntity implements GeoEnti
         return this.dataTracker.get(DATA_ID_TYPE_VARIANT);
     }
 
-    protected void setVariant(HumanoidBunnyVariant variant) {
+    public void setVariant(HumanoidBunnyVariant variant) {
         this.dataTracker.set(DATA_ID_TYPE_VARIANT, variant.getId() & 255);
     }
 }

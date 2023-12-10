@@ -27,12 +27,12 @@ import net.minecraft.recipe.Ingredient;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
-import net.pevori.queencats.QueenCats;
 import net.pevori.queencats.screen.HumanoidAnimalScreenHandler;
 import org.jetbrains.annotations.Nullable;
 
@@ -40,14 +40,14 @@ public abstract class HumanoidAnimalEntity extends TameableEntity implements Ext
     protected static final String INVENTORY_KEY = "Humanoid_Animal_Inventory";
     protected static final String ARMOR_KEY = "Humanoid_Animal_Armor_Item";
     protected static final String SLOT_KEY = "Humanoid_Animal_Inventory_Slot";
-    protected Inventory inventory;
+    protected SimpleInventory inventory;
 
     protected Ingredient equippableArmor = Ingredient.ofItems(Items.LEATHER_CHESTPLATE, Items.CHAINMAIL_CHESTPLATE, Items.GOLDEN_CHESTPLATE,
             Items.IRON_CHESTPLATE, Items.DIAMOND_CHESTPLATE, Items.NETHERITE_CHESTPLATE);
 
     protected HumanoidAnimalEntity(EntityType<? extends TameableEntity> entityType, World world) {
         super(entityType, world);
-        this.inventory = new SimpleInventory(19);
+        this.updateInventory();
     }
 
     @Override
@@ -71,8 +71,7 @@ public abstract class HumanoidAnimalEntity extends TameableEntity implements Ext
         if (target instanceof CreeperEntity || target instanceof GhastEntity) {
             return false;
         }
-        if (target instanceof HumanoidAnimalEntity) {
-            HumanoidAnimalEntity humanoidAnimalEntity = (HumanoidAnimalEntity) target;
+        if (target instanceof HumanoidAnimalEntity humanoidAnimalEntity) {
             return !humanoidAnimalEntity.isTamed() || humanoidAnimalEntity.getOwner() != owner;
         }
         if (target instanceof PlayerEntity && owner instanceof PlayerEntity
@@ -89,9 +88,8 @@ public abstract class HumanoidAnimalEntity extends TameableEntity implements Ext
     public ActionResult interactMob(PlayerEntity player, Hand hand) {
         ItemStack itemStack = player.getStackInHand(hand);
 
-        if (!this.world.isClient &&  this.isOwner(player) && !this.isBaby() && this.hasArmorSlot() && this.isEquippableArmor(itemStack) && !this.hasArmorInSlot()) {
+        if (!this.world.isClient && this.isOwner(player) && this.hasArmorSlot() && this.isValidArmor(itemStack) && !this.hasArmorInSlot()) {
             this.equipArmor(player, itemStack);
-            this.equipArmor(itemStack);
             return ActionResult.success(this.world.isClient);
         }
 
@@ -111,38 +109,62 @@ public abstract class HumanoidAnimalEntity extends TameableEntity implements Ext
         return this.hasStackEquipped(EquipmentSlot.CHEST);
     }
 
-    public boolean isEquippableArmor(ItemStack itemStack){
+    public boolean isValidArmor(ItemStack itemStack){
         return equippableArmor.test(itemStack);
     }
 
     public void equipArmor(PlayerEntity player, ItemStack stack) {
-        if (this.isEquippableArmor(stack)) {
-            this.inventory.setStack(0, new ItemStack(stack.getItem()));
-            this.playSound(SoundEvents.ENTITY_HORSE_ARMOR, 0.5F, 1.0F);
-            this.inventory.markDirty();
+        if(!this.world.isClient()){
+            if (this.isValidArmor(stack)) {
+                this.inventory.setStack(0, stack.copy());
+                this.playSound(stack.getEquipSound(), 0.5F, 1.0F);
+                equipArmor(stack);
+                this.inventory.markDirty();
 
-            if (!player.getAbilities().creativeMode) {
-                stack.decrement(1);
+                if (!player.getAbilities().creativeMode) {
+                    stack.decrement(1);
+                }
             }
         }
     }
 
     public void equipArmor(ItemStack stack) {
-        if (this.isEquippableArmor(stack)) {
-            this.equipStack(EquipmentSlot.CHEST, stack);
-            this.setEquipmentDropChance(EquipmentSlot.CHEST, 0.0F);
+        if(!this.world.isClient()){
+            if (this.isValidArmor(stack)) {
+                this.equipStack(EquipmentSlot.CHEST, stack);
+                this.setEquipmentDropChance(EquipmentSlot.CHEST, 0.0F);
+            }
         }
     }
 
-    public void unEquipArmor(){
-        this.equipStack(EquipmentSlot.CHEST, ItemStack.EMPTY);
+    public int getInventorySize() {
+        return 19;
+    }
+
+    protected void updateInventory() {
+        var previousInventory = this.inventory;
+        this.inventory = new SimpleInventory(this.getInventorySize());
+        if (previousInventory != null) {
+            previousInventory.removeListener(this);
+            int maxSize = Math.min(previousInventory.size(), this.inventory.size());
+
+            for (int slot = 0; slot < maxSize; ++slot) {
+                var stack = previousInventory.getStack(slot);
+                if (!stack.isEmpty()) {
+                    this.inventory.setStack(slot, stack.copy());
+                }
+            }
+        }
+
+        this.inventory.addListener(this);
+        this.syncInventoryToFlags();
     }
 
     @Override
     protected void dropInventory() {
         super.dropInventory();
         if (this.inventory != null) {
-            for(int i = 0; i < this.inventory.size(); ++i) {
+            for(int i = 1; i < this.inventory.size(); ++i) {
                 ItemStack itemStack = this.inventory.getStack(i);
                 if (!itemStack.isEmpty() && !EnchantmentHelper.hasVanishingCurse(itemStack)) {
                     this.dropStack(itemStack);
@@ -151,19 +173,24 @@ public abstract class HumanoidAnimalEntity extends TameableEntity implements Ext
         }
     }
 
-    @Override
-    public void onInventoryChanged(Inventory sender) {
-        logInventory("On Inventory Changed Before");
-        this.inventory = sender;
-        logInventory("On Inventory Changed After");
+    /**
+     * Syncs the flags with the inventory.
+     */
+    public void syncInventoryToFlags() {
+        if (!this.getWorld().isClient()) {
+            this.equipArmor(this.inventory.getStack(0));
+        }
     }
 
-    protected void logInventory(String loggerTitle){
-        QueenCats.LOGGER.info(loggerTitle);
-        for(int i = 0; i < this.inventory.size(); ++i) {
-            QueenCats.LOGGER.info("Index: "+ i + ", Item: " + this.inventory.getStack(i).getItem().toString());
+    @Override
+    public void onInventoryChanged(Inventory sender) {
+        boolean previouslyEquipped = this.hasArmorInSlot();
+        this.syncInventoryToFlags();
+
+        if (this.age > 20 && !previouslyEquipped && this.hasArmorInSlot()) {
+            SoundEvent armorInSlotEquipSound = this.inventory.getStack(0).getEquipSound();
+            this.playSound(armorInSlotEquipSound, 0.5F, 1.0F);
         }
-        QueenCats.LOGGER.info("----------------------------------------------");
     }
 
     @Override
@@ -199,7 +226,7 @@ public abstract class HumanoidAnimalEntity extends TameableEntity implements Ext
         if (nbt.contains(ARMOR_KEY, NbtElement.COMPOUND_TYPE)) {
             ItemStack itemStack = ItemStack.fromNbt(nbt.getCompound(ARMOR_KEY));
 
-            if (!itemStack.isEmpty() && this.isEquippableArmor(itemStack)) {
+            if (!itemStack.isEmpty() && this.isValidArmor(itemStack)) {
                 this.inventory.setStack(0, itemStack);
                 this.equipArmor(itemStack);
             }
@@ -215,6 +242,14 @@ public abstract class HumanoidAnimalEntity extends TameableEntity implements Ext
         }
     }
 
+    public Inventory getInventory(){
+        if(this.inventory == null){
+            return new SimpleInventory(this.getInventorySize());
+        }
+
+        return this.inventory;
+    }
+
     public void setInventory(Inventory inventory){
         for(int i = 0; i < inventory.size(); i++){
             this.inventory.setStack(i, inventory.getStack(i));
@@ -223,18 +258,14 @@ public abstract class HumanoidAnimalEntity extends TameableEntity implements Ext
 
     @Override
     public void writeScreenOpeningData(ServerPlayerEntity player, PacketByteBuf buf) {
-        //Sends the entity id to pick it up later in the screenHandler and get back the entity reference.
-        int entityId = getId();
-
-        buf.writeInt(entityId);
+        buf.writeInt(this.getId());
+        buf.writeInt(this.getId());
     }
 
     @Nullable
     @Override
     public ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player) {
-        //We provide this to the screenHandler as our class Implements Inventory
-        //Only the Server has the Inventory at the start, this will be synced to the client in the ScreenHandler
-        return new HumanoidAnimalScreenHandler(syncId, playerInventory, inventory);
+        return new HumanoidAnimalScreenHandler(syncId, playerInventory, this);
     }
 
     @Override

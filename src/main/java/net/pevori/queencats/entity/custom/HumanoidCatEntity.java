@@ -26,6 +26,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.pevori.queencats.config.QueenCatsConfig;
 import net.pevori.queencats.entity.ModEntities;
 import net.pevori.queencats.entity.variant.HumanoidCatVariant;
 import net.pevori.queencats.item.ModItems;
@@ -35,6 +36,8 @@ import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache
 import software.bernie.geckolib.core.animatable.instance.SingletonAnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.*;
 import software.bernie.geckolib.core.object.PlayState;
+
+import static net.pevori.queencats.sound.ModSounds.soundEventByConfig;
 
 public class HumanoidCatEntity extends HumanoidAnimalEntity implements GeoEntity {
     private AnimatableInstanceCache factory = new SingletonAnimatableInstanceCache(this);
@@ -125,22 +128,22 @@ public class HumanoidCatEntity extends HumanoidAnimalEntity implements GeoEntity
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return ModSounds.HUMANOID_CAT_AMBIENT;
+        return soundEventByConfig(QueenCatsConfig.enableHumanoidCatSounds, ModSounds.HUMANOID_CAT_AMBIENT);
     }
 
     @Override
     public SoundEvent getEatSound(ItemStack stack) {
-        return ModSounds.HUMANOID_CAT_EAT;
+        return soundEventByConfig(QueenCatsConfig.enableHumanoidCatSounds, ModSounds.HUMANOID_CAT_EAT);
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return ModSounds.HUMANOID_CAT_HURT;
+        return soundEventByConfig(QueenCatsConfig.enableHumanoidCatSounds, ModSounds.HUMANOID_CAT_HURT);
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return ModSounds.HUMANOID_CAT_DEATH;
+        return soundEventByConfig(QueenCatsConfig.enableHumanoidCatSounds, ModSounds.HUMANOID_CAT_DEATH);
     }
 
     @Override
@@ -217,7 +220,7 @@ public class HumanoidCatEntity extends HumanoidAnimalEntity implements GeoEntity
         return this.dataTracker.get(DATA_ID_TYPE_VARIANT);
     }
 
-    protected void setVariant(HumanoidCatVariant variant) {
+    public void setVariant(HumanoidCatVariant variant) {
         this.dataTracker.set(DATA_ID_TYPE_VARIANT, variant.getId() & 255);
     }
 }

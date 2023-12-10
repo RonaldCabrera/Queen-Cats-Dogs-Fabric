@@ -58,6 +58,16 @@ public class ModItems {
                     new FabricItemSettings())
     );
 
+    public static final Item QUEEN_COW_SPAWN_EGG = registerItem("queen_cow_spawn_egg",
+            new SpawnEggItem(ModEntities.QUEEN_COW, 0xF3F7FA, 0x403424,
+                    new FabricItemSettings())
+    );
+
+    public static final Item PRINCESS_COW_SPAWN_EGG = registerItem("princess_cow_spawn_egg",
+            new SpawnEggItem(ModEntities.PRINCESS_COW, 0xF3F7FA, 0x1D140E,
+                    new FabricItemSettings())
+    );
+
     private static Item registerItem(String name, Item item){
         return Registry.register(Registries.ITEM, new Identifier(QueenCats.MOD_ID, name), item);
     }
@@ -78,6 +88,8 @@ public class ModItems {
         addToItemGroup(ModItemGroup.QUEENCATS, PRINCESS_DOG_SPAWN_EGG);
         addToItemGroup(ModItemGroup.QUEENCATS, QUEEN_BUNNY_SPAWN_EGG);
         addToItemGroup(ModItemGroup.QUEENCATS, PRINCESS_BUNNY_SPAWN_EGG);
+        addToItemGroup(ModItemGroup.QUEENCATS, QUEEN_COW_SPAWN_EGG);
+        addToItemGroup(ModItemGroup.QUEENCATS, PRINCESS_COW_SPAWN_EGG);
     }
 
     public static void addToItemGroup(ItemGroup group, Item item){
@@ -87,7 +99,6 @@ public class ModItems {
 
     public static void registerModItems(){
         QueenCats.LOGGER.info("Registering Mod Items for " + QueenCats.MOD_ID);
-
         addItemsToItemGroups();
     }
 

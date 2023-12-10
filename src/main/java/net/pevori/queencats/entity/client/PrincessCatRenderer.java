@@ -1,7 +1,6 @@
 package net.pevori.queencats.entity.client;
 
 import java.util.Map;
-
 import com.google.common.collect.Maps;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -9,7 +8,6 @@ import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 import net.pevori.queencats.QueenCats;
-import net.pevori.queencats.entity.custom.PrincessBunnyEntity;
 import net.pevori.queencats.entity.custom.PrincessCatEntity;
 import net.pevori.queencats.entity.variant.HumanoidCatVariant;
 import org.jetbrains.annotations.Nullable;

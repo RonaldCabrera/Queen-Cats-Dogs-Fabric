@@ -104,23 +104,6 @@ public class QueenCatEntity extends HumanoidCatEntity{
             return ActionResult.CONSUME;
         }
 
-//        if (this.hasStackEquipped(EquipmentSlot.CHEST) && isTamed() && this.isOwner(player) && !this.world.isClient() && hand == Hand.MAIN_HAND
-//                && player.isSneaking()) {
-//            if (!player.getAbilities().creativeMode) {
-//                player.giveItemStack(this.getEquippedStack(EquipmentSlot.CHEST));
-//            }
-//            this.equipStack(EquipmentSlot.CHEST, ItemStack.EMPTY);
-//
-//            return ActionResult.CONSUME;
-//        } else if (equippableArmor.test(itemStack) && isTamed() && this.isOwner(player) && !this.hasStackEquipped(EquipmentSlot.CHEST)) {
-//            this.equipStack(EquipmentSlot.CHEST, itemStack.copy());
-//            if (!player.getAbilities().creativeMode) {
-//                itemStack.decrement(1);
-//            }
-//
-//            return ActionResult.SUCCESS;
-//        }
-
         if ((itemForHealing.test(itemStack)) && isTamed() && this.getHealth() < getMaxHealth()) {
             if (this.world.isClient()) {
                 return ActionResult.CONSUME;
