@@ -20,6 +20,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.EntityView;
 import net.minecraft.world.World;
 import net.pevori.queencats.config.QueenCatsConfig;
 import net.pevori.queencats.entity.ModEntities;
@@ -41,7 +42,7 @@ public class HumanoidCowEntity extends HumanoidAnimalEntity implements GeoEntity
     protected Ingredient itemForHealing = Ingredient.ofItems(Items.WHEAT, ModItems.GOLDEN_WHEAT);
     protected Item itemForGrowth = ModItems.KEMOMIMI_POTION;
 
-    protected HumanoidCowEntity(EntityType<? extends TameableEntity> entityType, World world) {
+    protected HumanoidCowEntity(EntityType<? extends HumanoidAnimalEntity> entityType, World world) {
         super(entityType, world);
     }
 

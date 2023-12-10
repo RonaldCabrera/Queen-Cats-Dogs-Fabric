@@ -31,7 +31,7 @@ import net.pevori.queencats.item.ModItems;
 import org.jetbrains.annotations.Nullable;
 
 public class PrincessDogEntity extends HumanoidDogEntity{
-    public PrincessDogEntity(EntityType<? extends TameableEntity> entityType, World world) {
+    public PrincessDogEntity(EntityType<? extends HumanoidDogEntity> entityType, World world) {
         super(entityType, world);
     }
 

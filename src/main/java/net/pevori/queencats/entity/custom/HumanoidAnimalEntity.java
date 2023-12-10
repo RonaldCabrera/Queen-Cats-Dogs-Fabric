@@ -32,6 +32,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.world.EntityView;
 import net.minecraft.world.World;
 import net.pevori.queencats.screen.HumanoidAnimalScreenHandler;
 import org.jetbrains.annotations.Nullable;
@@ -117,7 +118,7 @@ public abstract class HumanoidAnimalEntity extends TameableEntity implements Ext
         if(!this.world.isClient()){
             if (this.isValidArmor(stack)) {
                 this.inventory.setStack(0, stack.copy());
-                this.playSound(stack.getEquipSound(), 0.5F, 1.0F);
+                this.playSound(SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0.5F, 1.0F);
                 equipArmor(stack);
                 this.inventory.markDirty();
 
@@ -188,8 +189,7 @@ public abstract class HumanoidAnimalEntity extends TameableEntity implements Ext
         this.syncInventoryToFlags();
 
         if (this.age > 20 && !previouslyEquipped && this.hasArmorInSlot()) {
-            SoundEvent armorInSlotEquipSound = this.inventory.getStack(0).getEquipSound();
-            this.playSound(armorInSlotEquipSound, 0.5F, 1.0F);
+            this.playSound(SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0.5F, 1.0F);
         }
     }
 
@@ -271,5 +271,10 @@ public abstract class HumanoidAnimalEntity extends TameableEntity implements Ext
     @Override
     public Text getDisplayName() {
         return super.getDisplayName();
+    }
+
+    @Override
+    public EntityView method_48926() {
+        return this.getWorld();
     }
 }

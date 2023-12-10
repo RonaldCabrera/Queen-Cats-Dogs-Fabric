@@ -40,7 +40,7 @@ public class HumanoidAnimalScreen extends HandledScreen<HumanoidAnimalScreenHand
         this.drawTexture(matrices, x + 7, y + 35, 0, this.backgroundHeight + 54, 18, 18);
 
         // Draws the entity render in the black box.
-        InventoryScreen.drawEntity(x + 42, y + 66, 20, (float)(x + 51) - mouseX, (float)(y + 75 - 50) - mouseY, this.entity);
+        InventoryScreen.drawEntity(matrices, x + 42, y + 66, 20, (float)(x + 51) - mouseX, (float)(y + 75 - 50) - mouseY, this.entity);
     }
 
     @Override

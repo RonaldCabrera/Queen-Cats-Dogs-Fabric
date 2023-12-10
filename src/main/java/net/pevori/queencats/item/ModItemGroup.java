@@ -12,7 +12,7 @@ public class ModItemGroup {
 
     public static void registerItemGroup(){
         QUEENCATS = FabricItemGroup.builder(new Identifier(QueenCats.MOD_ID, "queencats"))
-                .displayName(Text.literal("Queen Cats Item Group"))
+                .displayName(Text.literal("Queen Cats & Dogs"))
                 .icon(() -> new ItemStack(ModItems.GOLDEN_FISH)).build();
     }
 }

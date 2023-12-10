@@ -25,6 +25,7 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.EntityView;
 import net.minecraft.world.World;
 import net.pevori.queencats.config.QueenCatsConfig;
 import net.pevori.queencats.entity.ModEntities;
@@ -47,7 +48,7 @@ public class HumanoidDogEntity extends HumanoidAnimalEntity implements GeoEntity
     public static final String koroSan = "korone";
 
 
-    protected HumanoidDogEntity(EntityType<? extends TameableEntity> entityType, World world) {
+    protected HumanoidDogEntity(EntityType<? extends HumanoidAnimalEntity> entityType, World world) {
     super(entityType, world);
     }
 

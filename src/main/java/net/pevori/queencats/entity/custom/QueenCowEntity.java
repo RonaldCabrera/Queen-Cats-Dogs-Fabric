@@ -24,7 +24,7 @@ import net.pevori.queencats.item.ModItems;
 import org.jetbrains.annotations.Nullable;
 
 public class QueenCowEntity extends HumanoidCowEntity{
-    public QueenCowEntity(EntityType<? extends TameableEntity> entityType, World world) {
+    public QueenCowEntity(EntityType<? extends HumanoidCowEntity> entityType, World world) {
         super(entityType, world);
     }
 

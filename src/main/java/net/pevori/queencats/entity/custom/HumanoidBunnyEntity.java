@@ -25,6 +25,7 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.EntityView;
 import net.minecraft.world.World;
 import net.pevori.queencats.config.QueenCatsConfig;
 import net.pevori.queencats.entity.ModEntities;
@@ -48,7 +49,7 @@ public class HumanoidBunnyEntity extends HumanoidAnimalEntity implements GeoEnti
     protected Item itemForGrowth = ModItems.KEMOMIMI_POTION;
     public static final String pekoSan = "pekora";
 
-    protected HumanoidBunnyEntity(EntityType<? extends TameableEntity> entityType, World world) {
+    protected HumanoidBunnyEntity(EntityType<? extends HumanoidAnimalEntity> entityType, World world) {
         super(entityType, world);
     }
 
