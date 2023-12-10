@@ -11,7 +11,7 @@ import net.pevori.queencats.entity.custom.QueenCowEntity;
 import net.pevori.queencats.entity.variant.HumanoidCowVariant;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.Map;
 
 public class QueenCowRenderer extends GeoEntityRenderer<QueenCowEntity> {

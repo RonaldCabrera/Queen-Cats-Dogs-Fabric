@@ -9,9 +9,9 @@ import net.minecraft.util.Util;
 import net.pevori.queencats.QueenCats;
 import net.pevori.queencats.entity.custom.QueenCatEntity;
 import net.pevori.queencats.entity.variant.HumanoidCatVariant;
+import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
-import javax.annotation.Nullable;
 import java.util.Map;
 
 public class QueenCatRenderer extends GeoEntityRenderer<QueenCatEntity> {

@@ -89,12 +89,12 @@ public abstract class HumanoidAnimalEntity extends TameableEntity implements Ext
     public ActionResult interactMob(PlayerEntity player, Hand hand) {
         ItemStack itemStack = player.getStackInHand(hand);
 
-        if (!this.world.isClient && this.isOwner(player) && this.hasArmorSlot() && this.isValidArmor(itemStack) && !this.hasArmorInSlot()) {
+        if (!this.getWorld().isClient && this.isOwner(player) && this.hasArmorSlot() && this.isValidArmor(itemStack) && !this.hasArmorInSlot()) {
             this.equipArmor(player, itemStack);
-            return ActionResult.success(this.world.isClient);
+            return ActionResult.success(this.getWorld().isClient);
         }
 
-        if (!this.world.isClient && this.isOwner(player) && player.isSneaking()) {
+        if (!this.getWorld().isClient && this.isOwner(player) && player.isSneaking()) {
             player.openHandledScreen(this);
             return ActionResult.SUCCESS;
         }
@@ -115,7 +115,7 @@ public abstract class HumanoidAnimalEntity extends TameableEntity implements Ext
     }
 
     public void equipArmor(PlayerEntity player, ItemStack stack) {
-        if(!this.world.isClient()){
+        if(!this.getWorld().isClient()){
             if (this.isValidArmor(stack)) {
                 this.inventory.setStack(0, stack.copy());
                 this.playSound(SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0.5F, 1.0F);
@@ -130,7 +130,7 @@ public abstract class HumanoidAnimalEntity extends TameableEntity implements Ext
     }
 
     public void equipArmor(ItemStack stack) {
-        if(!this.world.isClient()){
+        if(!this.getWorld().isClient()){
             if (this.isValidArmor(stack)) {
                 this.equipStack(EquipmentSlot.CHEST, stack);
                 this.setEquipmentDropChance(EquipmentSlot.CHEST, 0.0F);

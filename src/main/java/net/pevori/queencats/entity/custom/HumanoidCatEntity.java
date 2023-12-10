@@ -69,7 +69,7 @@ public class HumanoidCatEntity extends HumanoidAnimalEntity implements GeoEntity
 
     public void startGrowth() {
         HumanoidCatVariant variant = this.getVariant();
-        QueenCatEntity queenCatEntity = ModEntities.QUEEN_CAT.create(world);
+        QueenCatEntity queenCatEntity = ModEntities.QUEEN_CAT.create(this.getWorld());
         queenCatEntity.refreshPositionAndAngles(this.getX(), this.getY(), this.getZ(), this.getYaw(), this.getPitch());
         queenCatEntity.setAiDisabled(this.isAiDisabled());
         queenCatEntity.setInventory(this.inventory);
@@ -85,7 +85,7 @@ public class HumanoidCatEntity extends HumanoidAnimalEntity implements GeoEntity
         queenCatEntity.setOwnerUuid(this.getOwnerUuid());
         queenCatEntity.setTamed(true);
         queenCatEntity.setSitting(this.isSitting());
-        world.spawnEntity(queenCatEntity);
+        this.getWorld().spawnEntity(queenCatEntity);
         this.discard();
     }
 

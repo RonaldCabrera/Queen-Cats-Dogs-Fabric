@@ -39,11 +39,11 @@ public abstract class QueenDogMixin extends AnimalEntity {
             }
 
             if(thisWolf.isBaby()){
-                PrincessDogEntity princessCatEntity = ModEntities.PRINCESS_DOG.create(thisWolf.world);
+                PrincessDogEntity princessCatEntity = ModEntities.PRINCESS_DOG.create(thisWolf.getWorld());
                 spawnHumanoidDog(princessCatEntity, thisWolf, player);
             }
             else {
-                QueenDogEntity queenCatEntity = ModEntities.QUEEN_DOG.create(thisWolf.world);
+                QueenDogEntity queenCatEntity = ModEntities.QUEEN_DOG.create(thisWolf.getWorld());
                 spawnHumanoidDog(queenCatEntity, thisWolf, player);
             }
         }
@@ -66,7 +66,7 @@ public abstract class QueenDogMixin extends AnimalEntity {
         HumanoidDogVariant variant = Util.getRandom(HumanoidDogVariant.values(), this.random);
         humanoidDogEntity.setVariant(variant);
 
-        wolfEntity.world.spawnEntity(humanoidDogEntity);
+        wolfEntity.getWorld().spawnEntity(humanoidDogEntity);
         wolfEntity.discard();
     }
 }

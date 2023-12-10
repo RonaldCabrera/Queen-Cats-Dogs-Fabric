@@ -13,7 +13,7 @@ import net.pevori.queencats.entity.custom.QueenDogEntity;
 import net.pevori.queencats.entity.variant.HumanoidDogVariant;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.Map;
 
 public class QueenDogRenderer extends GeoEntityRenderer<QueenDogEntity> {

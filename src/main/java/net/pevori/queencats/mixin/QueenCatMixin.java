@@ -41,11 +41,11 @@ public abstract class QueenCatMixin extends AnimalEntity {
             }
 
             if(thisCat.isBaby()){
-                PrincessCatEntity princessCatEntity = ModEntities.PRINCESS_CAT.create(thisCat.world);
+                PrincessCatEntity princessCatEntity = ModEntities.PRINCESS_CAT.create(thisCat.getWorld());
                 spawnHumanoidCat(princessCatEntity, thisCat, player);
             }
             else {
-                QueenCatEntity queenCatEntity = ModEntities.QUEEN_CAT.create(thisCat.world);
+                QueenCatEntity queenCatEntity = ModEntities.QUEEN_CAT.create(thisCat.getWorld());
                 spawnHumanoidCat(queenCatEntity, thisCat, player);
             }
         }
@@ -68,7 +68,7 @@ public abstract class QueenCatMixin extends AnimalEntity {
         HumanoidCatVariant variant = Util.getRandom(HumanoidCatVariant.values(), this.random);
         humanoidCatEntity.setVariant(variant);
 
-        catEntity.world.spawnEntity(humanoidCatEntity);
+        catEntity.getWorld().spawnEntity(humanoidCatEntity);
         catEntity.discard();
     }
 }

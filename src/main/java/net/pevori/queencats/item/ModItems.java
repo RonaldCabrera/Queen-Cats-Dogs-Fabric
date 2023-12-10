@@ -76,30 +76,8 @@ public class ModItems {
         return Registry.register(Registries.ITEM, new Identifier(QueenCats.MOD_ID, name), item);
     }
 
-    public static void addItemsToItemGroups(){
-        addToItemGroup(ModItemGroup.QUEENCATS, GOLDEN_FISH);
-        addToItemGroup(ModItemGroup.QUEENCATS, GOLDEN_BONE);
-        addToItemGroup(ModItemGroup.QUEENCATS, GOLDEN_WHEAT);
-        addToItemGroup(ModItemGroup.QUEENCATS, KEMOMIMI_POTION);
-
-        addToItemGroup(ModItemGroup.QUEENCATS, QUEEN_CAT_SPAWN_EGG);
-        addToItemGroup(ModItemGroup.QUEENCATS, PRINCESS_CAT_SPAWN_EGG);
-        addToItemGroup(ModItemGroup.QUEENCATS, QUEEN_DOG_SPAWN_EGG);
-        addToItemGroup(ModItemGroup.QUEENCATS, PRINCESS_DOG_SPAWN_EGG);
-        addToItemGroup(ModItemGroup.QUEENCATS, QUEEN_BUNNY_SPAWN_EGG);
-        addToItemGroup(ModItemGroup.QUEENCATS, PRINCESS_BUNNY_SPAWN_EGG);
-        addToItemGroup(ModItemGroup.QUEENCATS, QUEEN_COW_SPAWN_EGG);
-        addToItemGroup(ModItemGroup.QUEENCATS, PRINCESS_COW_SPAWN_EGG);
-    }
-
-    public static void addToItemGroup(ItemGroup group, Item item){
-        ItemGroupEvents.modifyEntriesEvent(group).register(entries ->
-                entries.add(item));
-    }
-
     public static void registerModItems(){
         QueenCats.LOGGER.info("Registering Mod Items for " + QueenCats.MOD_ID);
-        addItemsToItemGroups();
     }
 
 }

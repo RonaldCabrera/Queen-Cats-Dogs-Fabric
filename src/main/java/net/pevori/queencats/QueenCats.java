@@ -16,7 +16,7 @@ public class QueenCats implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
-		ModItemGroup.registerItemGroup();
+		ModItemGroup.registerItemGroups();
 		ModItems.registerModItems();
 		ModRegistries.registerQueenCats();
 		MidnightConfig.init(MOD_ID, QueenCatsConfig.class);

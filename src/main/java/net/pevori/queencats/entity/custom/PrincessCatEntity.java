@@ -104,14 +104,14 @@ public class PrincessCatEntity extends HumanoidCatEntity{
         }
 
         if ((itemForHealing.test(itemStack)) && isTamed() && this.getHealth() < getMaxHealth() && !player.isSneaking()) {
-            if (this.world.isClient()) {
+            if (this.getWorld().isClient()) {
                 return ActionResult.CONSUME;
             } else {
                 if (!player.getAbilities().creativeMode) {
                     itemStack.decrement(1);
                 }
 
-                if (!this.world.isClient()) {
+                if (!this.getWorld().isClient()) {
                     this.eat(player, hand, itemStack);
                     this.heal(10.0f);
 
@@ -125,18 +125,18 @@ public class PrincessCatEntity extends HumanoidCatEntity{
                 return ActionResult.SUCCESS;
             }
         } else if (item == itemForTaming && !isTamed()) {
-            if (this.world.isClient()) {
+            if (this.getWorld().isClient()) {
                 return ActionResult.CONSUME;
             } else {
                 if (!player.getAbilities().creativeMode) {
                     itemStack.decrement(1);
                 }
 
-                if (!this.world.isClient()) {
+                if (!this.getWorld().isClient()) {
                     super.setOwner(player);
                     this.navigation.recalculatePath();
                     this.setTarget(null);
-                    this.world.sendEntityStatus(this, (byte) 7);
+                    this.getWorld().sendEntityStatus(this, (byte) 7);
                     setSit(true);
                     this.setHealth(getMaxHealth());
                 }
@@ -145,7 +145,7 @@ public class PrincessCatEntity extends HumanoidCatEntity{
             }
         }
 
-        if (isTamed() && this.isOwner(player) && !player.isSneaking() && !this.world.isClient() && hand == Hand.MAIN_HAND) {
+        if (isTamed() && this.isOwner(player) && !player.isSneaking() && !this.getWorld().isClient() && hand == Hand.MAIN_HAND) {
             setSit(!isSitting());
             return ActionResult.SUCCESS;
         }

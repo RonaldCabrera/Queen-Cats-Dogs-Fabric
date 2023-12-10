@@ -70,17 +70,17 @@ public class QueenCowEntity extends HumanoidCowEntity{
             player.setStackInHand(hand, itemStack2);
 
             this.playSound(getMilkingSound(), 1.0F, 1.0F);
-            return ActionResult.success(this.world.isClient);
+            return ActionResult.success(this.getWorld().isClient);
         }
 
         if (itemstack.isOf(Items.BUCKET) && this.isMilkableVariant()) {
-            ItemStack itemstack1 = new ItemStack(Items.MILK_BUCKET);
+            ItemStack itemStack1 = new ItemStack(Items.MILK_BUCKET);
 
-            ItemStack itemstack2 = ItemUsage.exchangeStack(itemstack, player, itemstack1, false);
-            player.setStackInHand(hand, itemstack2);
+            ItemStack itemStack2 = ItemUsage.exchangeStack(itemstack, player, itemStack1, false);
+            player.setStackInHand(hand, itemStack2);
 
             this.playSound(getMilkingSound(), 1.0F, 1.0F);
-            return ActionResult.success(this.world.isClient);
+            return ActionResult.success(this.getWorld().isClient);
         }
 
         if (item instanceof DyeItem && this.isOwner(player) && !player.isSneaking()) {
@@ -106,14 +106,14 @@ public class QueenCowEntity extends HumanoidCowEntity{
         }
 
         if ((itemForHealing.test(itemstack)) && isTamed() && !player.isSneaking() && this.getHealth() < getMaxHealth()) {
-            if (this.world.isClient()) {
+            if (this.getWorld().isClient()) {
                 return ActionResult.CONSUME;
             } else {
                 if (!player.getAbilities().creativeMode) {
                     itemstack.decrement(1);
                 }
 
-                if (!this.world.isClient()) {
+                if (!this.getWorld().isClient()) {
                     this.eat(player, hand, itemstack);
                     this.heal(10.0f);
 
@@ -129,19 +129,19 @@ public class QueenCowEntity extends HumanoidCowEntity{
         }
 
         else if (item == itemForTaming && !isTamed()) {
-            if (this.world.isClient()) {
+            if (this.getWorld().isClient()) {
                 return ActionResult.CONSUME;
             } else {
                 if (!player.getAbilities().creativeMode) {
                     itemstack.decrement(1);
                 }
 
-                if (!this.world.isClient()) {
+                if (!this.getWorld().isClient()) {
                     this.playSound(this.getEatSound(itemstack), 1.0f, 1.0f);
                     super.setOwner(player);
                     this.navigation.recalculatePath();
                     this.setTarget(null);
-                    this.world.sendEntityStatus(this, (byte) 7);
+                    this.getWorld().sendEntityStatus(this, (byte) 7);
                     setSit(true);
                     this.setHealth(getMaxHealth());
                 }
@@ -150,7 +150,7 @@ public class QueenCowEntity extends HumanoidCowEntity{
             }
         }
 
-        if (isTamed() && this.isOwner(player) && !player.isSneaking() && !this.world.isClient() && hand == Hand.MAIN_HAND) {
+        if (isTamed() && this.isOwner(player) && !player.isSneaking() && !this.getWorld().isClient() && hand == Hand.MAIN_HAND) {
             setSit(!isSitting());
             return ActionResult.SUCCESS;
         }

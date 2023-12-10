@@ -74,7 +74,7 @@ public class HumanoidBunnyEntity extends HumanoidAnimalEntity implements GeoEnti
 
     public void startGrowth() {
         HumanoidBunnyVariant variant = this.getVariant();
-        QueenBunnyEntity queenBunnyEntity = ModEntities.QUEEN_BUNNY.create(world);
+        QueenBunnyEntity queenBunnyEntity = ModEntities.QUEEN_BUNNY.create(this.getWorld());
         queenBunnyEntity.refreshPositionAndAngles(this.getX(), this.getY(), this.getZ(), this.getYaw(), this.getPitch());
         queenBunnyEntity.setAiDisabled(this.isAiDisabled());
         queenBunnyEntity.setInventory(this.inventory);
@@ -90,7 +90,7 @@ public class HumanoidBunnyEntity extends HumanoidAnimalEntity implements GeoEnti
         queenBunnyEntity.setOwnerUuid(this.getOwnerUuid());
         queenBunnyEntity.setTamed(true);
         queenBunnyEntity.setSitting(this.isSitting());
-        world.spawnEntity(queenBunnyEntity);
+        this.getWorld().spawnEntity(queenBunnyEntity);
         this.discard();
     }
 

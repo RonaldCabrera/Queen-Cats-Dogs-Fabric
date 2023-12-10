@@ -146,7 +146,7 @@ public class HumanoidCowEntity extends HumanoidAnimalEntity implements GeoEntity
 
     public void startGrowth() {
         HumanoidCowVariant variant = this.getVariant();
-        QueenCowEntity queenCowEntity = ModEntities.QUEEN_COW.create(world);
+        QueenCowEntity queenCowEntity = ModEntities.QUEEN_COW.create(this.getWorld());
         queenCowEntity.refreshPositionAndAngles(this.getX(), this.getY(), this.getZ(), this.getYaw(), this.getPitch());
         queenCowEntity.setAiDisabled(this.isAiDisabled());
         queenCowEntity.setInventory(this.inventory);
@@ -162,7 +162,7 @@ public class HumanoidCowEntity extends HumanoidAnimalEntity implements GeoEntity
         queenCowEntity.setOwnerUuid(this.getOwnerUuid());
         queenCowEntity.setTamed(true);
         queenCowEntity.setSitting(this.isSitting());
-        world.spawnEntity(queenCowEntity);
+        this.getWorld().spawnEntity(queenCowEntity);
         this.discard();
     }
 

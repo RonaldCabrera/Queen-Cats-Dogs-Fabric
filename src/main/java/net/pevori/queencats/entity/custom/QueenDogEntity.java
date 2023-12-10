@@ -106,14 +106,14 @@ public class QueenDogEntity extends HumanoidDogEntity{
         }
 
         if ((isMeatItem(item)) && isTamed() && !player.isSneaking() && this.getHealth() < getMaxHealth()) {
-            if (this.world.isClient()) {
+            if (this.getWorld().isClient()) {
                 return ActionResult.CONSUME;
             } else {
                 if (!player.getAbilities().creativeMode) {
                     itemStack.decrement(1);
                 }
 
-                if (!this.world.isClient()) {
+                if (!this.getWorld().isClient()) {
                     this.eat(player, hand, itemStack);
                     this.heal(10.0f);
 
@@ -129,19 +129,19 @@ public class QueenDogEntity extends HumanoidDogEntity{
         }
 
         else if (item == itemForTaming && !isTamed()) {
-            if (this.world.isClient()) {
+            if (this.getWorld().isClient()) {
                 return ActionResult.CONSUME;
             } else {
                 if (!player.getAbilities().creativeMode) {
                     itemStack.decrement(1);
                 }
 
-                if (!this.world.isClient()) {
+                if (!this.getWorld().isClient()) {
                     this.playSound(this.getEatSound(itemStack), 1.0f, 1.0f);
                     super.setOwner(player);
                     this.navigation.recalculatePath();
                     this.setTarget(null);
-                    this.world.sendEntityStatus(this, (byte) 7);
+                    this.getWorld().sendEntityStatus(this, (byte) 7);
                     setSit(true);
                     this.setHealth(getMaxHealth());
                 }
@@ -150,7 +150,7 @@ public class QueenDogEntity extends HumanoidDogEntity{
             }
         }
 
-        if (isTamed() && this.isOwner(player) && !player.isSneaking() && !this.world.isClient() && hand == Hand.MAIN_HAND) {
+        if (isTamed() && this.isOwner(player) && !player.isSneaking() && !this.getWorld().isClient() && hand == Hand.MAIN_HAND) {
             setSit(!isSitting());
             return ActionResult.SUCCESS;
         }

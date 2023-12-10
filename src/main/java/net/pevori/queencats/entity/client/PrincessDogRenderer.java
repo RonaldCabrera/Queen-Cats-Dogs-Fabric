@@ -7,7 +7,6 @@ import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 import net.pevori.queencats.QueenCats;
-import net.pevori.queencats.entity.custom.PrincessCatEntity;
 import net.pevori.queencats.entity.custom.PrincessDogEntity;
 import net.pevori.queencats.entity.variant.HumanoidDogVariant;
 import org.jetbrains.annotations.Nullable;
