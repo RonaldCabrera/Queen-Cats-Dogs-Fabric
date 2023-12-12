@@ -18,32 +18,6 @@ public class HumanoidAnimalScreen extends HandledScreen<HumanoidAnimalScreenHand
         this.entity = handler.getEntity();
     }
 
-    //@Override
-    /*protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
-        RenderSystem.setShader(GameRenderer::getPositionTexProgram);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, HumanoidAnimalScreenRegistries.TEXTURE);
-        int x = (width - backgroundWidth) / 2;
-        int y = (height - backgroundHeight) / 2;
-
-        // TODO: Add weapon slot eventually.
-        /*if (this.entity.hasWeaponSlot()) {
-            this.drawTexture(matrices, i + 7, j + 35 - 18, 18, this.backgroundHeight + 54, 18, 18);
-        }
-
-        // Draws the background of the inventory.
-        drawTexture(matrices, x, y, 0, 0, backgroundWidth, backgroundHeight);
-
-        // Draws the entity inventory slots.
-        this.drawTexture(matrices, x + 61, y + 17, 0, this.backgroundHeight, 6 * 18, 54);
-
-        // Draws the player inventory and hotbar slots.
-        this.drawTexture(matrices, x + 7, y + 35, 0, this.backgroundHeight + 54, 18, 18);
-
-        // Draws the entity render in the black box.
-        InventoryScreen.drawEntity(matrices, x + 42, y + 66, 20, (float)(x + 51) - mouseX, (float)(y + 75 - 50) - mouseY, this.entity);
-    }*/
-
     @Override
     protected void drawBackground(DrawContext context, float delta, int mouseX, int mouseY) {
         RenderSystem.setShader(GameRenderer::getPositionTexProgram);
@@ -67,12 +41,11 @@ public class HumanoidAnimalScreen extends HandledScreen<HumanoidAnimalScreenHand
         context.drawTexture(HumanoidAnimalScreenRegistries.TEXTURE, x + 7, y + 35, 0, this.backgroundHeight + 54, 18, 18);
 
         // Draws the entity render in the black box.
-        InventoryScreen.drawEntity(context, x + 42, y + 66, 20, (float)(x + 51) - mouseX, (float)(y + 75 - 50) - mouseY, this.entity);
-    }
+        InventoryScreen.drawEntity(context, x + 20, y + 18, x + 68, y + 70, 20, 0.25f, mouseX, mouseY, this.entity);    }
 
     @Override
     public void render(DrawContext matrices, int mouseX, int mouseY, float delta) {
-        renderBackground(matrices);
+        renderBackground(matrices, mouseX, mouseY, delta);
         super.render(matrices, mouseX, mouseY, delta);
         drawMouseoverTooltip(matrices, mouseX, mouseY);
     }
