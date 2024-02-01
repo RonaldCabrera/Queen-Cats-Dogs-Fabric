@@ -3,21 +3,19 @@ package net.pevori.queencats.mixin;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.CowEntity;
-import net.minecraft.entity.passive.RabbitEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResult;
+import net.minecraft.item.Item;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Util;
 import net.minecraft.world.World;
 import net.pevori.queencats.entity.ModEntities;
-import net.pevori.queencats.entity.custom.HumanoidCowEntity;
-import net.pevori.queencats.entity.custom.PrincessCowEntity;
-import net.pevori.queencats.entity.custom.QueenBunnyEntity;
-import net.pevori.queencats.entity.custom.QueenCowEntity;
+import net.pevori.queencats.entity.custom.*;
 import net.pevori.queencats.entity.variant.HumanoidCowVariant;
 import net.pevori.queencats.item.ModItems;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(CowEntity.class)
 public abstract class QueenCowMixin extends AnimalEntity{
@@ -26,32 +24,23 @@ public abstract class QueenCowMixin extends AnimalEntity{
         super(entityType, world);
     }
 
-    //This Mixin injection is to make the cow turn into a humanoid cow when fed with golden wheat.
-    @Override
-    public ActionResult interactMob(PlayerEntity player, Hand hand) {
-        ItemStack itemStack = player.getStackInHand(hand);
+    //This Mixin injection is to make the cow turn into a humanoid cow when fed with a kemomimi potion.
+    @Inject(method = "interactMob", at = @At("HEAD"))
+    protected void injectInteractMethod(PlayerEntity player, Hand hand, CallbackInfoReturnable info) {
+        Item usedItem = player.getStackInHand(hand).getItem();
         CowEntity cowEntity = ((CowEntity)(Object)this);
 
-        /*
-         * This is the logic to generate a new Queen Cow, pretty much the same as
-         * a pig getting hit by lightning.
-         */
-        if(itemStack.getItem() == ModItems.KEMOMIMI_POTION){
+        if(usedItem == ModItems.KEMOMIMI_POTION){
             if (!player.getAbilities().creativeMode) {
                 player.getStackInHand(hand).decrement(1);
             }
 
-            if(cowEntity.isBaby()){
-                PrincessCowEntity princessCowEntity = ModEntities.PRINCESS_COW.create(cowEntity.getWorld());
-                spawnHumanoidCow(princessCowEntity, cowEntity, player);
-            }
-            else {
-                QueenCowEntity queenCowEntity = ModEntities.QUEEN_COW.create(cowEntity.getWorld());
-                spawnHumanoidCow(queenCowEntity, cowEntity, player);
-            }
-        }
+            HumanoidCowEntity humanoidCowEntity = cowEntity.isBaby()
+                    ? ModEntities.PRINCESS_COW.create(cowEntity.world)
+                    : ModEntities.QUEEN_COW.create(cowEntity.world);
 
-        return super.interactMob(player, hand);
+            spawnHumanoidCow(humanoidCowEntity, cowEntity, player);
+        }
     }
 
     public void spawnHumanoidCow(HumanoidCowEntity humanoidCowEntity, CowEntity cowEntity, PlayerEntity player){
@@ -71,7 +60,7 @@ public abstract class QueenCowMixin extends AnimalEntity{
         HumanoidCowVariant variant = Util.getRandom(HumanoidCowVariant.values(), this.random);
         humanoidCowEntity.setVariant(variant);
 
-        cowEntity.getWorld().spawnEntity(humanoidCowEntity);
+        cowEntity.world.spawnEntity(humanoidCowEntity);
         cowEntity.discard();
     }
 }
