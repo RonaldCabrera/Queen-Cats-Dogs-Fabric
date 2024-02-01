@@ -36,8 +36,8 @@ public abstract class QueenCowMixin extends AnimalEntity{
             }
 
             HumanoidCowEntity humanoidCowEntity = cowEntity.isBaby()
-                    ? ModEntities.PRINCESS_COW.create(cowEntity.world)
-                    : ModEntities.QUEEN_COW.create(cowEntity.world);
+                    ? ModEntities.PRINCESS_COW.create(cowEntity.getWorld())
+                    : ModEntities.QUEEN_COW.create(cowEntity.getWorld());
 
             spawnHumanoidCow(humanoidCowEntity, cowEntity, player);
         }
@@ -60,7 +60,7 @@ public abstract class QueenCowMixin extends AnimalEntity{
         HumanoidCowVariant variant = Util.getRandom(HumanoidCowVariant.values(), this.random);
         humanoidCowEntity.setVariant(variant);
 
-        cowEntity.world.spawnEntity(humanoidCowEntity);
+        cowEntity.getWorld().spawnEntity(humanoidCowEntity);
         cowEntity.discard();
     }
 }

@@ -33,8 +33,8 @@ public abstract class QueenBunnyMixin extends AnimalEntity{
             }
 
             HumanoidBunnyEntity humanoidBunnyEntity = rabbitEntity.isBaby()
-                    ? ModEntities.PRINCESS_BUNNY.create(rabbitEntity.world)
-                    : ModEntities.QUEEN_BUNNY.create(rabbitEntity.world);
+                    ? ModEntities.PRINCESS_BUNNY.create(rabbitEntity.getWorld())
+                    : ModEntities.QUEEN_BUNNY.create(rabbitEntity.getWorld());
 
             spawnHumanoidBunny(humanoidBunnyEntity, rabbitEntity, player);
         }
@@ -59,7 +59,7 @@ public abstract class QueenBunnyMixin extends AnimalEntity{
         HumanoidBunnyVariant variant = Util.getRandom(HumanoidBunnyVariant.values(), this.random);
         humanoidBunnyEntity.setVariant(variant);
 
-        rabbitEntity.world.spawnEntity(humanoidBunnyEntity);
+        rabbitEntity.getWorld().spawnEntity(humanoidBunnyEntity);
         rabbitEntity.discard();
     }
 }
