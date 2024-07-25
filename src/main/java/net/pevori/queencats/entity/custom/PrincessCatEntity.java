@@ -22,7 +22,6 @@ import net.minecraft.util.Util;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
-import net.pevori.queencats.entity.ModEntities;
 import net.pevori.queencats.entity.variant.HumanoidCatVariant;
 import net.pevori.queencats.item.ModItems;
 import org.jetbrains.annotations.Nullable;

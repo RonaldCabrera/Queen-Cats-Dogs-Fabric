@@ -7,7 +7,8 @@
     "QueenCatMixin",
     "QueenDogMixin",
     "QueenBunnyMixin",
-    "QueenCowMixin"
+    "QueenCowMixin",
+    "DyeItemMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -1,9 +1,7 @@
 package net.pevori.queencats.item;
 
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
-import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
 import net.minecraft.item.SpawnEggItem;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
@@ -65,6 +63,11 @@ public class ModItems {
 
     public static final Item PRINCESS_COW_SPAWN_EGG = registerItem("princess_cow_spawn_egg",
             new SpawnEggItem(ModEntities.PRINCESS_COW, 0xF3F7FA, 0x1D140E,
+                    new FabricItemSettings())
+    );
+
+    public static final Item QUEEN_SHEEP_SPAWN_EGG = registerItem("queen_sheep_spawn_egg",
+            new SpawnEggItem(ModEntities.QUEEN_SHEEP, 0xF3F7FA, 0x403524,
                     new FabricItemSettings())
     );
 

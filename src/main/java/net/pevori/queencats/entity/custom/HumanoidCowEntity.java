@@ -8,7 +8,6 @@ import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.passive.PassiveEntity;
-import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -20,7 +19,6 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.EntityView;
 import net.minecraft.world.World;
 import net.pevori.queencats.config.QueenCatsConfig;
 import net.pevori.queencats.entity.ModEntities;
@@ -64,7 +62,7 @@ public class HumanoidCowEntity extends HumanoidAnimalEntity implements GeoEntity
         return stack.getItem() == ModItems.KEMOMIMI_POTION;
     }
 
-    private PlayState predicate(AnimationState animationState) {
+    private PlayState predicate(AnimationState<HumanoidCowEntity> animationState) {
         if (this.isSitting()) {
             animationState.getController().setAnimation(RawAnimation.begin().then("animation.humanoidcow.sitting", Animation.LoopType.LOOP));
             return PlayState.CONTINUE;
@@ -79,7 +77,7 @@ public class HumanoidCowEntity extends HumanoidAnimalEntity implements GeoEntity
         return PlayState.CONTINUE;
     }
 
-    private PlayState attackPredicate(AnimationState state) {
+    private PlayState attackPredicate(AnimationState<HumanoidCowEntity> state) {
         if(this.handSwinging && state.getController().getAnimationState().equals(AnimationController.State.STOPPED)) {
             state.getController().forceAnimationReset();
             state.getController().setAnimation(RawAnimation.begin().then("animation.humanoidcow.attack", Animation.LoopType.PLAY_ONCE));

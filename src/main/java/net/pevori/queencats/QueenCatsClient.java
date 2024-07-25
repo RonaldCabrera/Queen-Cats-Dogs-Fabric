@@ -25,6 +25,8 @@ public class QueenCatsClient implements ClientModInitializer {
         EntityRendererRegistry.register(ModEntities.QUEEN_COW, QueenCowRenderer::new);
         EntityRendererRegistry.register(ModEntities.PRINCESS_COW, PrincessCowRenderer::new);
 
+        EntityRendererRegistry.register(ModEntities.QUEEN_SHEEP, QueenSheepRenderer::new);
+
         HumanoidAnimalScreenRegistries.registerScreenRenderers();
     }
 }

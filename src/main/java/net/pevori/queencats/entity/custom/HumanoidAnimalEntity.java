@@ -27,7 +27,6 @@ import net.minecraft.recipe.Ingredient;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
@@ -88,13 +87,14 @@ public abstract class HumanoidAnimalEntity extends TameableEntity implements Ext
     @Override
     public ActionResult interactMob(PlayerEntity player, Hand hand) {
         ItemStack itemStack = player.getStackInHand(hand);
+        World world = this.getWorld();
 
-        if (!this.getWorld().isClient && this.isOwner(player) && this.hasArmorSlot() && this.isValidArmor(itemStack) && !this.hasArmorInSlot()) {
+        if (!world.isClient && this.isOwner(player) && this.hasArmorSlot() && this.isValidArmor(itemStack) && !this.hasArmorInSlot()) {
             this.equipArmor(player, itemStack);
-            return ActionResult.success(this.getWorld().isClient);
+            return ActionResult.success(world.isClient);
         }
 
-        if (!this.getWorld().isClient && this.isOwner(player) && player.isSneaking()) {
+        if (!world.isClient && this.isOwner(player) && player.isSneaking()) {
             player.openHandledScreen(this);
             return ActionResult.SUCCESS;
         }

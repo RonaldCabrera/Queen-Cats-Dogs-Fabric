@@ -18,7 +18,6 @@ import net.minecraft.util.Util;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
-import net.pevori.queencats.entity.variant.HumanoidBunnyVariant;
 import net.pevori.queencats.entity.variant.HumanoidCowVariant;
 import net.pevori.queencats.item.ModItems;
 import org.jetbrains.annotations.Nullable;
@@ -58,6 +57,7 @@ public class QueenCowEntity extends HumanoidCowEntity{
     public ActionResult interactMob(PlayerEntity player, Hand hand) {
         ItemStack itemstack = player.getStackInHand(hand);
         Item item = itemstack.getItem();
+        World world = this.getWorld();
 
         if (isBreedingItem(itemstack)) {
             return super.interactMob(player, hand);
@@ -70,7 +70,7 @@ public class QueenCowEntity extends HumanoidCowEntity{
             player.setStackInHand(hand, itemStack2);
 
             this.playSound(getMilkingSound(), 1.0F, 1.0F);
-            return ActionResult.success(this.getWorld().isClient);
+            return ActionResult.success(world.isClient);
         }
 
         if (itemstack.isOf(Items.BUCKET) && this.isMilkableVariant()) {
@@ -80,7 +80,7 @@ public class QueenCowEntity extends HumanoidCowEntity{
             player.setStackInHand(hand, itemStack2);
 
             this.playSound(getMilkingSound(), 1.0F, 1.0F);
-            return ActionResult.success(this.getWorld().isClient);
+            return ActionResult.success(world.isClient);
         }
 
         if (item instanceof DyeItem && this.isOwner(player) && !player.isSneaking()) {

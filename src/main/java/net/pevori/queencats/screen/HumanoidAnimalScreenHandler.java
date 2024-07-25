@@ -11,7 +11,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
-import net.pevori.queencats.QueenCats;
 import net.pevori.queencats.entity.custom.HumanoidAnimalEntity;
 
 public class HumanoidAnimalScreenHandler extends ScreenHandler {

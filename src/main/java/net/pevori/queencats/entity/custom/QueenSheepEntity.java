@@ -6,7 +6,7 @@ import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.passive.PassiveEntity;
+import net.minecraft.entity.mob.AbstractSkeletonEntity;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.DyeItem;
@@ -14,39 +14,24 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.recipe.Ingredient;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.DyeColor;
 import net.minecraft.util.Hand;
-import net.minecraft.util.Util;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
-import net.pevori.queencats.entity.variant.HumanoidCowVariant;
 import net.pevori.queencats.item.ModItems;
 import org.jetbrains.annotations.Nullable;
 
-public class PrincessCowEntity extends HumanoidCowEntity{
-    public PrincessCowEntity(EntityType<? extends HumanoidCowEntity> entityType, World world) {
+public class QueenSheepEntity extends HumanoidSheepEntity{
+    public QueenSheepEntity(EntityType<? extends HumanoidSheepEntity> entityType, World world) {
         super(entityType, world);
-    }
-
-    @Nullable
-    @Override
-    public PassiveEntity createChild(ServerWorld world, PassiveEntity entity) {
-        return null;
-    }
-
-    @Override
-    public boolean isBaby() {
-        return true;
     }
 
     public static DefaultAttributeContainer.Builder setAttributes() {
         return TameableEntity.createMobAttributes()
                 .add(EntityAttributes.GENERIC_MAX_HEALTH, 20.0D)
-                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 4.0f)
-                .add(EntityAttributes.GENERIC_ATTACK_SPEED, 1.0f)
+                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 8.0f)
+                .add(EntityAttributes.GENERIC_ATTACK_SPEED, 2.0f)
                 .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.3f);
     }
 
@@ -57,7 +42,8 @@ public class PrincessCowEntity extends HumanoidCowEntity{
         this.goalSelector.add(1, new SitGoal(this));
         this.goalSelector.add(2, new MeleeAttackGoal(this, 1.25D, false));
         this.goalSelector.add(3, new FollowOwnerGoal(this, 1.0, 10.0f, 2.0f, false));
-        this.goalSelector.add(5, new TemptGoal(this, 1.0f, Ingredient.ofItems(ModItems.GOLDEN_WHEAT), false));
+        this.goalSelector.add(4, new AnimalMateGoal(this, 1.0));
+        this.goalSelector.add(5, new TemptGoal(this, 1.0f, Ingredient.ofItems(ModItems.GOLDEN_BONE), false));
         this.goalSelector.add(5, new WanderAroundPointOfInterestGoal(this, 1.0f, false));
         this.goalSelector.add(5, new WanderAroundFarGoal(this, 1.0, 1));
         this.goalSelector.add(6, new LookAroundGoal(this));
@@ -65,75 +51,61 @@ public class PrincessCowEntity extends HumanoidCowEntity{
 
         this.targetSelector.add(1, new TrackOwnerAttackerGoal(this));
         this.targetSelector.add(2, new AttackWithOwnerGoal(this));
+        this.targetSelector.add(4, new ActiveTargetGoal<>(this, AbstractSkeletonEntity.class, false));
     }
 
     @Override
     public ActionResult interactMob(PlayerEntity player, Hand hand) {
-        ItemStack itemstack = player.getStackInHand(hand);
-        Item item = itemstack.getItem();
+        ItemStack itemStack = player.getStackInHand(hand);
+        Item item = itemStack.getItem();
+
+        if (isBreedingItem(itemStack)) {
+            return super.interactMob(player, hand);
+        }
 
         if (item instanceof DyeItem && this.isOwner(player) && !player.isSneaking()) {
-            DyeColor dyeColor = ((DyeItem) item).getColor();
-            if (dyeColor == DyeColor.BLACK) {
-                this.setVariant(HumanoidCowVariant.COFFEE);
-            } else if (dyeColor == DyeColor.WHITE) {
-                this.setVariant(HumanoidCowVariant.MILKSHAKE);
-            } else if (dyeColor == DyeColor.RED) {
-                this.setVariant(HumanoidCowVariant.MOOSHROOM);
-            } else if (dyeColor == DyeColor.YELLOW) {
-                this.setVariant(HumanoidCowVariant.MOOBLOOM);
-            } else if (dyeColor == DyeColor.BROWN) {
-                this.setVariant(HumanoidCowVariant.WOOLY);
-            }
 
             if (!player.getAbilities().creativeMode) {
-                itemstack.decrement(1);
+                itemStack.decrement(1);
             }
 
             this.setPersistent();
             return ActionResult.CONSUME;
         }
 
-        if (item == itemForGrowth && isTamed() && this.isOwner(player) && !player.isSneaking()) {
-            if (!player.getAbilities().creativeMode) {
-                itemstack.decrement(1);
-            }
-            startGrowth();
-            return ActionResult.CONSUME;
-        }
-
-        if ((itemForHealing.test(itemstack)) && isTamed() && !player.isSneaking() && this.getHealth() < getMaxHealth()) {
-            if (this.getWorld().isClient()) {
-                return ActionResult.CONSUME;
-            } else {
-                if (!player.getAbilities().creativeMode) {
-                    itemstack.decrement(1);
-                }
-
-                if (!this.getWorld().isClient()) {
-                    this.eat(player, hand, itemstack);
-                    this.heal(10.0f);
-
-                    if (this.getHealth() > getMaxHealth()) {
-                        this.setHealth(getMaxHealth());
-                    }
-
-                    this.playSound(this.getEatSound(itemstack), 1.0f, 1.0f);
-                }
-
-                return ActionResult.SUCCESS;
-            }
-        }
+//        if ((isMeatItem(item)) && isTamed() && !player.isSneaking() && this.getHealth() < getMaxHealth()) {
+//            if (this.getWorld().isClient()) {
+//                return ActionResult.CONSUME;
+//            } else {
+//                if (!player.getAbilities().creativeMode) {
+//                    itemStack.decrement(1);
+//                }
+//
+//                if (!this.getWorld().isClient()) {
+//                    this.eat(player, hand, itemStack);
+//                    this.heal(10.0f);
+//
+//                    if (this.getHealth() > getMaxHealth()) {
+//                        this.setHealth(getMaxHealth());
+//                    }
+//
+//                    this.playSound(this.getEatSound(itemStack), 1.0f, 1.0f);
+//                }
+//
+//                return ActionResult.SUCCESS;
+//            }
+//        }
 
         else if (item == itemForTaming && !isTamed()) {
             if (this.getWorld().isClient()) {
                 return ActionResult.CONSUME;
             } else {
                 if (!player.getAbilities().creativeMode) {
-                    itemstack.decrement(1);
+                    itemStack.decrement(1);
                 }
 
                 if (!this.getWorld().isClient()) {
+                    this.playSound(this.getEatSound(itemStack), 1.0f, 1.0f);
                     super.setOwner(player);
                     this.navigation.recalculatePath();
                     this.setTarget(null);
@@ -151,7 +123,7 @@ public class PrincessCowEntity extends HumanoidCowEntity{
             return ActionResult.SUCCESS;
         }
 
-        if (itemstack.getItem() == itemForTaming) {
+        if (itemStack.getItem() == itemForTaming) {
             return ActionResult.PASS;
         }
 
@@ -162,21 +134,20 @@ public class PrincessCowEntity extends HumanoidCowEntity{
     public void setTamed(boolean tamed) {
         super.setTamed(tamed);
         if (tamed) {
-            getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH).setBaseValue(40.0D);
-            getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE).setBaseValue(3.5D);
-            getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED).setBaseValue((double) 0.3f);
+            getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH).setBaseValue(60.0D);
+            getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE).setBaseValue(5.0D);
+            getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED).setBaseValue(0.3f);
         } else {
             getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH).setBaseValue(20.0D);
             getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE).setBaseValue(2.0D);
-            getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED).setBaseValue((double) 0.3f);
+            getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED).setBaseValue(0.3f);
         }
     }
 
+
     @Override
     public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason,
-            @Nullable EntityData entityData, @Nullable NbtCompound entityNbt) {
-        HumanoidCowVariant variant = Util.getRandom(HumanoidCowVariant.values(), this.random);
-        setVariant(variant);
+                                 @Nullable EntityData entityData, @Nullable NbtCompound entityNbt) {
         return super.initialize(world, difficulty, spawnReason, entityData, entityNbt);
     }
 }

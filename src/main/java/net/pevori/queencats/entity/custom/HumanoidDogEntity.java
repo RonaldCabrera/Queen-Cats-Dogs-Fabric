@@ -3,29 +3,21 @@ package net.pevori.queencats.entity.custom;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.mob.CreeperEntity;
-import net.minecraft.entity.mob.GhastEntity;
-import net.minecraft.entity.passive.HorseEntity;
 import net.minecraft.entity.passive.PassiveEntity;
-import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.recipe.Ingredient;
 import net.minecraft.scoreboard.AbstractTeam;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.EntityView;
 import net.minecraft.world.World;
 import net.pevori.queencats.config.QueenCatsConfig;
 import net.pevori.queencats.entity.ModEntities;
@@ -75,7 +67,7 @@ public class HumanoidDogEntity extends HumanoidAnimalEntity implements GeoEntity
         return (s != null && s.toLowerCase().contains(koroSan));
     }
 
-    private PlayState predicate(AnimationState animationState) {
+    private PlayState predicate(AnimationState<HumanoidDogEntity> animationState) {
         if (this.isSitting()) {
             animationState.getController().setAnimation(RawAnimation.begin().then("animation.humanoiddog.sitting", Animation.LoopType.LOOP));
             return PlayState.CONTINUE;
@@ -90,7 +82,7 @@ public class HumanoidDogEntity extends HumanoidAnimalEntity implements GeoEntity
         return PlayState.CONTINUE;
     }
 
-    private PlayState attackPredicate(AnimationState state) {
+    private PlayState attackPredicate(AnimationState<HumanoidDogEntity> state) {
         if(this.handSwinging && state.getController().getAnimationState().equals(AnimationController.State.STOPPED)) {
             state.getController().forceAnimationReset();
             state.getController().setAnimation(RawAnimation.begin().then("animation.humanoiddog.attack", Animation.LoopType.PLAY_ONCE));

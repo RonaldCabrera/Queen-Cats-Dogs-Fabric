@@ -3,7 +3,6 @@ package net.pevori.queencats.entity.client;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.util.Identifier;
 import net.pevori.queencats.QueenCats;
-import net.pevori.queencats.entity.custom.PrincessBunnyEntity;
 import net.pevori.queencats.entity.custom.QueenDogEntity;
 import software.bernie.geckolib.constant.DataTickets;
 import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
