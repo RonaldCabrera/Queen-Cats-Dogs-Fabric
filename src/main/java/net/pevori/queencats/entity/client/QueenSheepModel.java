@@ -27,7 +27,7 @@ public class QueenSheepModel  extends GeoModel<QueenSheepEntity> {
 
     @Override
     public Identifier getAnimationResource(QueenSheepEntity animatable) {
-        return new Identifier(QueenCats.MOD_ID, "animations/humanoid_dog.animation.json");
+        return new Identifier(QueenCats.MOD_ID, "animations/humanoid_sheep.animation.json");
     }
 
     @Override
@@ -35,6 +35,12 @@ public class QueenSheepModel  extends GeoModel<QueenSheepEntity> {
         super.setCustomAnimations(animatable, instanceId, animationState);
 
         CoreGeoBone head = getAnimationProcessor().getBone("head");
+        CoreGeoBone overgrown = getAnimationProcessor().getBone("overgrown");
+
+        if (overgrown != null) {
+            overgrown.setHidden(animatable.isSheared());
+        }
+
         EntityModelData entityData = animationState.getData(DataTickets.ENTITY_MODEL_DATA);
 
         if (head != null) {

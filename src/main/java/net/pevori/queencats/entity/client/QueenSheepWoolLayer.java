@@ -5,7 +5,6 @@ import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.passive.SheepEntity;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.pevori.queencats.QueenCats;
@@ -17,7 +16,6 @@ import software.bernie.geckolib.renderer.layer.GeoRenderLayer;
 
 public class QueenSheepWoolLayer extends GeoRenderLayer<QueenSheepEntity> {
     private static final Identifier TEXTURE = new Identifier(QueenCats.MOD_ID, "textures/entity/queen_sheep/humanoid_sheep_wool.png");
-
 
     public QueenSheepWoolLayer(GeoRenderer<QueenSheepEntity> entityRendererIn) {
         super(entityRendererIn);

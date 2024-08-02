@@ -6,6 +6,7 @@
     "queencats.midnightconfig.enable_humanoid_dog_sounds":"Enable Humanoid Dog Sounds",
     "queencats.midnightconfig.enable_humanoid_bunny_sounds":"Enable Humanoid Bunny Sounds",
     "queencats.midnightconfig.enable_humanoid_cow_sounds":"Enable Humanoid Cow Sounds",
+    "queencats.midnightconfig.enable_humanoid_sheep_sounds":"Enable Humanoid Sheep Sounds",
 
     "item.queencats.golden_fish": "Golden Fish",
     "item.queencats.golden_bone": "Golden Bone",
@@ -21,6 +22,8 @@
     "item.queencats.princess_bunny_spawn_egg": "Princess Bunny Spawn Egg",
     "item.queencats.queen_cow_spawn_egg": "Queen Cow Spawn Egg",
     "item.queencats.princess_cow_spawn_egg": "Princess Cow Spawn Egg",
+    "item.queencats.queen_sheep_spawn_egg": "Queen Sheep Spawn Egg",
+    "item.queencats.princess_sheep_spawn_egg": "Princess Sheep Spawn Egg",
 
     "entity.queencats.queen_cat": "Queen Cat",
     "entity.queencats.princess_cat": "Princess Cat",
@@ -33,6 +36,9 @@
 
     "entity.queencats.queen_cow": "Queen Cow",
     "entity.queencats.princess_cow": "Princess Cow",
+
+    "entity.queencats.queen_sheep": "Queen Sheep",
+    "entity.queencats.princess_sheep": "Princess Sheep",
 
     "queencats.humanoid_cat_ambient": "Humanoid Cat Meows",
     "queencats.humanoid_cat_eat": "Humanoid Cat Eats",
@@ -53,5 +59,10 @@
     "queencats.humanoid_cow_eat": "Humanoid Cow Eats",
     "queencats.humanoid_cow_hurt": "Humanoid Cow Hurts",
     "queencats.humanoid_cow_death": "Humanoid Cow Dies",
-    "queencats.humanoid_cow_milk": "Humanoid Cow Milked"
+    "queencats.humanoid_cow_milk": "Humanoid Cow Milked",
+
+    "queencats.humanoid_sheep_ambient": "Humanoid Sheep Bleats",
+    "queencats.humanoid_sheep_eat": "Humanoid Sheep Eats",
+    "queencats.humanoid_sheep_hurt": "Humanoid Sheep Hurts",
+    "queencats.humanoid_sheep_death": "Humanoid Sheep Dies"
 }

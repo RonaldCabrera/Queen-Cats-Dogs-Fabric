@@ -22,6 +22,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.pevori.queencats.config.QueenCatsConfig;
 import net.pevori.queencats.entity.ModEntities;
+import net.pevori.queencats.entity.variant.HumanoidAnimalVariant;
 import net.pevori.queencats.entity.variant.HumanoidCowVariant;
 import net.pevori.queencats.item.ModItems;
 import net.pevori.queencats.sound.ModSounds;
@@ -216,7 +217,8 @@ public class HumanoidCowEntity extends HumanoidAnimalEntity implements GeoEntity
         return this.dataTracker.get(DATA_ID_TYPE_VARIANT);
     }
 
-    public void setVariant(HumanoidCowVariant variant) {
+    @Override
+    public void setVariant(HumanoidAnimalVariant variant) {
         this.dataTracker.set(DATA_ID_TYPE_VARIANT, variant.getId() & 255);
     }
 }

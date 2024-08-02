@@ -3,7 +3,7 @@ package net.pevori.queencats.entity.variant;
 import java.util.Arrays;
 import java.util.Comparator;
 
-public enum HumanoidCatVariant {
+public enum HumanoidCatVariant implements HumanoidAnimalVariant{
     WHITE(0),
     BLACK(1),
     CALICO(2),

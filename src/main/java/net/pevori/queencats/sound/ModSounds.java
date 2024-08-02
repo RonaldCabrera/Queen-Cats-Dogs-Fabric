@@ -29,6 +29,12 @@ public class ModSounds {
     public static SoundEvent HUMANOID_COW_DEATH = registerSoundEvent("humanoid_cow_death");
     public static SoundEvent HUMANOID_COW_MILK = registerSoundEvent("humanoid_cow_milk");
 
+    public static SoundEvent HUMANOID_SHEEP_AMBIENT = registerSoundEvent("humanoid_sheep_ambient");
+    public static SoundEvent HUMANOID_SHEEP_EAT = registerSoundEvent("humanoid_sheep_eat");
+    public static SoundEvent HUMANOID_SHEEP_HURT = registerSoundEvent("humanoid_sheep_hurt");
+    public static SoundEvent HUMANOID_SHEEP_DEATH = registerSoundEvent("humanoid_sheep_death");
+    public static SoundEvent HUMANOID_SHEEP_SHEAR = registerSoundEvent("humanoid_sheep_shear");
+
     public static SoundEvent HUMANOID_ENTITY_SILENT = registerSoundEvent("humanoid_entity_silent");
 
 

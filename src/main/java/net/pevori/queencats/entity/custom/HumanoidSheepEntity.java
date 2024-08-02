@@ -135,23 +135,23 @@
 
      private PlayState predicate(AnimationState<HumanoidSheepEntity> animationState) {
          if (this.isSitting()) {
-             animationState.getController().setAnimation(RawAnimation.begin().then("animation.humanoidcow.sitting", Animation.LoopType.LOOP));
+             animationState.getController().setAnimation(RawAnimation.begin().then("animation.humanoidsheep.sitting", Animation.LoopType.LOOP));
              return PlayState.CONTINUE;
          }
 
          if(animationState.isMoving()) {
-             animationState.getController().setAnimation(RawAnimation.begin().then("animation.humanoidcow.walk", Animation.LoopType.LOOP));
+             animationState.getController().setAnimation(RawAnimation.begin().then("animation.humanoidsheep.walk", Animation.LoopType.LOOP));
              return PlayState.CONTINUE;
          }
 
-         animationState.getController().setAnimation(RawAnimation.begin().then("animation.humanoidcow.idle", Animation.LoopType.LOOP));
+         animationState.getController().setAnimation(RawAnimation.begin().then("animation.humanoidsheep.idle", Animation.LoopType.LOOP));
          return PlayState.CONTINUE;
      }
 
      private PlayState attackPredicate(AnimationState<HumanoidSheepEntity> state) {
          if(this.handSwinging && state.getController().getAnimationState().equals(AnimationController.State.STOPPED)) {
              state.getController().forceAnimationReset();
-             state.getController().setAnimation(RawAnimation.begin().then("animation.humanoidcow.attack", Animation.LoopType.PLAY_ONCE));
+             state.getController().setAnimation(RawAnimation.begin().then("animation.humanoidsheep.attack", Animation.LoopType.PLAY_ONCE));
              this.handSwinging = false;
          }
 
@@ -173,22 +173,30 @@
 
      @Override
      protected SoundEvent getAmbientSound() {
-         return soundEventByConfig(QueenCatsConfig.enableHumanoidCowSounds, ModSounds.HUMANOID_COW_AMBIENT);
+         return soundEventByConfig(QueenCatsConfig.enableHumanoidSheepSounds, ModSounds.HUMANOID_SHEEP_AMBIENT);
      }
 
      @Override
      public SoundEvent getEatSound(ItemStack stack) {
-         return soundEventByConfig(QueenCatsConfig.enableHumanoidCowSounds, ModSounds.HUMANOID_COW_EAT);
+         return soundEventByConfig(QueenCatsConfig.enableHumanoidSheepSounds, ModSounds.HUMANOID_SHEEP_EAT);
      }
 
      @Override
      protected SoundEvent getHurtSound(DamageSource source) {
-         return soundEventByConfig(QueenCatsConfig.enableHumanoidCowSounds, ModSounds.HUMANOID_COW_HURT);
+         return soundEventByConfig(QueenCatsConfig.enableHumanoidSheepSounds, ModSounds.HUMANOID_SHEEP_HURT);
      }
 
      @Override
      protected SoundEvent getDeathSound() {
-         return soundEventByConfig(QueenCatsConfig.enableHumanoidCowSounds, ModSounds.HUMANOID_COW_DEATH);
+         return soundEventByConfig(QueenCatsConfig.enableHumanoidSheepSounds, ModSounds.HUMANOID_SHEEP_DEATH);
+     }
+
+     protected SoundEvent getShearSound(){
+        if(QueenCatsConfig.enableHumanoidSheepSounds){
+            return ModSounds.HUMANOID_SHEEP_SHEAR;
+        }
+
+        return SoundEvents.ENTITY_SHEEP_SHEAR;
      }
 
      @Override
@@ -238,7 +246,7 @@
 
      @Override
      public void sheared(SoundCategory shearedSoundCategory) {
-         this.getWorld().playSoundFromEntity(null, this, SoundEvents.ENTITY_SHEEP_SHEAR, shearedSoundCategory, 1.0f, 1.0f);
+         this.getWorld().playSoundFromEntity(null, this, this.getShearSound(), shearedSoundCategory, 1.0f, 1.0f);
          this.setSheared(true);
          int i = 1 + this.random.nextInt(3);
          for (int j = 0; j < i; ++j) {

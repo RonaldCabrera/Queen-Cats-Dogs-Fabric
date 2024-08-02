@@ -7,6 +7,9 @@ import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.LongDoorInteractGoal;
 import net.minecraft.entity.ai.pathing.MobNavigation;
+import net.minecraft.entity.data.DataTracker;
+import net.minecraft.entity.data.TrackedData;
+import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.CreeperEntity;
 import net.minecraft.entity.mob.GhastEntity;
 import net.minecraft.entity.passive.HorseEntity;
@@ -33,6 +36,8 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.world.EntityView;
 import net.minecraft.world.World;
+import net.pevori.queencats.entity.variant.HumanoidAnimalVariant;
+import net.pevori.queencats.entity.variant.HumanoidBunnyVariant;
 import net.pevori.queencats.screen.HumanoidAnimalScreenHandler;
 import org.jetbrains.annotations.Nullable;
 
@@ -276,5 +281,40 @@ public abstract class HumanoidAnimalEntity extends TameableEntity implements Ext
     @Override
     public EntityView method_48926() {
         return this.getWorld();
+    }
+
+    protected static final TrackedData<Boolean> SITTING =
+            DataTracker.registerData(HumanoidAnimalEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+
+    public void setSit(boolean sitting) {
+        this.dataTracker.set(SITTING, sitting);
+        super.setSitting(sitting);
+    }
+
+    public boolean isSitting() {
+        return this.dataTracker.get(SITTING);
+    }
+
+    /* VARIANTS */
+    protected static final TrackedData<Integer> DATA_ID_TYPE_VARIANT = DataTracker.registerData(HumanoidAnimalEntity.class,
+            TrackedDataHandlerRegistry.INTEGER);
+
+    public HumanoidAnimalVariant getVariant() {
+        return HumanoidAnimalVariant.byId(this.getTypeVariant() & 255);
+    }
+
+    private int getTypeVariant() {
+        return this.dataTracker.get(DATA_ID_TYPE_VARIANT);
+    }
+
+    public void setVariant(HumanoidAnimalVariant variant) {
+        this.dataTracker.set(DATA_ID_TYPE_VARIANT, variant.getId() & 255);
+    }
+
+    @Override
+    protected void initDataTracker() {
+        super.initDataTracker();
+        this.dataTracker.startTracking(SITTING, false);
+        this.dataTracker.startTracking(DATA_ID_TYPE_VARIANT, 0);
     }
 }

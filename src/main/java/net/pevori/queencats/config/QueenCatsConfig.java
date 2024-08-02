@@ -11,4 +11,6 @@ public class QueenCatsConfig extends MidnightConfig {
     public static boolean enableHumanoidBunnySounds = true;
     @Entry(name = "queencats.midnightconfig.enable_humanoid_cow_sounds")
     public static boolean enableHumanoidCowSounds = true;
+    @Entry(name = "queencats.midnightconfig.enable_humanoid_sheep_sounds")
+    public static boolean enableHumanoidSheepSounds = true;
 }

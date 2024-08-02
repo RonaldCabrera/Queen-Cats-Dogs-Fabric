@@ -23,7 +23,7 @@ public class ModItems {
     );
 
     public static final Item KEMOMIMI_POTION = registerItem("kemomimi_potion", 
-        new GlintedItem(new FabricItemSettings())
+        new KemomimiPotion(new FabricItemSettings())
     );
 
     public static final Item QUEEN_CAT_SPAWN_EGG = registerItem("queen_cat_spawn_egg",
