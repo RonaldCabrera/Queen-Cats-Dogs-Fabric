@@ -62,12 +62,17 @@ public class ModItems {
     );
 
     public static final Item PRINCESS_COW_SPAWN_EGG = registerItem("princess_cow_spawn_egg",
-            new SpawnEggItem(ModEntities.PRINCESS_COW, 0xF3F7FA, 0x1D140E,
+            new SpawnEggItem(ModEntities.PRINCESS_COW, 0xF3F7FA, 0x403424,
                     new FabricItemSettings())
     );
 
     public static final Item QUEEN_SHEEP_SPAWN_EGG = registerItem("queen_sheep_spawn_egg",
-            new SpawnEggItem(ModEntities.QUEEN_SHEEP, 0xF3F7FA, 0x403524,
+            new SpawnEggItem(ModEntities.QUEEN_SHEEP, 0xF3F7FA, 0xB1ADA4,
+                    new FabricItemSettings())
+    );
+
+    public static final Item PRINCESS_SHEEP_SPAWN_EGG = registerItem("princess_sheep_spawn_egg",
+            new SpawnEggItem(ModEntities.PRINCESS_SHEEP, 0xF3F7FA, 0xB1ADA4,
                     new FabricItemSettings())
     );
 

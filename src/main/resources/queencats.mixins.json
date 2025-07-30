@@ -6,8 +6,7 @@
   "mixins": [
     "QueenCatMixin",
     "QueenDogMixin",
-    "QueenBunnyMixin",
-    "DyeItemMixin"
+    "QueenBunnyMixin"
   ],
   "injectors": {
     "defaultRequire": 1

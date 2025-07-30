@@ -9,19 +9,19 @@ import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.pevori.queencats.QueenCats;
 import net.pevori.queencats.entity.custom.HumanoidSheepEntity;
-import net.pevori.queencats.entity.custom.QueenSheepEntity;
+import net.pevori.queencats.entity.custom.PrincessSheepEntity;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.renderer.GeoRenderer;
 import software.bernie.geckolib.renderer.layer.GeoRenderLayer;
 
-public class QueenSheepWoolLayer extends GeoRenderLayer<QueenSheepEntity> {
+public class PrincessSheepWoolLayer extends GeoRenderLayer<PrincessSheepEntity> {
     private static final Identifier TEXTURE = new Identifier(QueenCats.MOD_ID, "textures/entity/queen_sheep/humanoid_sheep_wool.png");
 
-    public QueenSheepWoolLayer(GeoRenderer<QueenSheepEntity> entityRendererIn) {
+    public PrincessSheepWoolLayer(GeoRenderer<PrincessSheepEntity> entityRendererIn) {
         super(entityRendererIn);
     }
 
-    public void render(MatrixStack poseStack, QueenSheepEntity animatable, BakedGeoModel bakedModel, RenderLayer renderType, VertexConsumerProvider bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
+    public void render(MatrixStack poseStack, PrincessSheepEntity animatable, BakedGeoModel bakedModel, RenderLayer renderType, VertexConsumerProvider bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
         float blue;
         float green;
         float red;

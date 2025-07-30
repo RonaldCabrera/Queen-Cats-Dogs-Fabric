@@ -27,6 +27,7 @@ public class ModItemGroup {
                         entries.add(ModItems.QUEEN_COW_SPAWN_EGG);
                         entries.add(ModItems.PRINCESS_COW_SPAWN_EGG);
                         entries.add(ModItems.QUEEN_SHEEP_SPAWN_EGG);
+                        entries.add(ModItems.PRINCESS_SHEEP_SPAWN_EGG);
                     }).build());
 
     public static void registerItemGroups(){

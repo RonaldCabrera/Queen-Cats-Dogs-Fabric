@@ -27,6 +27,7 @@ public class ModRegistries {
         FabricDefaultAttributeRegistry.register(ModEntities.PRINCESS_COW, PrincessCowEntity.setAttributes());
 
         FabricDefaultAttributeRegistry.register(ModEntities.QUEEN_SHEEP, QueenSheepEntity.setAttributes());
+        FabricDefaultAttributeRegistry.register(ModEntities.PRINCESS_SHEEP, PrincessSheepEntity.setAttributes());
     }
 
     private static void registerSounds(){

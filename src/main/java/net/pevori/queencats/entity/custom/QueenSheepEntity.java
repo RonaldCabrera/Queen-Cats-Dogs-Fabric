@@ -7,24 +7,42 @@ import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.AbstractSkeletonEntity;
+import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.DyeItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.recipe.Ingredient;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Util;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
+import net.pevori.queencats.entity.ModEntities;
+import net.pevori.queencats.entity.variant.HumanoidDogVariant;
 import net.pevori.queencats.item.ModItems;
 import org.jetbrains.annotations.Nullable;
 
-public class QueenSheepEntity extends HumanoidSheepEntity{
+public class QueenSheepEntity extends HumanoidSheepEntity {
     public QueenSheepEntity(EntityType<? extends HumanoidSheepEntity> entityType, World world) {
         super(entityType, world);
+    }
+
+    @Override
+    public PassiveEntity createChild(ServerWorld world, PassiveEntity entity) {
+        var baby = ModEntities.PRINCESS_SHEEP.create(world);
+        var variant = Util.getRandom(HumanoidDogVariant.values(), this.random);
+        baby.setVariant(variant);
+
+        if (this.isTamed()) {
+            baby.setOwnerUuid(this.getOwnerUuid());
+            baby.setTamed(true);
+        }
+
+        return baby;
     }
 
     public static DefaultAttributeContainer.Builder setAttributes() {
@@ -63,39 +81,6 @@ public class QueenSheepEntity extends HumanoidSheepEntity{
             return super.interactMob(player, hand);
         }
 
-        if (item instanceof DyeItem && this.isOwner(player) && !player.isSneaking()) {
-
-            if (!player.getAbilities().creativeMode) {
-                itemStack.decrement(1);
-            }
-
-            this.setPersistent();
-            return ActionResult.CONSUME;
-        }
-
-//        if ((isMeatItem(item)) && isTamed() && !player.isSneaking() && this.getHealth() < getMaxHealth()) {
-//            if (this.getWorld().isClient()) {
-//                return ActionResult.CONSUME;
-//            } else {
-//                if (!player.getAbilities().creativeMode) {
-//                    itemStack.decrement(1);
-//                }
-//
-//                if (!this.getWorld().isClient()) {
-//                    this.eat(player, hand, itemStack);
-//                    this.heal(10.0f);
-//
-//                    if (this.getHealth() > getMaxHealth()) {
-//                        this.setHealth(getMaxHealth());
-//                    }
-//
-//                    this.playSound(this.getEatSound(itemStack), 1.0f, 1.0f);
-//                }
-//
-//                return ActionResult.SUCCESS;
-//            }
-//        }
-
         else if (item == itemForTaming && !isTamed()) {
             if (this.getWorld().isClient()) {
                 return ActionResult.CONSUME;
@@ -116,11 +101,6 @@ public class QueenSheepEntity extends HumanoidSheepEntity{
 
                 return ActionResult.SUCCESS;
             }
-        }
-
-        if (isTamed() && this.isOwner(player) && !player.isSneaking() && !this.getWorld().isClient() && hand == Hand.MAIN_HAND) {
-            setSit(!isSitting());
-            return ActionResult.SUCCESS;
         }
 
         if (itemStack.getItem() == itemForTaming) {

@@ -6,6 +6,7 @@
   "queencats.midnightconfig.enable_humanoid_dog_sounds":"Activar Sonidos de Perro Humanoide",
   "queencats.midnightconfig.enable_humanoid_bunny_sounds":"Activar Sonidos de Conejo Humanoide",
   "queencats.midnightconfig.enable_humanoid_cow_sounds":"Activar Sonidos de Vaca Humanoide",
+  "queencats.midnightconfig.enable_humanoid_sheep_sounds":"Activar Sonidos de Oveja Humanoide",
 
   "item.queencats.golden_fish": "Pez dorado",
   "item.queencats.golden_bone": "Hueso dorado",
@@ -21,6 +22,8 @@
   "item.queencats.princess_bunny_spawn_egg": "Generar Princesa Conejo",
   "item.queencats.queen_cow_spawn_egg": "Generar Reina Vaca",
   "item.queencats.princess_cow_spawn_egg": "Generar Princesa Vaca",
+  "item.queencats.queen_sheep_spawn_egg": "Generar Reina Oveja",
+  "item.queencats.princess_sheep_spawn_egg": "Generar Princesa Oveja",
 
   "entity.queencats.queen_cat": "Reina Gato",
   "entity.queencats.princess_cat": "Princesa Gato",
@@ -33,6 +36,9 @@
 
   "entity.queencats.queen_cow": "Reina Vaca",
   "entity.queencats.princess_cow": "Princesa Vaca",
+
+  "entity.queencats.queen_sheep": "Reina Oveja",
+  "entity.queencats.princess_sheep": "Princesa Oveja",
 
   "queencats.humanoid_cat_ambient": "Maullidos de Gato Humanoide",
   "queencats.humanoid_cat_eat": "Gato Humanoide Comiendo",
@@ -50,8 +56,13 @@
   "queencats.humanoid_bunny_death": "Conejo Humanoide Muere",
 
   "queencats.humanoid_cow_ambient": "Mugidos de Vaca Humanoide",
-  "queencats.humanoid_cow_eat": "Vaca Humanoide Come",
+  "queencats.humanoid_cow_eat": "Vaca Humanoide Comiendo",
   "queencats.humanoid_cow_hurt": "Vaca Humanoide Herido",
   "queencats.humanoid_cow_death": "Vaca Humanoide Muere",
-  "queencats.humanoid_cow_milk": "Vaca Humanoide Ordeñada"
+  "queencats.humanoid_cow_milk": "Vaca Humanoide Ordeñada",
+
+  "queencats.humanoid_sheep_ambient": "Balido de Oveja Humanoide",
+  "queencats.humanoid_sheep_eat": "Oveja Humanoide Comiendo",
+  "queencats.humanoid_sheep_hurt": "Oveja Humanoide Herido",
+  "queencats.humanoid_sheep_death": "Oveja Humanoide Muere"
 }
