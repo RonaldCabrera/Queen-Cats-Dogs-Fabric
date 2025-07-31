@@ -76,15 +76,15 @@ public class ModItems {
                     new FabricItemSettings())
     );
 
-    private static Item registerItem(String name, Item item){
+    private static Item registerItem(String name, Item item) {
         return Registry.register(Registries.ITEM, new Identifier(QueenCats.MOD_ID, name), item);
     }
 
-    private static Item registerItem(String name, GlintedItem item){
+    private static Item registerItem(String name, GlintedItem item) {
         return Registry.register(Registries.ITEM, new Identifier(QueenCats.MOD_ID, name), item);
     }
 
-    public static void registerModItems(){
+    public static void registerModItems() {
         QueenCats.LOGGER.info("Registering Mod Items for " + QueenCats.MOD_ID);
     }
 

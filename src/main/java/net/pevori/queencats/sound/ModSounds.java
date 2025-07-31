@@ -38,17 +38,17 @@ public class ModSounds {
     public static SoundEvent HUMANOID_ENTITY_SILENT = registerSoundEvent("humanoid_entity_silent");
 
 
-    private static SoundEvent registerSoundEvent(String name){
+    private static SoundEvent registerSoundEvent(String name) {
         Identifier id = new Identifier(QueenCats.MOD_ID, name);
         return Registry.register(Registries.SOUND_EVENT, id, SoundEvent.of(id));
     }
 
-    public static void bootSounds(){
+    public static void bootSounds() {
         
     }
 
-    public static SoundEvent soundEventByConfig(boolean config, SoundEvent entitySound){
-        if(!config){
+    public static SoundEvent soundEventByConfig(boolean config, SoundEvent entitySound) {
+        if(!config) {
             return ModSounds.HUMANOID_ENTITY_SILENT;
         }
 

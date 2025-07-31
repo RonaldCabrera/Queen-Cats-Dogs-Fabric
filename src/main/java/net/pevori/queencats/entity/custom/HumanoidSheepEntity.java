@@ -13,12 +13,20 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
+import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.PassiveEntity;
+import net.minecraft.entity.passive.SheepEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.CraftingInventory;
+import net.minecraft.inventory.RecipeInputInventory;
 import net.minecraft.item.*;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.recipe.CraftingRecipe;
 import net.minecraft.recipe.Ingredient;
+import net.minecraft.recipe.RecipeEntry;
+import net.minecraft.recipe.RecipeType;
 import net.minecraft.scoreboard.AbstractTeam;
+import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
@@ -46,6 +54,7 @@ import software.bernie.geckolib.core.object.PlayState;
 import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.google.common.collect.Maps;
@@ -205,10 +214,14 @@ public class HumanoidSheepEntity extends HumanoidAnimalEntity implements GeoEnti
         ItemStack itemStack = player.getStackInHand(hand);
         Item item = itemStack.getItem();
 
+        if (isBreedingItem(itemStack)) {
+            return super.interactMob(player, hand);
+        }
+
         if (item instanceof DyeItem dyeItem && (!this.isTamed() || this.isOwner(player))) {
             DyeColor dyeColor = dyeItem.getColor();
 
-            if (this.getColor() == dyeColor){
+            if (this.getColor() == dyeColor) {
                 return ActionResult.PASS;
             }
 
@@ -248,6 +261,46 @@ public class HumanoidSheepEntity extends HumanoidAnimalEntity implements GeoEnti
         return DyeColor.byId(this.dataTracker.get(COLOR) & 0xF);
     }
 
+    protected DyeColor getChildColor(HumanoidSheepEntity mom, HumanoidSheepEntity otherMom) {
+        var momDyeColor = mom.getColor();
+        var otherMomDyeColor = otherMom.getColor();
+
+        return this.getMixedColor(momDyeColor, otherMomDyeColor);
+    }
+
+    private DyeColor getMixedColor(DyeColor firstDyeColor, DyeColor secondDyeColor) {
+        var world = this.getWorld();
+        var craftingInventory = new CraftingInventory(new ScreenHandler(null, 0) {
+            @Override
+            public ItemStack quickMove(PlayerEntity player, int slot) {
+                return ItemStack.EMPTY;
+            }
+
+            @Override public boolean canUse(PlayerEntity player) { return false; }
+        }, 2, 1);
+
+        craftingInventory.setStack(0, new ItemStack(DyeItem.byColor(firstDyeColor)));
+        craftingInventory.setStack(1, new ItemStack(DyeItem.byColor(secondDyeColor)));
+
+        var recipe = world.getRecipeManager()
+                .getFirstMatch(RecipeType.CRAFTING, craftingInventory, world)
+                .map(RecipeEntry::value).orElse(null);;
+
+        if (recipe != null) {
+            ItemStack result = recipe.craft(craftingInventory, world.getRegistryManager());
+
+            if (result.getItem() instanceof DyeItem dyeItem){
+                return dyeItem.getColor();
+            }
+        }
+
+        // if there somehow is no combination, then select the color of one of the parents
+        return world.random.nextBoolean()
+                ? firstDyeColor
+                : secondDyeColor;
+    }
+
+
     public void setColor(DyeColor color) {
         byte b = this.dataTracker.get(COLOR);
         this.dataTracker.set(COLOR, (byte) (b & 0xF0 | color.getId() & 0xF));
@@ -279,7 +332,7 @@ public class HumanoidSheepEntity extends HumanoidAnimalEntity implements GeoEnti
     }
 
     public boolean isShearable() {
-        return this.isAlive() && !this.isSheared() && !this.isBaby();
+        return this.isAlive() && !this.isSheared();
     }
 
     public boolean isSheared() {
@@ -332,12 +385,12 @@ public class HumanoidSheepEntity extends HumanoidAnimalEntity implements GeoEnti
     }
 
     public void startGrowth() {
-        QueenCowEntity queenEntity = ModEntities.QUEEN_COW.create(this.getWorld());
+        var queenEntity = ModEntities.QUEEN_SHEEP.create(this.getWorld());
         queenEntity.refreshPositionAndAngles(this.getX(), this.getY(), this.getZ(), this.getYaw(), this.getPitch());
         queenEntity.setAiDisabled(this.isAiDisabled());
         queenEntity.setInventory(this.inventory);
 
-        //queenCowEntity.setVariant(variant);
+        queenEntity.setColor(this.getColor());
 
         if (this.hasCustomName()) {
             queenEntity.setCustomName(this.getCustomName());

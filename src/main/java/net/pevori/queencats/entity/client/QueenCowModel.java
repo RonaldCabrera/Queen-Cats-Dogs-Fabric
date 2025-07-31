@@ -12,7 +12,7 @@ import software.bernie.geckolib.model.data.EntityModelData;
 public class QueenCowModel extends GeoModel<QueenCowEntity> {
     @Override
     public Identifier getModelResource(QueenCowEntity entity) {
-        if(entity.hasArmorInSlot()){
+        if(entity.hasArmorInSlot()) {
             return new Identifier(QueenCats.MOD_ID, "geo/humanoid_cow_armor.geo.json");
         }
 

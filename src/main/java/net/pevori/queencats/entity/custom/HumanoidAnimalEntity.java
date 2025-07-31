@@ -115,12 +115,12 @@ public abstract class HumanoidAnimalEntity extends TameableEntity implements Ext
         return this.hasStackEquipped(EquipmentSlot.CHEST);
     }
 
-    public boolean isValidArmor(ItemStack itemStack){
+    public boolean isValidArmor(ItemStack itemStack) {
         return equippableArmor.test(itemStack);
     }
 
     public void equipArmor(PlayerEntity player, ItemStack stack) {
-        if(!this.getWorld().isClient()){
+        if(!this.getWorld().isClient()) {
             if (this.isValidArmor(stack)) {
                 this.inventory.setStack(0, stack.copy());
                 this.playSound(SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0.5F, 1.0F);
@@ -135,7 +135,7 @@ public abstract class HumanoidAnimalEntity extends TameableEntity implements Ext
     }
 
     public void equipArmor(ItemStack stack) {
-        if(!this.getWorld().isClient()){
+        if(!this.getWorld().isClient()) {
             if (this.isValidArmor(stack)) {
                 this.equipStack(EquipmentSlot.CHEST, stack);
                 this.setEquipmentDropChance(EquipmentSlot.CHEST, 0.0F);
@@ -247,16 +247,16 @@ public abstract class HumanoidAnimalEntity extends TameableEntity implements Ext
         }
     }
 
-    public Inventory getInventory(){
-        if(this.inventory == null){
+    public Inventory getInventory() {
+        if(this.inventory == null) {
             return new SimpleInventory(this.getInventorySize());
         }
 
         return this.inventory;
     }
 
-    public void setInventory(Inventory inventory){
-        for(int i = 0; i < inventory.size(); i++){
+    public void setInventory(Inventory inventory) {
+        for(int i = 0; i < inventory.size(); i++) {
             this.inventory.setStack(i, inventory.getStack(i));
         }
     }

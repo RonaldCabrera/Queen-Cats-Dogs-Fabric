@@ -56,7 +56,7 @@ public class HumanoidCatEntity extends HumanoidAnimalEntity implements GeoEntity
         return false;
     }
 
-    public boolean isMogu(){
+    public boolean isMogu() {
         String s = Formatting.strip(this.getName().getString());
         return (s != null && s.toLowerCase().contains(okayuSan));
     }

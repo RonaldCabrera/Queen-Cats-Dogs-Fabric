@@ -77,7 +77,7 @@ public class HumanoidAnimalScreenHandler extends ScreenHandler {
         this.inventory.onClose(player);
     }
 
-    public HumanoidAnimalEntity getEntity(){
+    public HumanoidAnimalEntity getEntity() {
         return entity;
     }
 
@@ -85,7 +85,7 @@ public class HumanoidAnimalScreenHandler extends ScreenHandler {
         return 6;
     }
 
-    public Slot getCustomArmorSlot(){
+    public Slot getCustomArmorSlot() {
         return new Slot(inventory, 0, 8, 36) {
             public boolean canInsert(ItemStack stack) {
                 return isValidArmor(stack);
@@ -101,37 +101,37 @@ public class HumanoidAnimalScreenHandler extends ScreenHandler {
         };
     }
 
-    public boolean isValidArmor(ItemStack itemStack){
+    public boolean isValidArmor(ItemStack itemStack) {
         return itemStack.getItem() instanceof ArmorItem item && item.getSlotType() == EquipmentSlot.CHEST;
     }
 
-    public void addHumanoidAnimalInventory(){
-        int m, l;
+    public void addHumanoidAnimalInventory() {
+        int row, column;
         //The Humanoid Animal´s inventory
-        for (m = 0; m < 3; ++m) {
-            for (l = 0; l < getInventoryColumns(); ++l) {
-                this.addSlot(new Slot(inventory, 1 + l + m * getInventoryColumns(), 62 + l * 18, 18 + m * 18));
+        for (row = 0; row < 3; ++row) {
+            for (column = 0; column < getInventoryColumns(); ++column) {
+                this.addSlot(new Slot(inventory, 1 + column + row * getInventoryColumns(), 62 + column * 18, 18 + row * 18));
             }
         }
     }
 
-    public void addPlayerInventory(PlayerInventory playerInventory){
-        int m, l;
+    public void addPlayerInventory(PlayerInventory playerInventory) {
+        int row, column;
 
         //The player inventory
-        for (m = 0; m < 3; ++m) {
-            for (l = 0; l < 9; ++l) {
-                this.addSlot(new Slot(playerInventory, l + m * 9 + 9, 8 + l * 18, 84 + m * 18));
+        for (row = 0; row < 3; ++row) {
+            for (column = 0; column < 9; ++column) {
+                this.addSlot(new Slot(playerInventory, column + row * 9 + 9, 8 + column * 18, 84 + row * 18));
             }
         }
 
         //The player Hotbar
-        for (m = 0; m < 9; ++m) {
-            this.addSlot(new Slot(playerInventory, m, 8 + m * 18, 142));
+        for (row = 0; row < 9; ++row) {
+            this.addSlot(new Slot(playerInventory, row, 8 + row * 18, 142));
         }
     }
 
-    public HumanoidAnimalEntity getEntityServerSide(PacketByteBuf buf){
+    public HumanoidAnimalEntity getEntityServerSide(PacketByteBuf buf) {
         HumanoidAnimalEntity humanoidAnimal = (HumanoidAnimalEntity) MinecraftClient.getInstance().world.getEntityById(buf.readInt());
         this.entity = humanoidAnimal;
         return humanoidAnimal;

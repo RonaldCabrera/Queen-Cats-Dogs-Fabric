@@ -17,7 +17,7 @@ public class HumanoidAnimalScreenRegistries {
         HUMANOID_ANIMAL_SCREEN_HANDLER = Registry.register(Registries.SCREEN_HANDLER, HUMANOID_ANIMAL_SCREEN, new ExtendedScreenHandlerType<>(HumanoidAnimalScreenHandler::new));
     }
 
-    public static void registerScreenRenderers(){
+    public static void registerScreenRenderers() {
         HandledScreens.register(HUMANOID_ANIMAL_SCREEN_HANDLER, HumanoidAnimalScreen::new);
     }
 }

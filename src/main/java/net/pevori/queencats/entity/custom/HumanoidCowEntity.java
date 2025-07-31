@@ -121,7 +121,7 @@ public class HumanoidCowEntity extends HumanoidAnimalEntity implements GeoEntity
         return soundEventByConfig(QueenCatsConfig.enableHumanoidCowSounds, ModSounds.HUMANOID_COW_DEATH);
     }
 
-    protected SoundEvent getMilkingSound(){
+    protected SoundEvent getMilkingSound() {
         return soundEventByConfig(QueenCatsConfig.enableHumanoidCowSounds, ModSounds.HUMANOID_COW_MILK);
     }
 
@@ -199,12 +199,12 @@ public class HumanoidCowEntity extends HumanoidAnimalEntity implements GeoEntity
     protected static final TrackedData<Integer> DATA_ID_TYPE_VARIANT = DataTracker.registerData(HumanoidCowEntity.class,
             TrackedDataHandlerRegistry.INTEGER);
 
-    public boolean isMilkableVariant(){
+    public boolean isMilkableVariant() {
         HumanoidCowVariant variant = this.getVariant();
         return variant != HumanoidCowVariant.MOOSHROOM && variant != HumanoidCowVariant.MOOBLOOM;
     }
 
-    public boolean isStewableVariant(){
+    public boolean isStewableVariant() {
         HumanoidCowVariant variant = this.getVariant();
         return variant == HumanoidCowVariant.MOOSHROOM || variant == HumanoidCowVariant.MOOBLOOM;
     }

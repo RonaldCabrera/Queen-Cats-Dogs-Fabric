@@ -45,7 +45,7 @@ public class HumanoidDogEntity extends HumanoidAnimalEntity implements GeoEntity
     }
 
     @Override
-    public PassiveEntity createChild(ServerWorld var1, PassiveEntity var2) {
+    public PassiveEntity createChild(ServerWorld world, PassiveEntity entity) {
         return null;
     }
 
@@ -62,7 +62,7 @@ public class HumanoidDogEntity extends HumanoidAnimalEntity implements GeoEntity
         return stack.getItem() == ModItems.KEMOMIMI_POTION;
     }
 
-    public boolean isDoog(){
+    public boolean isDoog() {
         String s = Formatting.strip(this.getName().getString());
         return (s != null && s.toLowerCase().contains(koroSan));
     }
@@ -107,7 +107,7 @@ public class HumanoidDogEntity extends HumanoidAnimalEntity implements GeoEntity
 
     @Override
     protected SoundEvent getAmbientSound() {
-        if(this.isAttacking()){
+        if(this.isAttacking()) {
             return soundEventByConfig(QueenCatsConfig.enableHumanoidDogSounds, ModSounds.HUMANOID_DOG_ANGRY);
         }
 

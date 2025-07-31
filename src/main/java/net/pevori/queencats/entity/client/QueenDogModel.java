@@ -13,7 +13,7 @@ import software.bernie.geckolib.model.data.EntityModelData;
 public class QueenDogModel extends GeoModel<QueenDogEntity> {
     @Override
     public Identifier getModelResource(QueenDogEntity object) {
-        if(object.hasStackEquipped(EquipmentSlot.CHEST)){
+        if(object.hasStackEquipped(EquipmentSlot.CHEST)) {
             return new Identifier(QueenCats.MOD_ID, "geo/humanoid_dog_armor.geo.json");
         }
 

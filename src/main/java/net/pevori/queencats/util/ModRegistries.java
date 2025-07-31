@@ -30,11 +30,11 @@ public class ModRegistries {
         FabricDefaultAttributeRegistry.register(ModEntities.PRINCESS_SHEEP, PrincessSheepEntity.setAttributes());
     }
 
-    private static void registerSounds(){
+    private static void registerSounds() {
         ModSounds.bootSounds();
     }
 
-    private static void registerScreens(){
+    private static void registerScreens() {
         HumanoidAnimalScreenRegistries.registerScreenHandlers();
     }
 }

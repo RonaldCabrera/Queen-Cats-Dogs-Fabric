@@ -61,7 +61,7 @@ public class HumanoidBunnyEntity extends HumanoidAnimalEntity implements GeoEnti
         super.onDeath(source);
     }
 
-    public boolean isAlmond(){
+    public boolean isAlmond() {
         String s = Formatting.strip(this.getName().getString());
         return (s != null && s.toLowerCase().contains(pekoSan));
     }

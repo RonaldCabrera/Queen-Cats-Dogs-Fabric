@@ -19,8 +19,8 @@ public class PrincessDogModel extends GeoModel<PrincessDogEntity> {
 
     @Override
     public Identifier getTextureResource(PrincessDogEntity object) {
-        if(object.hasCustomName()){
-            if(object.getCustomName().toString() == koroSan){
+        if(object.hasCustomName()) {
+            if(object.getCustomName().toString() == koroSan) {
                 return new Identifier(QueenCats.MOD_ID, "textures/entity/queen_dog/humanoid_dog_doog.png");
             }
         }

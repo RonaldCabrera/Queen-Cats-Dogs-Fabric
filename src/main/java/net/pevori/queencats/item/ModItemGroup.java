@@ -30,7 +30,7 @@ public class ModItemGroup {
                         entries.add(ModItems.PRINCESS_SHEEP_SPAWN_EGG);
                     }).build());
 
-    public static void registerItemGroups(){
+    public static void registerItemGroups() {
 
     }
 }

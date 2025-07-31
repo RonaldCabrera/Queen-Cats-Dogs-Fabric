@@ -8,6 +8,7 @@ import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.AbstractSkeletonEntity;
 import net.minecraft.entity.passive.PassiveEntity;
+import net.minecraft.entity.passive.SheepEntity;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -33,16 +34,15 @@ public class QueenSheepEntity extends HumanoidSheepEntity {
 
     @Override
     public PassiveEntity createChild(ServerWorld world, PassiveEntity entity) {
-        var baby = ModEntities.PRINCESS_SHEEP.create(world);
-        var variant = Util.getRandom(HumanoidDogVariant.values(), this.random);
-        baby.setVariant(variant);
+        var childEntity = ModEntities.PRINCESS_SHEEP.create(world);
+        childEntity.setColor(this.getChildColor(this, (HumanoidSheepEntity) entity));
 
         if (this.isTamed()) {
-            baby.setOwnerUuid(this.getOwnerUuid());
-            baby.setTamed(true);
+            childEntity.setOwnerUuid(this.getOwnerUuid());
+            childEntity.setTamed(true);
         }
 
-        return baby;
+        return childEntity;
     }
 
     public static DefaultAttributeContainer.Builder setAttributes() {

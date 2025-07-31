@@ -33,7 +33,7 @@ public class PrincessDogRenderer extends GeoEntityRenderer<PrincessDogEntity> {
 
     @Override
     public Identifier getTextureLocation(PrincessDogEntity instance) {
-        if(instance.isDoog()){
+        if(instance.isDoog()) {
             return new Identifier(QueenCats.MOD_ID, "textures/entity/queen_dog/humanoid_dog_doog.png");
         }
 

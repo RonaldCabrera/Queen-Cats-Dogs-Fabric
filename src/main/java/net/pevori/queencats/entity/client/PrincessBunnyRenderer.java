@@ -33,7 +33,7 @@ public class PrincessBunnyRenderer extends GeoEntityRenderer<PrincessBunnyEntity
 
     @Override
     public Identifier getTextureLocation(PrincessBunnyEntity instance) {
-        if(instance.isAlmond()){
+        if(instance.isAlmond()) {
             return new Identifier(QueenCats.MOD_ID, "textures/entity/queen_bunny/humanoid_bunny_almond.png");
         }
 
