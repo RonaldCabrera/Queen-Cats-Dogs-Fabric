@@ -6,7 +6,6 @@ import net.pevori.queencats.config.QueenCatsConfig;
 import net.pevori.queencats.item.ModItemGroup;
 import net.pevori.queencats.item.ModItems;
 import net.pevori.queencats.util.ModRegistries;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

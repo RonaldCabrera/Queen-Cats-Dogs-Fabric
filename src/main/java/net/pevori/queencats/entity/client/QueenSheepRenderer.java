@@ -7,7 +7,6 @@ import net.minecraft.util.Identifier;
 import net.pevori.queencats.QueenCats;
 import net.pevori.queencats.entity.custom.QueenSheepEntity;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.example.client.renderer.entity.layer.CoolKidGlassesLayer;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class QueenSheepRenderer extends GeoEntityRenderer<QueenSheepEntity> {

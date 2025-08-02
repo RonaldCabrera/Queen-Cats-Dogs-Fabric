@@ -1,6 +1,5 @@
 package net.pevori.queencats.entity.client;
 
-import java.util.Map;
 import com.google.common.collect.Maps;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -12,6 +11,8 @@ import net.pevori.queencats.entity.custom.PrincessCowEntity;
 import net.pevori.queencats.entity.variant.HumanoidCowVariant;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
+
+import java.util.Map;
 
 public class PrincessCowRenderer extends GeoEntityRenderer<PrincessCowEntity> {
     public static final Map<HumanoidCowVariant, Identifier> LOCATION_BY_VARIANT =

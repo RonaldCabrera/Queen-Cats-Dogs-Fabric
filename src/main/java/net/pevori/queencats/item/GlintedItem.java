@@ -1,7 +1,5 @@
 package net.pevori.queencats.item;
 
-import java.util.List;
-
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -9,6 +7,8 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Rarity;
 import net.minecraft.util.UseAction;
 import net.minecraft.world.World;
+
+import java.util.List;
 
 public class GlintedItem extends Item {
 

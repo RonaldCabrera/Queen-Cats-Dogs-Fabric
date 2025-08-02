@@ -25,7 +25,6 @@ import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
 import net.pevori.queencats.entity.variant.HumanoidDogVariant;
 import net.pevori.queencats.item.ModItems;
-
 import org.jetbrains.annotations.Nullable;
 
 public class PrincessDogEntity extends HumanoidDogEntity{

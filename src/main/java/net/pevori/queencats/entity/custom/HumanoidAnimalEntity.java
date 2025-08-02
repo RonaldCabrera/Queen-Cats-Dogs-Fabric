@@ -37,7 +37,6 @@ import net.minecraft.util.Hand;
 import net.minecraft.world.EntityView;
 import net.minecraft.world.World;
 import net.pevori.queencats.entity.variant.HumanoidAnimalVariant;
-import net.pevori.queencats.entity.variant.HumanoidBunnyVariant;
 import net.pevori.queencats.screen.HumanoidAnimalScreenHandler;
 import org.jetbrains.annotations.Nullable;
 

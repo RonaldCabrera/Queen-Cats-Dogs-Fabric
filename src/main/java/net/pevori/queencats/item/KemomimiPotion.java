@@ -7,7 +7,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Util;
-import net.pevori.queencats.QueenCats;
 import net.pevori.queencats.entity.ModEntities;
 import net.pevori.queencats.entity.custom.*;
 import net.pevori.queencats.entity.variant.*;

@@ -1,29 +1,20 @@
 package net.pevori.queencats.entity.custom;
 
+import com.google.common.collect.Maps;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.entity.EntityData;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.Shearable;
-import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.EatGrassGoal;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.PassiveEntity;
-import net.minecraft.entity.passive.SheepEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.CraftingInventory;
-import net.minecraft.inventory.RecipeInputInventory;
 import net.minecraft.item.*;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.recipe.CraftingRecipe;
 import net.minecraft.recipe.Ingredient;
-import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.scoreboard.AbstractTeam;
 import net.minecraft.screen.ScreenHandler;
@@ -31,7 +22,10 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.*;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.DyeColor;
+import net.minecraft.util.Hand;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.LocalDifficulty;
@@ -48,16 +42,14 @@ import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animatable.instance.SingletonAnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.*;
 import software.bernie.geckolib.core.object.PlayState;
 
 import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
-
-import com.google.common.collect.Maps;
 
 import static net.pevori.queencats.sound.ModSounds.soundEventByConfig;
 
@@ -68,7 +60,6 @@ public class HumanoidSheepEntity extends HumanoidAnimalEntity implements GeoEnti
     protected Ingredient itemForHealing = Ingredient.ofItems(Items.WHEAT, ModItems.GOLDEN_WHEAT);
     protected Item itemForGrowth = ModItems.KEMOMIMI_POTION;
 
-    private static final int MAX_GRASS_TIMER = 40;
     private static final TrackedData<Byte> COLOR = DataTracker.registerData(HumanoidSheepEntity.class, TrackedDataHandlerRegistry.BYTE);
     protected static final TrackedData<Boolean> SHEARED = DataTracker.registerData(HumanoidSheepEntity.class,
             TrackedDataHandlerRegistry.BOOLEAN);
@@ -282,12 +273,10 @@ public class HumanoidSheepEntity extends HumanoidAnimalEntity implements GeoEnti
         craftingInventory.setStack(0, new ItemStack(DyeItem.byColor(firstDyeColor)));
         craftingInventory.setStack(1, new ItemStack(DyeItem.byColor(secondDyeColor)));
 
-        var recipe = world.getRecipeManager()
-                .getFirstMatch(RecipeType.CRAFTING, craftingInventory, world)
-                .map(RecipeEntry::value).orElse(null);;
+        var recipe = world.getRecipeManager().getFirstMatch(RecipeType.CRAFTING, craftingInventory, world);
 
-        if (recipe != null) {
-            ItemStack result = recipe.craft(craftingInventory, world.getRegistryManager());
+        if (recipe.isPresent()) {
+            ItemStack result = recipe.get().craft(craftingInventory, world.getRegistryManager());
 
             if (result.getItem() instanceof DyeItem dyeItem){
                 return dyeItem.getColor();
@@ -299,7 +288,6 @@ public class HumanoidSheepEntity extends HumanoidAnimalEntity implements GeoEnti
                 ? firstDyeColor
                 : secondDyeColor;
     }
-
 
     public void setColor(DyeColor color) {
         byte b = this.dataTracker.get(COLOR);
@@ -427,7 +415,7 @@ public class HumanoidSheepEntity extends HumanoidAnimalEntity implements GeoEnti
     }
 
     public boolean canBeLeashedBy(PlayerEntity player) {
-        return false;
+        return true;
     }
 
     @Override

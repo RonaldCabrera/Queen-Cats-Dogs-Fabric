@@ -7,8 +7,8 @@
 				"texture_width": 128,
 				"texture_height": 64,
 				"visible_bounds_width": 5,
-				"visible_bounds_height": 5,
-				"visible_bounds_offset": [0, 2.5, 0]
+				"visible_bounds_height": 6,
+				"visible_bounds_offset": [0, 2, 0]
 			},
 			"bones": [
 				{
@@ -50,9 +50,9 @@
 				{
 					"name": "overgrown",
 					"parent": "head",
-					"pivot": [0, 26, 0],
+					"pivot": [0, 26, -0.675],
 					"cubes": [
-						{"origin": [-4, 24.57231, -4], "size": [8, 8, -1], "inflate": 0.6, "uv": [9, 9]}
+						{"origin": [-4.5, 23.32231, -4.525], "size": [9, 10, 0.1], "uv": [96, 39]}
 					]
 				},
 				{

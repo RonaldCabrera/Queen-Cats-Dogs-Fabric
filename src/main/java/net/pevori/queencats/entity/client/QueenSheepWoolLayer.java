@@ -21,6 +21,7 @@ public class QueenSheepWoolLayer extends GeoRenderLayer<QueenSheepEntity> {
         super(entityRendererIn);
     }
 
+    @Override
     public void render(MatrixStack poseStack, QueenSheepEntity animatable, BakedGeoModel bakedModel, RenderLayer renderType, VertexConsumerProvider bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
         float blue;
         float green;
@@ -43,14 +44,31 @@ public class QueenSheepWoolLayer extends GeoRenderLayer<QueenSheepEntity> {
             green = currentColorRGB[1] * (1.0f - transitionProgress) + nextColorRGB[1] * transitionProgress;
             blue = currentColorRGB[2] * (1.0f - transitionProgress) + nextColorRGB[2] * transitionProgress;
 
-        } else {
+        }
+        else {
             float[] defaultColorRGB = HumanoidSheepEntity.getRgbColor(animatable.getColor());
             red = defaultColorRGB[0];
             green = defaultColorRGB[1];
             blue = defaultColorRGB[2];
         }
 
-        RenderLayer armorRenderType = RenderLayer.getArmorCutoutNoCull(TEXTURE);
-        this.getRenderer().reRender(this.getDefaultBakedModel(animatable), poseStack, bufferSource, animatable, armorRenderType, bufferSource.getBuffer(armorRenderType), partialTick, packedLight, OverlayTexture.DEFAULT_UV, red, green, blue, 1.0F);
+        var renderMarkingType = RenderLayer.getEntityCutoutNoCull(TEXTURE);
+
+        this.getRenderer().reRender(
+                this.getDefaultBakedModel(animatable),
+                poseStack,
+                bufferSource,
+                animatable,
+                renderMarkingType,
+                bufferSource.getBuffer(renderMarkingType),
+                partialTick,
+                packedLight,
+                OverlayTexture.DEFAULT_UV,
+                red,
+                green,
+                blue,
+                1.0F);
+
+        super.render(poseStack, animatable, bakedModel, renderType, bufferSource, buffer, partialTick, packedLight, packedOverlay);
     }
 }

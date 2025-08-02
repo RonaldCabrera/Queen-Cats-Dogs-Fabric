@@ -1,8 +1,8 @@
 package net.pevori.queencats.entity.client;
 
+import net.minecraft.util.Identifier;
 import net.pevori.queencats.QueenCats;
 import net.pevori.queencats.entity.custom.PrincessCatEntity;
-import net.minecraft.util.Identifier;
 import software.bernie.geckolib.constant.DataTickets;
 import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
