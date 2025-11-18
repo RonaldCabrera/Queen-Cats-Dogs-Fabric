@@ -1,4 +1,4 @@
-package net.pevori.queencats.screen;
+package net.pevori.queencats.screen.custom;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.EquipmentSlot;
@@ -11,30 +11,28 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
+import net.minecraft.util.math.BlockPos;
 import net.pevori.queencats.entity.custom.HumanoidAnimalEntity;
+import net.pevori.queencats.network.packet.HumanoidScreenHandlerPacketS2C;
+import net.pevori.queencats.screen.ModScreenHandlers;
 
 public class HumanoidAnimalScreenHandler extends ScreenHandler {
     private Inventory inventory;
-    private int entityId;
     private HumanoidAnimalEntity entity;
 
     // Client ScreenHandler Initializer
-    public HumanoidAnimalScreenHandler(int syncId, PlayerInventory playerInventory, PacketByteBuf buf) {
-        this(syncId, playerInventory, (HumanoidAnimalEntity) MinecraftClient.getInstance().world.getEntityById(buf.readInt()));
-        this.entityId = buf.readInt();
-
-        this.inventory = new SimpleInventory(19);
-        this.entity = (HumanoidAnimalEntity) MinecraftClient.getInstance().world.getEntityById(entityId);
-        this.inventory.onOpen(playerInventory.player);
+    public HumanoidAnimalScreenHandler(int syncId, PlayerInventory playerInventory, HumanoidScreenHandlerPacketS2C packet) {
+        this(syncId, playerInventory, (HumanoidAnimalEntity) playerInventory.player.getWorld().getEntityById(packet.entityId()));
     }
 
     // Server ScreenHandler Initializer
     public HumanoidAnimalScreenHandler(int syncId, PlayerInventory playerInventory, HumanoidAnimalEntity entity) {
-        super(HumanoidAnimalScreenRegistries.HUMANOID_ANIMAL_SCREEN_HANDLER, syncId);
+        super(ModScreenHandlers.HUMANOID_ANIMAL_SCREEN_HANDLER, syncId);
 
-        Inventory entityInventory = entity.getInventory();
-        checkSize(entityInventory, 19);
-        this.inventory = entityInventory;
+        //Inventory entityInventory = entity.getInventory();
+        //checkSize(entityInventory, 19);
+        this.entity = entity;
+        this.inventory = entity.getInventory();
 
         this.addSlot(getCustomArmorSlot());
         this.addHumanoidAnimalInventory();
@@ -129,11 +127,5 @@ public class HumanoidAnimalScreenHandler extends ScreenHandler {
         for (row = 0; row < 9; ++row) {
             this.addSlot(new Slot(playerInventory, row, 8 + row * 18, 142));
         }
-    }
-
-    public HumanoidAnimalEntity getEntityServerSide(PacketByteBuf buf) {
-        HumanoidAnimalEntity humanoidAnimal = (HumanoidAnimalEntity) MinecraftClient.getInstance().world.getEntityById(buf.readInt());
-        this.entity = humanoidAnimal;
-        return humanoidAnimal;
     }
 }

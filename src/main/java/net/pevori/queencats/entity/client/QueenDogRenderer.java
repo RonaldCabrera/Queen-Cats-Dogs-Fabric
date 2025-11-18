@@ -18,13 +18,13 @@ public class QueenDogRenderer extends GeoEntityRenderer<QueenDogEntity> {
     public static final Map<HumanoidDogVariant, Identifier> LOCATION_BY_VARIANT =
     Util.make(Maps.newEnumMap(HumanoidDogVariant.class), (map) -> {
         map.put(HumanoidDogVariant.SHIRO,
-                new Identifier(QueenCats.MOD_ID, "textures/entity/queen_dog/humanoid_dog_shiro.png"));
+                Identifier.of(QueenCats.MOD_ID, "textures/entity/queen_dog/humanoid_dog_shiro.png"));
         map.put(HumanoidDogVariant.HUSKY,
-                new Identifier(QueenCats.MOD_ID, "textures/entity/queen_dog/humanoid_dog_husky.png"));
+                Identifier.of(QueenCats.MOD_ID, "textures/entity/queen_dog/humanoid_dog_husky.png"));
         map.put(HumanoidDogVariant.CREAM,
-                new Identifier(QueenCats.MOD_ID, "textures/entity/queen_dog/humanoid_dog_cream.png"));
+                Identifier.of(QueenCats.MOD_ID, "textures/entity/queen_dog/humanoid_dog_cream.png"));
         map.put(HumanoidDogVariant.GRAY,
-                new Identifier(QueenCats.MOD_ID, "textures/entity/queen_dog/humanoid_dog_gray.png"));
+                Identifier.of(QueenCats.MOD_ID, "textures/entity/queen_dog/humanoid_dog_gray.png"));
     });
 
     public QueenDogRenderer(EntityRendererFactory.Context ctx) {
@@ -33,8 +33,8 @@ public class QueenDogRenderer extends GeoEntityRenderer<QueenDogEntity> {
 
     @Override
     public Identifier getTextureLocation(QueenDogEntity instance) {
-        if(instance.isDoog()) {
-            return new Identifier(QueenCats.MOD_ID, "textures/entity/queen_dog/humanoid_dog_doog.png");
+        if(instance.hasHoloNameEasterEgg()) {
+            return Identifier.of(QueenCats.MOD_ID, "textures/entity/queen_dog/humanoid_dog_doog.png");
         }
 
         return LOCATION_BY_VARIANT.get(instance.getVariant());

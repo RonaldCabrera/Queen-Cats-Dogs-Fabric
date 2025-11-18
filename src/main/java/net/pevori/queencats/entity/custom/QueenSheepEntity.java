@@ -39,7 +39,7 @@ public class QueenSheepEntity extends HumanoidSheepEntity {
 
         if (this.isTamed()) {
             childEntity.setOwnerUuid(this.getOwnerUuid());
-            childEntity.setTamed(true);
+            childEntity.setTamed(true, true);
         }
 
         return childEntity;
@@ -59,7 +59,7 @@ public class QueenSheepEntity extends HumanoidSheepEntity {
         this.goalSelector.add(0, new SwimGoal(this));
         this.goalSelector.add(1, new SitGoal(this));
         this.goalSelector.add(2, new MeleeAttackGoal(this, 1.25D, false));
-        this.goalSelector.add(3, new FollowOwnerGoal(this, 1.0, 10.0f, 2.0f, false));
+        this.goalSelector.add(3, new FollowOwnerGoal(this, 1.0, 10.0f, 2.0f));
         this.goalSelector.add(4, new AnimalMateGoal(this, 1.0));
         this.goalSelector.add(5, new TemptGoal(this, 1.0f, Ingredient.ofItems(ModItems.GOLDEN_BONE), false));
         this.goalSelector.add(5, new WanderAroundPointOfInterestGoal(this, 1.0f, false));
@@ -85,9 +85,7 @@ public class QueenSheepEntity extends HumanoidSheepEntity {
             if (this.getWorld().isClient()) {
                 return ActionResult.CONSUME;
             } else {
-                if (!player.getAbilities().creativeMode) {
-                    itemStack.decrement(1);
-                }
+                itemStack.decrementUnlessCreative(1, player);
 
                 if (!this.getWorld().isClient()) {
                     this.playSound(this.getEatSound(itemStack), 1.0f, 1.0f);
@@ -111,23 +109,7 @@ public class QueenSheepEntity extends HumanoidSheepEntity {
     }
 
     @Override
-    public void setTamed(boolean tamed) {
-        super.setTamed(tamed);
-        if (tamed) {
-            getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH).setBaseValue(60.0D);
-            getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE).setBaseValue(5.0D);
-            getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED).setBaseValue(0.3f);
-        } else {
-            getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH).setBaseValue(20.0D);
-            getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE).setBaseValue(2.0D);
-            getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED).setBaseValue(0.3f);
-        }
-    }
-
-
-    @Override
-    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason,
-                                 @Nullable EntityData entityData, @Nullable NbtCompound entityNbt) {
-        return super.initialize(world, difficulty, spawnReason, entityData, entityNbt);
+    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData) {
+        return super.initialize(world, difficulty, spawnReason, entityData);
     }
 }

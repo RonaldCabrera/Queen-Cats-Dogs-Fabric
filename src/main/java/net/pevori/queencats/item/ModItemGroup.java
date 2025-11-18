@@ -10,7 +10,7 @@ import net.minecraft.util.Identifier;
 import net.pevori.queencats.QueenCats;
 
 public class ModItemGroup {
-    public static ItemGroup QUEENCATS = Registry.register(Registries.ITEM_GROUP, new Identifier(QueenCats.MOD_ID, "queencats"),
+    public static ItemGroup QUEENCATS = Registry.register(Registries.ITEM_GROUP, Identifier.of(QueenCats.MOD_ID, "queencats"),
             FabricItemGroup.builder().displayName(Text.literal("Queen Cats & Dogs"))
                     .icon(() -> new ItemStack(ModItems.GOLDEN_FISH)).entries((displayContext, entries) -> {
                         entries.add(ModItems.GOLDEN_FISH);

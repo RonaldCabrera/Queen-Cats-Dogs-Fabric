@@ -7,11 +7,10 @@ import net.minecraft.util.Identifier;
 import net.pevori.queencats.QueenCats;
 import net.pevori.queencats.entity.custom.QueenSheepEntity;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.example.client.renderer.entity.layer.CoolKidGlassesLayer;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class QueenSheepRenderer extends GeoEntityRenderer<QueenSheepEntity> {
-    private static final Identifier TEXTURE = new Identifier(QueenCats.MOD_ID, "textures/entity/queen_sheep/humanoid_sheep.png");
+    private static final Identifier TEXTURE = Identifier.of(QueenCats.MOD_ID, "textures/entity/queen_sheep/humanoid_sheep.png");
 
     public QueenSheepRenderer(EntityRendererFactory.Context ctx) {
         super(ctx, new QueenSheepModel());

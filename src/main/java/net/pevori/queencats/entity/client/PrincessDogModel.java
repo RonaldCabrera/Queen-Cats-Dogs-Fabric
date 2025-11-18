@@ -4,8 +4,7 @@ import net.minecraft.util.Identifier;
 import net.pevori.queencats.QueenCats;
 import net.pevori.queencats.entity.custom.PrincessDogEntity;
 import software.bernie.geckolib.constant.DataTickets;
-import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
-import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.model.data.EntityModelData;
 
@@ -14,14 +13,14 @@ public class PrincessDogModel extends GeoModel<PrincessDogEntity> {
 
     @Override
     public Identifier getModelResource(PrincessDogEntity object) {
-        return new Identifier(QueenCats.MOD_ID, "geo/humanoid_dog_children.geo.json");
+        return Identifier.of(QueenCats.MOD_ID, "geo/humanoid_dog_children.geo.json");
     }
 
     @Override
     public Identifier getTextureResource(PrincessDogEntity object) {
         if(object.hasCustomName()) {
             if(object.getCustomName().toString() == koroSan) {
-                return new Identifier(QueenCats.MOD_ID, "textures/entity/queen_dog/humanoid_dog_doog.png");
+                return Identifier.of(QueenCats.MOD_ID, "textures/entity/queen_dog/humanoid_dog_doog.png");
             }
         }
 
@@ -30,14 +29,14 @@ public class PrincessDogModel extends GeoModel<PrincessDogEntity> {
 
     @Override
     public Identifier getAnimationResource(PrincessDogEntity animatable) {
-        return new Identifier(QueenCats.MOD_ID, "animations/humanoid_dog.animation.json");
+        return Identifier.of(QueenCats.MOD_ID, "animations/humanoid_dog.animation.json");
     }
 
     @Override
     public void setCustomAnimations(PrincessDogEntity animatable, long instanceId, AnimationState<PrincessDogEntity> animationState) {
         super.setCustomAnimations(animatable, instanceId, animationState);
 
-        CoreGeoBone head = getAnimationProcessor().getBone("head");
+        var head = getAnimationProcessor().getBone("head");
         EntityModelData entityData = animationState.getData(DataTickets.ENTITY_MODEL_DATA);
 
         if (head != null) {

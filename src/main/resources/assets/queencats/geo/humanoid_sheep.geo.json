@@ -7,8 +7,8 @@
 				"texture_width": 128,
 				"texture_height": 64,
 				"visible_bounds_width": 5,
-				"visible_bounds_height": 5,
-				"visible_bounds_offset": [0, 2.5, 0]
+				"visible_bounds_height": 6,
+				"visible_bounds_offset": [0, 2, 0]
 			},
 			"bones": [
 				{
@@ -22,6 +22,14 @@
 					"cubes": [
 						{"origin": [-4, 24.82231, -4], "size": [8, 8, 8], "uv": [0, 16]},
 						{"origin": [-4, 24.82231, -4], "size": [8, 8, 8], "inflate": 0.5, "uv": [0, 0]}
+					]
+				},
+				{
+					"name": "overgrown",
+					"parent": "head",
+					"pivot": [0, 26, -0.675],
+					"cubes": [
+						{"origin": [-4.5, 23.32231, -4.525], "size": [9, 10, 0.1], "uv": [96, 39]}
 					]
 				},
 				{
@@ -45,14 +53,6 @@
 					"cubes": [
 						{"origin": [-5, 26.2, -0.5], "size": [1.5, 5, 1], "pivot": [-4.5, 29.2, 0], "rotation": [0, 90, 90], "uv": [26, 49], "mirror": true},
 						{"origin": [-5, 26.2, -0.5], "size": [1.5, 4, 1], "pivot": [-4.5, 28.2, 0], "rotation": [0, 90, 90], "uv": [25, 49], "mirror": true}
-					]
-				},
-				{
-					"name": "overgrown",
-					"parent": "head",
-					"pivot": [0, 26, 0],
-					"cubes": [
-						{"origin": [-4, 24.57231, -4], "size": [8, 8, -1], "inflate": 0.6, "uv": [9, 9]}
 					]
 				},
 				{

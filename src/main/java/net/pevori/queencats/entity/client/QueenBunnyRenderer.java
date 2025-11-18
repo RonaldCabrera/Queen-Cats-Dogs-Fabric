@@ -18,13 +18,13 @@ public class QueenBunnyRenderer extends GeoEntityRenderer<QueenBunnyEntity> {
     public static final Map<HumanoidBunnyVariant, Identifier> LOCATION_BY_VARIANT =
             Util.make(Maps.newEnumMap(HumanoidBunnyVariant.class), (map) -> {
                 map.put(HumanoidBunnyVariant.COCOA,
-                        new Identifier(QueenCats.MOD_ID, "textures/entity/queen_bunny/humanoid_bunny_cocoa.png"));
+                        Identifier.of(QueenCats.MOD_ID, "textures/entity/queen_bunny/humanoid_bunny_cocoa.png"));
                 map.put(HumanoidBunnyVariant.SNOW,
-                        new Identifier(QueenCats.MOD_ID, "textures/entity/queen_bunny/humanoid_bunny_snow.png"));
+                        Identifier.of(QueenCats.MOD_ID, "textures/entity/queen_bunny/humanoid_bunny_snow.png"));
                 map.put(HumanoidBunnyVariant.SUNDAY,
-                        new Identifier(QueenCats.MOD_ID, "textures/entity/queen_bunny/humanoid_bunny_sunday.png"));
+                        Identifier.of(QueenCats.MOD_ID, "textures/entity/queen_bunny/humanoid_bunny_sunday.png"));
                 map.put(HumanoidBunnyVariant.STRAWBERRY,
-                        new Identifier(QueenCats.MOD_ID, "textures/entity/queen_bunny/humanoid_bunny_strawberry.png"));
+                        Identifier.of(QueenCats.MOD_ID, "textures/entity/queen_bunny/humanoid_bunny_strawberry.png"));
             });
 
     public QueenBunnyRenderer(EntityRendererFactory.Context ctx) {
@@ -33,8 +33,8 @@ public class QueenBunnyRenderer extends GeoEntityRenderer<QueenBunnyEntity> {
 
     @Override
     public Identifier getTextureLocation(QueenBunnyEntity instance) {
-        if(instance.isAlmond()) {
-            return new Identifier(QueenCats.MOD_ID, "textures/entity/queen_bunny/humanoid_bunny_almond.png");
+        if(instance.hasHoloNameEasterEgg()) {
+            return Identifier.of(QueenCats.MOD_ID, "textures/entity/queen_bunny/humanoid_bunny_almond.png");
         }
 
         return LOCATION_BY_VARIANT.get(instance.getVariant());

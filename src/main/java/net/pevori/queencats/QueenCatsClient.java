@@ -4,9 +4,11 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
+import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.pevori.queencats.entity.ModEntities;
 import net.pevori.queencats.entity.client.*;
-import net.pevori.queencats.screen.HumanoidAnimalScreenRegistries;
+import net.pevori.queencats.screen.ModScreenHandlers;
+import net.pevori.queencats.screen.custom.HumanoidAnimalScreen;
 
 @Environment(EnvType.CLIENT)
 public class QueenCatsClient implements ClientModInitializer {
@@ -28,6 +30,6 @@ public class QueenCatsClient implements ClientModInitializer {
         EntityRendererRegistry.register(ModEntities.QUEEN_SHEEP, QueenSheepRenderer::new);
         EntityRendererRegistry.register(ModEntities.PRINCESS_SHEEP, PrincessSheepRenderer::new);
 
-        HumanoidAnimalScreenRegistries.registerScreenRenderers();
+        HandledScreens.register(ModScreenHandlers.HUMANOID_ANIMAL_SCREEN_HANDLER, HumanoidAnimalScreen::new);
     }
 }

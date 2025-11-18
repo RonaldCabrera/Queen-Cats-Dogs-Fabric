@@ -1,4 +1,4 @@
-package net.pevori.queencats.screen;
+package net.pevori.queencats.screen.custom;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.DrawContext;
@@ -7,9 +7,13 @@ import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
+import net.pevori.queencats.QueenCats;
 import net.pevori.queencats.entity.custom.HumanoidAnimalEntity;
 
 public class HumanoidAnimalScreen extends HandledScreen<HumanoidAnimalScreenHandler> {
+    public static final Identifier GUI_TEXTURE =
+            Identifier.of(QueenCats.MOD_ID, "textures/gui/container/humanoid_animal.png");
     private final HumanoidAnimalEntity entity;
 
     public HumanoidAnimalScreen(HumanoidAnimalScreenHandler handler, PlayerInventory inventory, Text text) {
@@ -20,8 +24,9 @@ public class HumanoidAnimalScreen extends HandledScreen<HumanoidAnimalScreenHand
     @Override
     protected void drawBackground(DrawContext context, float delta, int mouseX, int mouseY) {
         RenderSystem.setShader(GameRenderer::getPositionTexProgram);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, HumanoidAnimalScreenRegistries.TEXTURE);
+        RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
+        RenderSystem.setShaderTexture(0, GUI_TEXTURE);
+
         int x = (width - backgroundWidth) / 2;
         int y = (height - backgroundHeight) / 2;
 
@@ -31,13 +36,13 @@ public class HumanoidAnimalScreen extends HandledScreen<HumanoidAnimalScreenHand
         }*/
 
         // Draws the background of the inventory.
-        context.drawTexture(HumanoidAnimalScreenRegistries.TEXTURE, x, y, 0, 0, backgroundWidth, backgroundHeight);
+        context.drawTexture(GUI_TEXTURE, x, y, 0, 0, backgroundWidth, backgroundHeight);
 
         // Draws the entity inventory slots.
-        context.drawTexture(HumanoidAnimalScreenRegistries.TEXTURE, x + 61, y + 17, 0, this.backgroundHeight, 6 * 18, 54);
+        context.drawTexture(GUI_TEXTURE, x + 61, y + 17, 0, this.backgroundHeight, 6 * 18, 54);
 
         // Draws the player inventory and hotbar slots.
-        context.drawTexture(HumanoidAnimalScreenRegistries.TEXTURE, x + 7, y + 35, 0, this.backgroundHeight + 54, 18, 18);
+        context.drawTexture(GUI_TEXTURE, x + 7, y + 35, 0, this.backgroundHeight + 54, 18, 18);
 
         // Draws the entity render in the black box.
         InventoryScreen.drawEntity(context, x + 20, y + 18, x + 68, y + 70, 20, 0.25f, mouseX, mouseY, this.entity);

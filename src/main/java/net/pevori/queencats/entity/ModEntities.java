@@ -6,6 +6,8 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.Identifier;
 import net.pevori.queencats.QueenCats;
 import net.pevori.queencats.entity.custom.*;
@@ -17,52 +19,56 @@ public class ModEntities {
     public static final float princessSizeWidth = 0.45f;
 
     public static final EntityType<QueenCatEntity> QUEEN_CAT = Registry.register(
-        Registries.ENTITY_TYPE, new Identifier(QueenCats.MOD_ID, "queen_cat"),
-        FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, QueenCatEntity::new)
-                .dimensions(EntityDimensions.fixed(queenSizeWidth, queenSizeHeight)).build());
+        Registries.ENTITY_TYPE, Identifier.of(QueenCats.MOD_ID, "queen_cat"),
+            EntityType.Builder.create(QueenCatEntity::new, SpawnGroup.CREATURE)
+                .dimensions(queenSizeWidth, queenSizeHeight).build());
 
     public static final EntityType<PrincessCatEntity> PRINCESS_CAT = Registry.register(
-        Registries.ENTITY_TYPE, new Identifier(QueenCats.MOD_ID, "princess_cat"),
-        FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, PrincessCatEntity::new)
-                .dimensions(EntityDimensions.fixed(princessSizeWidth, princessSizeHeight)).build());
+        Registries.ENTITY_TYPE, Identifier.of(QueenCats.MOD_ID, "princess_cat"),
+            EntityType.Builder.create(PrincessCatEntity::new, SpawnGroup.CREATURE)
+                .dimensions(princessSizeWidth, princessSizeHeight).build());
 
     public static final EntityType<QueenDogEntity> QUEEN_DOG = Registry.register(
-        Registries.ENTITY_TYPE, new Identifier(QueenCats.MOD_ID, "queen_dog"),
-        FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, QueenDogEntity::new)
-                .dimensions(EntityDimensions.fixed(queenSizeWidth, queenSizeHeight)).build());
+        Registries.ENTITY_TYPE, Identifier.of(QueenCats.MOD_ID, "queen_dog"),
+            EntityType.Builder.create(QueenDogEntity::new, SpawnGroup.CREATURE)
+                .dimensions(queenSizeWidth, queenSizeHeight).build());
 
     public static final EntityType<PrincessDogEntity> PRINCESS_DOG = Registry.register(
-        Registries.ENTITY_TYPE, new Identifier(QueenCats.MOD_ID, "princess_dog"),
-        FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, PrincessDogEntity::new)
-                .dimensions(EntityDimensions.fixed(princessSizeWidth, princessSizeHeight)).build());
+        Registries.ENTITY_TYPE, Identifier.of(QueenCats.MOD_ID, "princess_dog"),
+            EntityType.Builder.create(PrincessDogEntity::new, SpawnGroup.CREATURE)
+                .dimensions(princessSizeWidth, princessSizeHeight).build());
 
     public static final EntityType<QueenBunnyEntity> QUEEN_BUNNY = Registry.register(
-        Registries.ENTITY_TYPE, new Identifier(QueenCats.MOD_ID, "queen_bunny"),
-        FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, QueenBunnyEntity::new)
-                .dimensions(EntityDimensions.fixed(queenSizeWidth, queenSizeHeight)).build());
+        Registries.ENTITY_TYPE, Identifier.of(QueenCats.MOD_ID, "queen_bunny"),
+            EntityType.Builder.create(QueenBunnyEntity::new, SpawnGroup.CREATURE)
+                .dimensions(queenSizeWidth, queenSizeHeight).build());
 
     public static final EntityType<PrincessBunnyEntity> PRINCESS_BUNNY = Registry.register(
-        Registries.ENTITY_TYPE, new Identifier(QueenCats.MOD_ID, "princess_bunny"),
-        FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, PrincessBunnyEntity::new)
-                .dimensions(EntityDimensions.fixed(princessSizeWidth, princessSizeHeight)).build());
+        Registries.ENTITY_TYPE, Identifier.of(QueenCats.MOD_ID, "princess_bunny"),
+            EntityType.Builder.create(PrincessBunnyEntity::new, SpawnGroup.CREATURE)
+                .dimensions(princessSizeWidth, princessSizeHeight).build());
 
     public static final EntityType<QueenCowEntity> QUEEN_COW = Registry.register(
-            Registries.ENTITY_TYPE, new Identifier(QueenCats.MOD_ID, "queen_cow"),
-            FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, QueenCowEntity::new)
-                    .dimensions(EntityDimensions.fixed(queenSizeWidth, queenSizeHeight)).build());
+            Registries.ENTITY_TYPE, Identifier.of(QueenCats.MOD_ID, "queen_cow"),
+            EntityType.Builder.create(QueenCowEntity::new, SpawnGroup.CREATURE)
+                    .dimensions(queenSizeWidth, queenSizeHeight).build());
 
     public static final EntityType<PrincessCowEntity> PRINCESS_COW = Registry.register(
-            Registries.ENTITY_TYPE, new Identifier(QueenCats.MOD_ID, "princess_cow"),
-            FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, PrincessCowEntity::new)
-                    .dimensions(EntityDimensions.fixed(princessSizeWidth, princessSizeHeight)).build());
+            Registries.ENTITY_TYPE, Identifier.of(QueenCats.MOD_ID, "princess_cow"),
+            EntityType.Builder.create(PrincessCowEntity::new, SpawnGroup.CREATURE)
+                    .dimensions(princessSizeWidth, princessSizeHeight).build());
 
     public static final EntityType<QueenSheepEntity> QUEEN_SHEEP = Registry.register(
-            Registries.ENTITY_TYPE, new Identifier(QueenCats.MOD_ID, "queen_sheep"),
-            FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, QueenSheepEntity::new)
-                    .dimensions(EntityDimensions.fixed(queenSizeWidth, queenSizeHeight)).build());
+            Registries.ENTITY_TYPE, Identifier.of(QueenCats.MOD_ID, "queen_sheep"),
+            EntityType.Builder.create(QueenSheepEntity::new, SpawnGroup.CREATURE)
+                    .dimensions(queenSizeWidth, queenSizeHeight).build());
 
     public static final EntityType<PrincessSheepEntity> PRINCESS_SHEEP = Registry.register(
-            Registries.ENTITY_TYPE, new Identifier(QueenCats.MOD_ID, "princess_sheep"),
-            FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, PrincessSheepEntity::new)
-                    .dimensions(EntityDimensions.fixed(princessSizeWidth, princessSizeHeight)).build());
+            Registries.ENTITY_TYPE, Identifier.of(QueenCats.MOD_ID, "princess_sheep"),
+            EntityType.Builder.create(PrincessSheepEntity::new, SpawnGroup.CREATURE)
+                    .dimensions(princessSizeWidth, princessSizeHeight).build());
+
+    public static void registerModEntities() {
+        QueenCats.LOGGER.info("Registering Mod Entities for " + QueenCats.MOD_ID);
+    }
 }

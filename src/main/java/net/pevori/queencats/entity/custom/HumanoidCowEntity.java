@@ -2,65 +2,123 @@ package net.pevori.queencats.entity.custom;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
+import net.minecraft.item.*;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.recipe.Ingredient;
-import net.minecraft.scoreboard.AbstractTeam;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.DyeColor;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
 import net.pevori.queencats.config.QueenCatsConfig;
-import net.pevori.queencats.entity.ModEntities;
 import net.pevori.queencats.entity.variant.HumanoidAnimalVariant;
 import net.pevori.queencats.entity.variant.HumanoidCowVariant;
 import net.pevori.queencats.item.ModItems;
 import net.pevori.queencats.sound.ModSounds;
+
 import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animatable.instance.SingletonAnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.*;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animatable.instance.SingletonAnimatableInstanceCache;
+import software.bernie.geckolib.animation.*;
 
 import static net.pevori.queencats.sound.ModSounds.soundEventByConfig;
 
 public class HumanoidCowEntity extends HumanoidAnimalEntity implements GeoEntity {
-    private AnimatableInstanceCache factory = new SingletonAnimatableInstanceCache(this);
+    private final AnimatableInstanceCache factory = new SingletonAnimatableInstanceCache(this);
 
     protected Item itemForTaming = ModItems.GOLDEN_WHEAT;
     protected Ingredient itemForHealing = Ingredient.ofItems(Items.WHEAT, ModItems.GOLDEN_WHEAT);
     protected Item itemForGrowth = ModItems.KEMOMIMI_POTION;
+
+    protected static final TrackedData<Boolean> SITTING = DataTracker.registerData(HumanoidCowEntity.class,
+            TrackedDataHandlerRegistry.BOOLEAN);
+    protected static final TrackedData<Integer> DATA_ID_TYPE_VARIANT = DataTracker.registerData(HumanoidCowEntity.class,
+            TrackedDataHandlerRegistry.INTEGER);
 
     protected HumanoidCowEntity(EntityType<? extends HumanoidAnimalEntity> entityType, World world) {
         super(entityType, world);
     }
 
     @Override
-    public PassiveEntity createChild(ServerWorld var1, PassiveEntity var2) {
-        return null;
-    }
+    public ActionResult interactMob(PlayerEntity player, Hand hand) {
+        ItemStack itemStack = player.getStackInHand(hand);
+        Item item = itemStack.getItem();
 
-    @Override
-    public void onDeath(DamageSource source) {
-        if (this.hasStackEquipped(EquipmentSlot.CHEST)) {
-            this.dropStack(getEquippedStack(EquipmentSlot.CHEST));
+        if (this.isTamed()) {
+            if (this.isOwner(player)){
+                if (isBreedingItem(itemStack) && !player.isSneaking()) {
+                    return super.interactMob(player, hand);
+                }
+                else if (item instanceof DyeItem && !player.isSneaking()) {
+                    DyeColor dyeColor = ((DyeItem) item).getColor();
+                    if (dyeColor == DyeColor.BLACK) {
+                        this.setVariant(HumanoidCowVariant.COFFEE);
+                    } else if (dyeColor == DyeColor.WHITE) {
+                        this.setVariant(HumanoidCowVariant.MILKSHAKE);
+                    } else if (dyeColor == DyeColor.RED) {
+                        this.setVariant(HumanoidCowVariant.MOOSHROOM);
+                    } else if (dyeColor == DyeColor.YELLOW) {
+                        this.setVariant(HumanoidCowVariant.MOOBLOOM);
+                    } else if (dyeColor == DyeColor.BROWN) {
+                        this.setVariant(HumanoidCowVariant.WOOLY);
+                    }
+
+                    itemStack.decrementUnlessCreative(1, player);
+                    this.setPersistent();
+
+                    return ActionResult.success(this.getWorld().isClient());
+                }
+                else if (itemStack.isOf(Items.BOWL) && this.isStewableVariant() && !this.isBaby()) {
+                    var stewItemStack = new ItemStack(Items.MUSHROOM_STEW);
+                    var exchangeStack = ItemUsage.exchangeStack(itemStack, player, stewItemStack, false);
+                    player.setStackInHand(hand, exchangeStack);
+
+                    this.playSound(getMilkingSound(), 1.0F, 1.0F);
+                    return ActionResult.success(this.getWorld().isClient);
+                }
+                else if (itemStack.isOf(Items.BUCKET) && this.isMilkableVariant() && !this.isBaby()) {
+                    var milkItemStack = new ItemStack(Items.MILK_BUCKET);
+                    var exchangeStack = ItemUsage.exchangeStack(itemStack, player, milkItemStack, false);
+                    player.setStackInHand(hand, exchangeStack);
+
+                    this.playSound(getMilkingSound(), 1.0F, 1.0F);
+                    return ActionResult.success(this.getWorld().isClient);
+                }
+                else if ((itemForHealing.test(itemStack)) && this.getHealth() < getMaxHealth()) {
+                    itemStack.decrementUnlessCreative(1, player);
+
+                    if (!this.getWorld().isClient()) {
+                        this.eat(player, hand, itemStack);
+                        this.heal(10.0f);
+                    }
+
+                    return ActionResult.success(this.getWorld().isClient());
+                }
+                else if (!player.isSneaking() && !this.getWorld().isClient() && hand == Hand.MAIN_HAND) {
+                    setSit(!isSitting());
+                    return ActionResult.SUCCESS;
+                }
+            }
         }
-        super.onDeath(source);
-    }
+        else if (item == itemForTaming) {
+            if (!this.getWorld().isClient()) {
+                this.eat(player, hand, itemStack);
+                this.tryTame(player);
+                this.setPersistent();
+            }
 
-    @Override
-    public boolean isBreedingItem(ItemStack stack) {
-        return stack.getItem() == ModItems.KEMOMIMI_POTION;
+            return ActionResult.SUCCESS;
+        }
+
+        return super.interactMob(player, hand);
     }
 
     private PlayState predicate(AnimationState<HumanoidCowEntity> animationState) {
@@ -130,10 +188,16 @@ public class HumanoidCowEntity extends HumanoidAnimalEntity implements GeoEntity
         this.playSound(SoundEvents.ENTITY_COW_STEP, 0.15f, 1.0f);
     }
 
-    /* TAMEABLE ENTITY */
-    protected static final TrackedData<Boolean> SITTING = DataTracker.registerData(HumanoidCowEntity.class,
-            TrackedDataHandlerRegistry.BOOLEAN);
+    @Override
+    protected void eat(PlayerEntity player, Hand hand, ItemStack stack) {
+        if (this.isBreedingItem(stack)) {
+            this.playSound(getEatSound(stack), 1.0F, 1.0F);
+        }
 
+        super.eat(player, hand, stack);
+    }
+
+    /* TAMEABLE ENTITY */
     public void setSit(boolean sitting) {
         this.dataTracker.set(SITTING, sitting);
         super.setSitting(sitting);
@@ -141,28 +205,6 @@ public class HumanoidCowEntity extends HumanoidAnimalEntity implements GeoEntity
 
     public boolean isSitting() {
         return this.dataTracker.get(SITTING);
-    }
-
-    public void startGrowth() {
-        HumanoidCowVariant variant = this.getVariant();
-        QueenCowEntity queenCowEntity = ModEntities.QUEEN_COW.create(this.getWorld());
-        queenCowEntity.refreshPositionAndAngles(this.getX(), this.getY(), this.getZ(), this.getYaw(), this.getPitch());
-        queenCowEntity.setAiDisabled(this.isAiDisabled());
-        queenCowEntity.setInventory(this.inventory);
-
-        queenCowEntity.setVariant(variant);
-
-        if (this.hasCustomName()) {
-            queenCowEntity.setCustomName(this.getCustomName());
-            queenCowEntity.setCustomNameVisible(this.isCustomNameVisible());
-        }
-
-        queenCowEntity.setPersistent();
-        queenCowEntity.setOwnerUuid(this.getOwnerUuid());
-        queenCowEntity.setTamed(true);
-        queenCowEntity.setSitting(this.isSitting());
-        this.getWorld().spawnEntity(queenCowEntity);
-        this.discard();
     }
 
     @Override
@@ -180,35 +222,13 @@ public class HumanoidCowEntity extends HumanoidAnimalEntity implements GeoEntity
     }
 
     @Override
-    public AbstractTeam getScoreboardTeam() {
-        return super.getScoreboardTeam();
-    }
-
-    public boolean canBeLeashedBy(PlayerEntity player) {
-        return false;
-    }
-
-    @Override
-    protected void initDataTracker() {
-        super.initDataTracker();
-        this.dataTracker.startTracking(SITTING, false);
-        this.dataTracker.startTracking(DATA_ID_TYPE_VARIANT, 0);
+    protected void initDataTracker(DataTracker.Builder builder) {
+        super.initDataTracker(builder);
+        builder.add(SITTING, false);
+        builder.add(DATA_ID_TYPE_VARIANT, 0);
     }
 
     /* VARIANTS */
-    protected static final TrackedData<Integer> DATA_ID_TYPE_VARIANT = DataTracker.registerData(HumanoidCowEntity.class,
-            TrackedDataHandlerRegistry.INTEGER);
-
-    public boolean isMilkableVariant() {
-        HumanoidCowVariant variant = this.getVariant();
-        return variant != HumanoidCowVariant.MOOSHROOM && variant != HumanoidCowVariant.MOOBLOOM;
-    }
-
-    public boolean isStewableVariant() {
-        HumanoidCowVariant variant = this.getVariant();
-        return variant == HumanoidCowVariant.MOOSHROOM || variant == HumanoidCowVariant.MOOBLOOM;
-    }
-
     public HumanoidCowVariant getVariant() {
         return HumanoidCowVariant.byId(this.getTypeVariant() & 255);
     }
@@ -220,5 +240,15 @@ public class HumanoidCowEntity extends HumanoidAnimalEntity implements GeoEntity
     @Override
     public void setVariant(HumanoidAnimalVariant variant) {
         this.dataTracker.set(DATA_ID_TYPE_VARIANT, variant.getId() & 255);
+    }
+
+    public boolean isMilkableVariant() {
+        HumanoidCowVariant variant = this.getVariant();
+        return variant != HumanoidCowVariant.MOOSHROOM && variant != HumanoidCowVariant.MOOBLOOM;
+    }
+
+    public boolean isStewableVariant() {
+        HumanoidCowVariant variant = this.getVariant();
+        return variant == HumanoidCowVariant.MOOSHROOM || variant == HumanoidCowVariant.MOOBLOOM;
     }
 }

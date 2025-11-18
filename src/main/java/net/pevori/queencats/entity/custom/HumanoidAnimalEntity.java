@@ -1,12 +1,12 @@
 package net.pevori.queencats.entity.custom;
 
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
+import net.minecraft.component.EnchantmentEffectComponentTypes;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.LongDoorInteractGoal;
 import net.minecraft.entity.ai.pathing.MobNavigation;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
@@ -20,12 +20,12 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.InventoryChangedListener;
 import net.minecraft.inventory.SimpleInventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -34,21 +34,27 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
-import net.minecraft.world.EntityView;
+import net.minecraft.world.LocalDifficulty;
+import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
 import net.pevori.queencats.entity.variant.HumanoidAnimalVariant;
-import net.pevori.queencats.entity.variant.HumanoidBunnyVariant;
-import net.pevori.queencats.screen.HumanoidAnimalScreenHandler;
+import net.pevori.queencats.item.ModItems;
+import net.pevori.queencats.network.packet.HumanoidScreenHandlerPacketS2C;
+import net.pevori.queencats.screen.custom.HumanoidAnimalScreenHandler;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class HumanoidAnimalEntity extends TameableEntity implements ExtendedScreenHandlerFactory, InventoryChangedListener {
+public abstract class HumanoidAnimalEntity extends TameableEntity implements ExtendedScreenHandlerFactory<HumanoidScreenHandlerPacketS2C>, InventoryChangedListener {
     protected static final String INVENTORY_KEY = "Humanoid_Animal_Inventory";
     protected static final String ARMOR_KEY = "Humanoid_Animal_Armor_Item";
     protected static final String SLOT_KEY = "Humanoid_Animal_Inventory_Slot";
     protected SimpleInventory inventory;
+    protected Item itemForGrowth = ModItems.KEMOMIMI_POTION;
 
     protected Ingredient equippableArmor = Ingredient.ofItems(Items.LEATHER_CHESTPLATE, Items.CHAINMAIL_CHESTPLATE, Items.GOLDEN_CHESTPLATE,
             Items.IRON_CHESTPLATE, Items.DIAMOND_CHESTPLATE, Items.NETHERITE_CHESTPLATE);
+
+    protected static final TrackedData<Boolean> SITTING =
+            DataTracker.registerData(HumanoidAnimalEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 
     protected HumanoidAnimalEntity(EntityType<? extends TameableEntity> entityType, World world) {
         super(entityType, world);
@@ -90,6 +96,25 @@ public abstract class HumanoidAnimalEntity extends TameableEntity implements Ext
     }
 
     @Override
+    public float getScaleFactor() {
+        return 1.0f;
+    }
+
+    @Override
+    public void onDeath(DamageSource source) {
+        if (this.hasStackEquipped(EquipmentSlot.CHEST)) {
+            this.dropStack(getEquippedStack(EquipmentSlot.CHEST));
+        }
+
+        super.onDeath(source);
+    }
+
+    @Override
+    public boolean isBreedingItem(ItemStack stack) {
+        return stack.getItem() == ModItems.KEMOMIMI_POTION;
+    }
+
+    @Override
     public ActionResult interactMob(PlayerEntity player, Hand hand) {
         ItemStack itemStack = player.getStackInHand(hand);
         World world = this.getWorld();
@@ -123,7 +148,7 @@ public abstract class HumanoidAnimalEntity extends TameableEntity implements Ext
         if(!this.getWorld().isClient()) {
             if (this.isValidArmor(stack)) {
                 this.inventory.setStack(0, stack.copy());
-                this.playSound(SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0.5F, 1.0F);
+                this.playSound(SoundEvents.ITEM_ARMOR_EQUIP_GENERIC.value(), 0.5F, 1.0F);
                 equipArmor(stack);
                 this.inventory.markDirty();
 
@@ -172,7 +197,7 @@ public abstract class HumanoidAnimalEntity extends TameableEntity implements Ext
         if (this.inventory != null) {
             for(int i = 1; i < this.inventory.size(); ++i) {
                 ItemStack itemStack = this.inventory.getStack(i);
-                if (!itemStack.isEmpty() && !EnchantmentHelper.hasVanishingCurse(itemStack)) {
+                if (!itemStack.isEmpty() && !EnchantmentHelper.hasAnyEnchantmentsWith(itemStack, EnchantmentEffectComponentTypes.PREVENT_EQUIPMENT_DROP)) {
                     this.dropStack(itemStack);
                 }
             }
@@ -194,7 +219,7 @@ public abstract class HumanoidAnimalEntity extends TameableEntity implements Ext
         this.syncInventoryToFlags();
 
         if (this.age > 20 && !previouslyEquipped && this.hasArmorInSlot()) {
-            this.playSound(SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0.5F, 1.0F);
+            this.playSound(SoundEvents.ITEM_ARMOR_EQUIP_GENERIC.value(), 0.5F, 1.0F);
         }
     }
 
@@ -205,7 +230,7 @@ public abstract class HumanoidAnimalEntity extends TameableEntity implements Ext
 
         // Writes the armor slot (slot 0)
         if (!this.inventory.getStack(0).isEmpty()) {
-            nbt.put(ARMOR_KEY, this.inventory.getStack(0).writeNbt(new NbtCompound()));
+            nbt.put(ARMOR_KEY, this.inventory.getStack(0).encode(this.getRegistryManager()));
         }
 
         // Writes the rest of the inventory (slot 2 to 18th)
@@ -214,8 +239,7 @@ public abstract class HumanoidAnimalEntity extends TameableEntity implements Ext
             if (!itemStack.isEmpty()) {
                 NbtCompound nbtCompound = new NbtCompound();
                 nbtCompound.putByte(SLOT_KEY, (byte)i);
-                itemStack.writeNbt(nbtCompound);
-                nbtList.add(nbtCompound);
+                nbtList.add(itemStack.encode(this.getRegistryManager(), nbtCompound));
             }
         }
 
@@ -229,7 +253,7 @@ public abstract class HumanoidAnimalEntity extends TameableEntity implements Ext
 
         // Reads the armor slot (slot 0)
         if (nbt.contains(ARMOR_KEY, NbtElement.COMPOUND_TYPE)) {
-            ItemStack itemStack = ItemStack.fromNbt(nbt.getCompound(ARMOR_KEY));
+            var itemStack = ItemStack.fromNbt(this.getRegistryManager(), nbt.getCompound(ARMOR_KEY)).orElse(ItemStack.EMPTY);
 
             if (!itemStack.isEmpty() && this.isValidArmor(itemStack)) {
                 this.inventory.setStack(0, itemStack);
@@ -238,11 +262,13 @@ public abstract class HumanoidAnimalEntity extends TameableEntity implements Ext
         }
 
         // Reads the rest of the inventory (slot 2 to 18th)
-        for(int i = 0; i < nbtList.size(); ++i) {
-            NbtCompound nbtCompound = nbtList.getCompound(i);
+        for (int index = 0; index < nbtList.size(); ++index) {
+            var nbtCompound = nbtList.getCompound(index);
             int j = nbtCompound.getByte(SLOT_KEY) & 255;
+
             if (j >= 1 && j < this.inventory.size()) {
-                this.inventory.setStack(j, ItemStack.fromNbt(nbtCompound));
+                var itemStack = ItemStack.fromNbt(this.getRegistryManager(), nbtCompound).orElse(ItemStack.EMPTY);
+                this.inventory.setStack(j, itemStack);
             }
         }
     }
@@ -261,30 +287,21 @@ public abstract class HumanoidAnimalEntity extends TameableEntity implements Ext
         }
     }
 
-    @Override
-    public void writeScreenOpeningData(ServerPlayerEntity player, PacketByteBuf buf) {
-        buf.writeInt(this.getId());
-        buf.writeInt(this.getId());
-    }
-
     @Nullable
     @Override
     public ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player) {
-        return new HumanoidAnimalScreenHandler(syncId, playerInventory, this);
+        return new HumanoidAnimalScreenHandler(syncId, playerInventory, new HumanoidScreenHandlerPacketS2C(this.getId()));
+    }
+
+    @Override
+    public HumanoidScreenHandlerPacketS2C getScreenOpeningData(ServerPlayerEntity serverPlayerEntity) {
+        return new HumanoidScreenHandlerPacketS2C(this.getId());
     }
 
     @Override
     public Text getDisplayName() {
         return super.getDisplayName();
     }
-
-    @Override
-    public EntityView method_48926() {
-        return this.getWorld();
-    }
-
-    protected static final TrackedData<Boolean> SITTING =
-            DataTracker.registerData(HumanoidAnimalEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 
     public void setSit(boolean sitting) {
         this.dataTracker.set(SITTING, sitting);
@@ -295,7 +312,29 @@ public abstract class HumanoidAnimalEntity extends TameableEntity implements Ext
         return this.dataTracker.get(SITTING);
     }
 
-    /* VARIANTS */
+    protected void tryTame(PlayerEntity player) {
+        this.setOwner(player);
+        this.navigation.stop();
+        this.setTarget(null);
+        setSit(true);
+        this.getWorld().sendEntityStatus(this, (byte)7);
+        this.setHealth(getMaxHealth());
+    }
+
+    /* VARIANT */
+    @Override
+    protected void initDataTracker(DataTracker.Builder builder) {
+        super.initDataTracker(builder);
+        builder.add(SITTING, false);
+        builder.add(DATA_ID_TYPE_VARIANT, 0);
+    }
+
+    @Override
+    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason,
+                                 @Nullable EntityData entityData) {
+        return super.initialize(world, difficulty, spawnReason, entityData);
+    }
+
     protected static final TrackedData<Integer> DATA_ID_TYPE_VARIANT = DataTracker.registerData(HumanoidAnimalEntity.class,
             TrackedDataHandlerRegistry.INTEGER);
 
@@ -309,12 +348,5 @@ public abstract class HumanoidAnimalEntity extends TameableEntity implements Ext
 
     public void setVariant(HumanoidAnimalVariant variant) {
         this.dataTracker.set(DATA_ID_TYPE_VARIANT, variant.getId() & 255);
-    }
-
-    @Override
-    protected void initDataTracker() {
-        super.initDataTracker();
-        this.dataTracker.startTracking(SITTING, false);
-        this.dataTracker.startTracking(DATA_ID_TYPE_VARIANT, 0);
     }
 }

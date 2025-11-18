@@ -8,13 +8,12 @@ import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.passive.PassiveEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.recipe.Ingredient;
-import net.minecraft.scoreboard.AbstractTeam;
+import net.minecraft.scoreboard.Team;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
@@ -28,20 +27,22 @@ import net.pevori.queencats.item.ModItems;
 import net.pevori.queencats.sound.ModSounds;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animatable.instance.SingletonAnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.*;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animatable.instance.SingletonAnimatableInstanceCache;
+import software.bernie.geckolib.animation.*;
 
 import static net.pevori.queencats.sound.ModSounds.soundEventByConfig;
 
 public class HumanoidBunnyEntity extends HumanoidAnimalEntity implements GeoEntity {
-    private AnimatableInstanceCache factory = new SingletonAnimatableInstanceCache(this);
-
+    private final AnimatableInstanceCache factory = new SingletonAnimatableInstanceCache(this);
     protected Item itemForTaming = ModItems.GOLDEN_WHEAT;
     protected Ingredient itemForHealing = Ingredient.ofItems(Items.CARROT, Items.WHEAT, ModItems.GOLDEN_WHEAT, Items.GOLDEN_CARROT);
     protected Item itemForGrowth = ModItems.KEMOMIMI_POTION;
-    public static final String pekoSan = "pekora";
+
+    protected static final TrackedData<Boolean> SITTING = DataTracker.registerData(HumanoidBunnyEntity.class,
+            TrackedDataHandlerRegistry.BOOLEAN);
+    protected static final TrackedData<Integer> DATA_ID_TYPE_VARIANT = DataTracker.registerData(HumanoidBunnyEntity.class,
+            TrackedDataHandlerRegistry.INTEGER);
 
     protected HumanoidBunnyEntity(EntityType<? extends HumanoidAnimalEntity> entityType, World world) {
         super(entityType, world);
@@ -61,30 +62,29 @@ public class HumanoidBunnyEntity extends HumanoidAnimalEntity implements GeoEnti
         super.onDeath(source);
     }
 
-    public boolean isAlmond() {
-        String s = Formatting.strip(this.getName().getString());
-        return (s != null && s.toLowerCase().contains(pekoSan));
+    public boolean hasHoloNameEasterEgg() {
+        return (this.hasCustomName() && this.getName().getString().toLowerCase().contains("pekora"));
     }
 
     public void startGrowth() {
-        HumanoidBunnyVariant variant = this.getVariant();
-        QueenBunnyEntity queenBunnyEntity = ModEntities.QUEEN_BUNNY.create(this.getWorld());
-        queenBunnyEntity.refreshPositionAndAngles(this.getX(), this.getY(), this.getZ(), this.getYaw(), this.getPitch());
-        queenBunnyEntity.setAiDisabled(this.isAiDisabled());
-        queenBunnyEntity.setInventory(this.inventory);
+        var variant = this.getVariant();
+        var queenEntity = ModEntities.QUEEN_BUNNY.create(this.getWorld());
+        queenEntity.refreshPositionAndAngles(this.getX(), this.getY(), this.getZ(), this.getYaw(), this.getPitch());
+        queenEntity.setAiDisabled(this.isAiDisabled());
+        queenEntity.setInventory(this.inventory);
 
-        queenBunnyEntity.setVariant(variant);
+        queenEntity.setVariant(variant);
 
         if (this.hasCustomName()) {
-            queenBunnyEntity.setCustomName(this.getCustomName());
-            queenBunnyEntity.setCustomNameVisible(this.isCustomNameVisible());
+            queenEntity.setCustomName(this.getCustomName());
+            queenEntity.setCustomNameVisible(this.isCustomNameVisible());
         }
 
-        queenBunnyEntity.setPersistent();
-        queenBunnyEntity.setOwnerUuid(this.getOwnerUuid());
-        queenBunnyEntity.setTamed(true);
-        queenBunnyEntity.setSitting(this.isSitting());
-        this.getWorld().spawnEntity(queenBunnyEntity);
+        queenEntity.setPersistent();
+        queenEntity.setOwnerUuid(this.getOwnerUuid());
+        queenEntity.setTamed(true, true);
+        queenEntity.setSitting(this.isSitting());
+        this.getWorld().spawnEntity(queenEntity);
         this.discard();
     }
 
@@ -93,6 +93,7 @@ public class HumanoidBunnyEntity extends HumanoidAnimalEntity implements GeoEnti
         return stack.getItem() == ModItems.KEMOMIMI_POTION;
     }
 
+    /* SOUNDS */
     @Override
     protected SoundEvent getAmbientSound() {
         return soundEventByConfig(QueenCatsConfig.enableHumanoidBunnySounds, ModSounds.HUMANOID_BUNNY_AMBIENT);
@@ -144,10 +145,10 @@ public class HumanoidBunnyEntity extends HumanoidAnimalEntity implements GeoEnti
     }
 
     @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController<>(this, "controller",
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
+        controllerRegistrar.add(new AnimationController<>(this, "controller",
                 0, this::predicate));
-        controllers.add(new AnimationController<>(this, "attackController",
+        controllerRegistrar.add(new AnimationController<>(this, "attackController",
                 0, this::attackPredicate));
     }
 
@@ -157,9 +158,6 @@ public class HumanoidBunnyEntity extends HumanoidAnimalEntity implements GeoEnti
     }
 
     /* TAMEABLE ENTITY */
-    protected static final TrackedData<Boolean> SITTING = DataTracker.registerData(HumanoidBunnyEntity.class,
-            TrackedDataHandlerRegistry.BOOLEAN);
-
     public void setSit(boolean sitting) {
         this.dataTracker.set(SITTING, sitting);
         super.setSitting(sitting);
@@ -184,18 +182,23 @@ public class HumanoidBunnyEntity extends HumanoidAnimalEntity implements GeoEnti
     }
 
     @Override
-    public AbstractTeam getScoreboardTeam() {
+    protected void initDataTracker(DataTracker.Builder builder) {
+        super.initDataTracker(builder);
+        builder.add(SITTING, false);
+        builder.add(DATA_ID_TYPE_VARIANT, 0);
+    }
+
+    @Override
+    public Team getScoreboardTeam() {
         return super.getScoreboardTeam();
     }
 
-    public boolean canBeLeashedBy(PlayerEntity player) {
+    @Override
+    public boolean canBeLeashed() {
         return false;
     }
 
     /* VARIANTS */
-    protected static final TrackedData<Integer> DATA_ID_TYPE_VARIANT = DataTracker.registerData(HumanoidBunnyEntity.class,
-            TrackedDataHandlerRegistry.INTEGER);
-
     public HumanoidBunnyVariant getVariant() {
         return HumanoidBunnyVariant.byId(this.getTypeVariant() & 255);
     }

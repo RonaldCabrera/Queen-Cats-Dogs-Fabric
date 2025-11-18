@@ -18,15 +18,15 @@ public class QueenCowRenderer extends GeoEntityRenderer<QueenCowEntity> {
     public static final Map<HumanoidCowVariant, Identifier> LOCATION_BY_VARIANT =
             Util.make(Maps.newEnumMap(HumanoidCowVariant.class), (map) -> {
                 map.put(HumanoidCowVariant.COFFEE,
-                        new Identifier(QueenCats.MOD_ID, "textures/entity/queen_cow/coffee.png"));
+                        Identifier.of(QueenCats.MOD_ID, "textures/entity/queen_cow/coffee.png"));
                 map.put(HumanoidCowVariant.MILKSHAKE,
-                        new Identifier(QueenCats.MOD_ID, "textures/entity/queen_cow/milkshake.png"));
+                        Identifier.of(QueenCats.MOD_ID, "textures/entity/queen_cow/milkshake.png"));
                 map.put(HumanoidCowVariant.MOOSHROOM,
-                        new Identifier(QueenCats.MOD_ID, "textures/entity/queen_cow/mooshroom.png"));
+                        Identifier.of(QueenCats.MOD_ID, "textures/entity/queen_cow/mooshroom.png"));
                 map.put(HumanoidCowVariant.MOOBLOOM,
-                        new Identifier(QueenCats.MOD_ID, "textures/entity/queen_cow/moobloom.png"));
+                        Identifier.of(QueenCats.MOD_ID, "textures/entity/queen_cow/moobloom.png"));
                 map.put(HumanoidCowVariant.WOOLY,
-                        new Identifier(QueenCats.MOD_ID, "textures/entity/queen_cow/wooly.png"));
+                        Identifier.of(QueenCats.MOD_ID, "textures/entity/queen_cow/wooly.png"));
             });
 
     public QueenCowRenderer(EntityRendererFactory.Context ctx) {

@@ -56,7 +56,7 @@ public class PrincessBunnyEntity extends HumanoidBunnyEntity{
         this.goalSelector.add(0, new SwimGoal(this));
         this.goalSelector.add(1, new SitGoal(this));
         this.goalSelector.add(2, new MeleeAttackGoal(this, 1.25D, false));
-        this.goalSelector.add(3, new FollowOwnerGoal(this, 1.0, 10.0f, 2.0f, false));
+        this.goalSelector.add(3, new FollowOwnerGoal(this, 1.0, 10.0f, 2.0f));
         this.goalSelector.add(5, new TemptGoal(this, 1.0f, Ingredient.ofItems(ModItems.GOLDEN_WHEAT), false));
         this.goalSelector.add(5, new WanderAroundPointOfInterestGoal(this, 1.0f, false));
         this.goalSelector.add(5, new WanderAroundFarGoal(this, 1.0, 1));
@@ -69,8 +69,8 @@ public class PrincessBunnyEntity extends HumanoidBunnyEntity{
 
     @Override
     public ActionResult interactMob(PlayerEntity player, Hand hand) {
-        ItemStack itemstack = player.getStackInHand(hand);
-        Item item = itemstack.getItem();
+        ItemStack itemStack = player.getStackInHand(hand);
+        Item item = itemStack.getItem();
 
         if (item instanceof DyeItem && this.isOwner(player) && !player.isSneaking()) {
             DyeColor dyeColor = ((DyeItem) item).getColor();
@@ -84,39 +84,33 @@ public class PrincessBunnyEntity extends HumanoidBunnyEntity{
                 this.setVariant(HumanoidBunnyVariant.STRAWBERRY);
             }
 
-            if (!player.getAbilities().creativeMode) {
-                itemstack.decrement(1);
-            }
+            itemStack.decrementUnlessCreative(1, player);
 
             this.setPersistent();
             return ActionResult.CONSUME;
         }
 
         if (item == itemForGrowth && isTamed() && this.isOwner(player) && !player.isSneaking()) {
-            if (!player.getAbilities().creativeMode) {
-                itemstack.decrement(1);
-            }
+            itemStack.decrementUnlessCreative(1, player);
             startGrowth();
             return ActionResult.CONSUME;
         }
 
-        if ((itemForHealing.test(itemstack)) && isTamed() && !player.isSneaking() && this.getHealth() < getMaxHealth()) {
+        if ((itemForHealing.test(itemStack)) && isTamed() && !player.isSneaking() && this.getHealth() < getMaxHealth()) {
             if (this.getWorld().isClient()) {
                 return ActionResult.CONSUME;
             } else {
-                if (!player.getAbilities().creativeMode) {
-                    itemstack.decrement(1);
-                }
+                itemStack.decrementUnlessCreative(1, player);
 
                 if (!this.getWorld().isClient()) {
-                    this.eat(player, hand, itemstack);
+                    this.eat(player, hand, itemStack);
                     this.heal(10.0f);
 
                     if (this.getHealth() > getMaxHealth()) {
                         this.setHealth(getMaxHealth());
                     }
 
-                    this.playSound(this.getEatSound(itemstack), 1.0f, 1.0f);
+                    this.playSound(this.getEatSound(itemStack), 1.0f, 1.0f);
                 }
 
                 return ActionResult.SUCCESS;
@@ -127,9 +121,7 @@ public class PrincessBunnyEntity extends HumanoidBunnyEntity{
             if (this.getWorld().isClient()) {
                 return ActionResult.CONSUME;
             } else {
-                if (!player.getAbilities().creativeMode) {
-                    itemstack.decrement(1);
-                }
+                itemStack.decrementUnlessCreative(1, player);
 
                 if (!this.getWorld().isClient()) {
                     super.setOwner(player);
@@ -149,39 +141,18 @@ public class PrincessBunnyEntity extends HumanoidBunnyEntity{
             return ActionResult.SUCCESS;
         }
 
-        if (itemstack.getItem() == itemForTaming) {
+        if (itemStack.getItem() == itemForTaming) {
             return ActionResult.PASS;
         }
 
         return super.interactMob(player, hand);
     }
 
-    @Override
-    public void setTamed(boolean tamed) {
-        super.setTamed(tamed);
-        if (tamed) {
-            getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH).setBaseValue(40.0D);
-            getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE).setBaseValue(3.5D);
-            getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED).setBaseValue((double) 0.3f);
-        } else {
-            getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH).setBaseValue(20.0D);
-            getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE).setBaseValue(2.0D);
-            getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED).setBaseValue((double) 0.3f);
-        }
-    }
 
     @Override
-    protected void initDataTracker() {
-        super.initDataTracker();
-        this.dataTracker.startTracking(SITTING, false);
-        this.dataTracker.startTracking(DATA_ID_TYPE_VARIANT, 0);
-    }
-
-    @Override
-    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason,
-            @Nullable EntityData entityData, @Nullable NbtCompound entityNbt) {
+    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData) {
         HumanoidBunnyVariant variant = Util.getRandom(HumanoidBunnyVariant.values(), this.random);
         setVariant(variant);
-        return super.initialize(world, difficulty, spawnReason, entityData, entityNbt);
+        return super.initialize(world, difficulty, spawnReason, entityData);
     }
 }

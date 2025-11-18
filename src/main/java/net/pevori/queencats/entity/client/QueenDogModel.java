@@ -5,8 +5,7 @@ import net.minecraft.util.Identifier;
 import net.pevori.queencats.QueenCats;
 import net.pevori.queencats.entity.custom.QueenDogEntity;
 import software.bernie.geckolib.constant.DataTickets;
-import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
-import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.model.data.EntityModelData;
 
@@ -14,10 +13,10 @@ public class QueenDogModel extends GeoModel<QueenDogEntity> {
     @Override
     public Identifier getModelResource(QueenDogEntity object) {
         if(object.hasStackEquipped(EquipmentSlot.CHEST)) {
-            return new Identifier(QueenCats.MOD_ID, "geo/humanoid_dog_armor.geo.json");
+            return Identifier.of(QueenCats.MOD_ID, "geo/humanoid_dog_armor.geo.json");
         }
 
-        return new Identifier(QueenCats.MOD_ID, "geo/humanoid_dog.geo.json");
+        return Identifier.of(QueenCats.MOD_ID, "geo/humanoid_dog.geo.json");
     }
 
     @Override
@@ -27,14 +26,14 @@ public class QueenDogModel extends GeoModel<QueenDogEntity> {
 
     @Override
     public Identifier getAnimationResource(QueenDogEntity animatable) {
-        return new Identifier(QueenCats.MOD_ID, "animations/humanoid_dog.animation.json");
+        return Identifier.of(QueenCats.MOD_ID, "animations/humanoid_dog.animation.json");
     }
 
     @Override
     public void setCustomAnimations(QueenDogEntity animatable, long instanceId, AnimationState<QueenDogEntity> animationState) {
         super.setCustomAnimations(animatable, instanceId, animationState);
 
-        CoreGeoBone head = getAnimationProcessor().getBone("head");
+        var head = getAnimationProcessor().getBone("head");
         EntityModelData entityData = animationState.getData(DataTickets.ENTITY_MODEL_DATA);
 
         if (head != null) {

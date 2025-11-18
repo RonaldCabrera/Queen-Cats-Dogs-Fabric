@@ -41,7 +41,7 @@ public class QueenDogEntity extends HumanoidDogEntity{
 
         if (this.isTamed()) {
             baby.setOwnerUuid(this.getOwnerUuid());
-            baby.setTamed(true);
+            baby.setTamed(true, true);
         }
 
         return baby;
@@ -50,7 +50,7 @@ public class QueenDogEntity extends HumanoidDogEntity{
     public static DefaultAttributeContainer.Builder setAttributes() {
         return TameableEntity.createMobAttributes()
                 .add(EntityAttributes.GENERIC_MAX_HEALTH, 20.0D)
-                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 8.0f)
+                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 5.0f)
                 .add(EntityAttributes.GENERIC_ATTACK_SPEED, 2.0f)
                 .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.3f);
     }
@@ -61,7 +61,7 @@ public class QueenDogEntity extends HumanoidDogEntity{
         this.goalSelector.add(0, new SwimGoal(this));
         this.goalSelector.add(1, new SitGoal(this));
         this.goalSelector.add(2, new MeleeAttackGoal(this, 1.25D, false));
-        this.goalSelector.add(3, new FollowOwnerGoal(this, 1.0, 10.0f, 2.0f, false));
+        this.goalSelector.add(3, new FollowOwnerGoal(this, 1.0, 10.0f, 2.0f));
         this.goalSelector.add(4, new AnimalMateGoal(this, 1.0));
         this.goalSelector.add(5, new TemptGoal(this, 1.0f, Ingredient.ofItems(ModItems.GOLDEN_BONE), false));
         this.goalSelector.add(5, new WanderAroundPointOfInterestGoal(this, 1.0f, false));
@@ -74,112 +74,29 @@ public class QueenDogEntity extends HumanoidDogEntity{
         this.targetSelector.add(4, new ActiveTargetGoal<>(this, AbstractSkeletonEntity.class, false));
     }
 
+    /* TAMEABLE ENTITY */
     @Override
-    public ActionResult interactMob(PlayerEntity player, Hand hand) {
-        ItemStack itemStack = player.getStackInHand(hand);
-        Item item = itemStack.getItem();
-
-        if (isBreedingItem(itemStack)) {
-            return super.interactMob(player, hand);
-        }
-
-        if (item instanceof DyeItem && this.isOwner(player) && !player.isSneaking()) {
-            DyeColor dyeColor = ((DyeItem) item).getColor();
-            if (dyeColor == DyeColor.BLACK) {
-                this.setVariant(HumanoidDogVariant.HUSKY);
-            } else if (dyeColor == DyeColor.WHITE) {
-                this.setVariant(HumanoidDogVariant.SHIRO);
-            } else if (dyeColor == DyeColor.PINK) {
-                this.setVariant(HumanoidDogVariant.CREAM);
-            } else if (dyeColor == DyeColor.GRAY) {
-                this.setVariant(HumanoidDogVariant.GRAY);
-            }
-            
-            if (!player.getAbilities().creativeMode) {
-                itemStack.decrement(1);
-            }
-
-            this.setPersistent();
-            return ActionResult.CONSUME;
-        }
-
-        if ((isMeatItem(item)) && isTamed() && !player.isSneaking() && this.getHealth() < getMaxHealth()) {
-            if (this.getWorld().isClient()) {
-                return ActionResult.CONSUME;
-            } else {
-                if (!player.getAbilities().creativeMode) {
-                    itemStack.decrement(1);
-                }
-
-                if (!this.getWorld().isClient()) {
-                    this.eat(player, hand, itemStack);
-                    this.heal(10.0f);
-
-                    if (this.getHealth() > getMaxHealth()) {
-                        this.setHealth(getMaxHealth());
-                    }
-
-                    this.playSound(this.getEatSound(itemStack), 1.0f, 1.0f);
-                }
-
-                return ActionResult.SUCCESS;
-            }
-        }
-
-        else if (item == itemForTaming && !isTamed()) {
-            if (this.getWorld().isClient()) {
-                return ActionResult.CONSUME;
-            } else {
-                if (!player.getAbilities().creativeMode) {
-                    itemStack.decrement(1);
-                }
-
-                if (!this.getWorld().isClient()) {
-                    this.playSound(this.getEatSound(itemStack), 1.0f, 1.0f);
-                    super.setOwner(player);
-                    this.navigation.recalculatePath();
-                    this.setTarget(null);
-                    this.getWorld().sendEntityStatus(this, (byte) 7);
-                    setSit(true);
-                    this.setHealth(getMaxHealth());
-                }
-
-                return ActionResult.SUCCESS;
-            }
-        }
-
-        if (isTamed() && this.isOwner(player) && !player.isSneaking() && !this.getWorld().isClient() && hand == Hand.MAIN_HAND) {
-            setSit(!isSitting());
-            return ActionResult.SUCCESS;
-        }
-
-        if (itemStack.getItem() == itemForTaming) {
-            return ActionResult.PASS;
-        }
-
-        return super.interactMob(player, hand);
+    public void setTamed(boolean tamed, boolean updateAttributes) {
+        super.setTamed(tamed, updateAttributes);
     }
 
     @Override
-    public void setTamed(boolean tamed) {
-        super.setTamed(tamed);
-        if (tamed) {
-            getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH).setBaseValue(60.0D);
-            getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE).setBaseValue(5.0D);
-            getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED).setBaseValue((double) 0.3f);
+    protected void updateAttributesForTamed() {
+        if (this.isTamed()) {
+            getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH).setBaseValue(60.0F);
+            getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE).setBaseValue(8.0F);
+            this.setHealth(60.0F);
         } else {
-            getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH).setBaseValue(20.0D);
-            getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE).setBaseValue(2.0D);
-            getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED).setBaseValue((double) 0.3f);
+            this.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH).setBaseValue(20.0F);
+            getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE).setBaseValue(5.0F);
         }
     }
 
-
     @Override
-    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason,
-            @Nullable EntityData entityData, @Nullable NbtCompound entityNbt) {
+    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData) {
         HumanoidDogVariant variant = Util.getRandom(HumanoidDogVariant.values(), this.random);
         setVariant(variant);
-        return super.initialize(world, difficulty, spawnReason, entityData, entityNbt);
+
+        return super.initialize(world, difficulty, spawnReason, entityData);
     }
 }
